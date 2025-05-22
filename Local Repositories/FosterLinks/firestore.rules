@@ -1,0 +1,83 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isWorker() {
+      return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'worker';
+    }
+    
+    function isFosterParent() {
+      return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'foster_parent';
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // Users can read and update their own data
+      // Admins can read and write all user data
+      // Allow creating a user document during registration
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // For new user creation, we need to be more permissive
+      // This allows a newly authenticated user to create their own document
+      allow create: if request.auth != null && request.auth.uid == userId;
+      
+      allow update, delete: if isOwner(userId) || isAdmin();
+    }
+    
+    // Foster parents collection
+    match /foster_parents/{parentId} {
+      // Admins and workers can read and write foster parent data
+      // Foster parents can read their own data
+      allow read: if isAdmin() || isWorker() || (isFosterParent() && isOwner(parentId));
+      allow write: if isAdmin() || isWorker();
+    }
+    
+    // Youth profiles collection
+    match /youth_profiles/{youthId} {
+      // Admins and workers can read and write all youth profiles
+      // Foster parents can read profiles of youth assigned to them
+      allow read: if isAdmin() || isWorker() || (isFosterParent() && resource.data.fosterParentId == request.auth.uid);
+      allow write: if isAdmin() || isWorker();
+    }
+    
+    // Medication logs collection
+    match /medication_logs/{logId} {
+      // Admins and workers can read and write all medication logs
+      // Foster parents can read and write logs for youth assigned to them
+      allow read: if isAdmin() || isWorker() || (isFosterParent() && resource.data.fosterParentId == request.auth.uid);
+      allow write: if isAdmin() || isWorker() || (isFosterParent() && resource.data.fosterParentId == request.auth.uid);
+    }
+    
+    // Reports collection
+    match /reports/{reportId} {
+      // Admins and workers can read and write all reports
+      allow read, write: if isAdmin() || isWorker();
+    }
+    
+    // Themes collection
+    match /themes/{userId} {
+      // Users can read and write their own theme settings
+      allow read, write: if isOwner(userId);
+    }
+    
+    // Agency settings collection
+    match /agency_settings/{agencyId} {
+      // All authenticated users can read agency settings
+      // Only admins can write agency settings
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+  }
+}
