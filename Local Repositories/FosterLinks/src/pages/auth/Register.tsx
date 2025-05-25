@@ -56,6 +56,7 @@ const Register: React.FC = () => {
       setLoading(true);
       
       console.log('Starting user registration process...');
+      console.log('Registration details:', { email, password, firstName, lastName, role });
       
       // Create user in Firebase Auth
       const user = await signUp(email, password);
@@ -78,11 +79,22 @@ const Register: React.FC = () => {
         navigate('/login');
       } catch (firestoreError: any) {
         console.error('Firestore document creation error:', firestoreError);
-        setError(`Error creating user profile: ${firestoreError.message}`);
+        console.log('Firestore error code:', firestoreError.code);
+        console.log('Firestore error message:', firestoreError.message);
         
-        // Even if Firestore fails, the user was created in Auth, so we should redirect
-        // They can complete their profile later
-        navigate('/login');
+        // Show a more user-friendly message
+        if (firestoreError.message && firestoreError.message.includes('PERMISSION_DENIED')) {
+          setError('Firestore service is not available. User created but profile data could not be saved.');
+        } else {
+          setError(`Error creating user profile: ${firestoreError.message}`);
+        }
+        
+        // Add a delay before redirecting to allow the user to see the message
+        setTimeout(() => {
+          // Even if Firestore fails, the user was created in Auth, so we should redirect
+          // They can complete their profile later
+          navigate('/login');
+        }, 3000);
       }
     } catch (error: any) {
       console.error('Registration error:', error);
