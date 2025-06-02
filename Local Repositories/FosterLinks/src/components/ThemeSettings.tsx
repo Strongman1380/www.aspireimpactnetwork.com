@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Box, 
   Typography, 
@@ -9,39 +9,25 @@ import {
   FormControlLabel, 
   Radio, 
   Button, 
-  Snackbar, 
-  Alert,
-  useTheme,
+  useTheme as useMuiTheme,
   useMediaQuery,
   Grid,
-  Divider
+  Divider,
+  CircularProgress
 } from '@mui/material';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase';
 import { useAuth } from '../contexts/AuthContext';
-
-interface ThemeSettings {
-  mode: 'light' | 'dark' | 'system';
-  primaryColor: string;
-  secondaryColor: string;
-}
+import { useAppTheme, ThemeSettings as ThemeSettingsType } from '../contexts/ThemeContext';
+import { useUI } from '../contexts/UIContext';
 
 const ThemeSettingsComponent: React.FC = () => {
   const { currentUser } = useAuth();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { themeSettings, updateThemeSettings } = useAppTheme();
+  const { showSnackbar, showLoading, hideLoading } = useUI();
+  const muiTheme = useMuiTheme();
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down('sm'));
   
-  const [themeSettings, setThemeSettings] = useState<ThemeSettings>({
-    mode: 'light',
-    primaryColor: '#1976d2', // Default MUI blue
-    secondaryColor: '#dc004e' // Default MUI pink
-  });
-  
-  const [loading, setLoading] = useState(true);
+  const [localThemeSettings, setLocalThemeSettings] = useState<ThemeSettingsType>(themeSettings);
   const [saving, setSaving] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   
   // Color options
   const primaryColorOptions = [
@@ -60,48 +46,26 @@ const ThemeSettingsComponent: React.FC = () => {
     { name: 'Lime', value: '#9e9d24' }
   ];
   
-  // Fetch user theme settings
-  useEffect(() => {
-    const fetchThemeSettings = async () => {
-      if (!currentUser) return;
-      
-      try {
-        const themeDoc = await getDoc(doc(db, 'themes', currentUser.uid));
-        
-        if (themeDoc.exists()) {
-          setThemeSettings(themeDoc.data() as ThemeSettings);
-        }
-      } catch (error) {
-        console.error('Error fetching theme settings:', error);
-        showSnackbar('Failed to load theme settings', 'error');
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchThemeSettings();
-  }, [currentUser]);
-  
   // Handle theme mode change
   const handleModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setThemeSettings({
-      ...themeSettings,
+    setLocalThemeSettings({
+      ...localThemeSettings,
       mode: event.target.value as 'light' | 'dark' | 'system'
     });
   };
   
   // Handle primary color change
   const handlePrimaryColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setThemeSettings({
-      ...themeSettings,
+    setLocalThemeSettings({
+      ...localThemeSettings,
       primaryColor: event.target.value
     });
   };
   
   // Handle secondary color change
   const handleSecondaryColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setThemeSettings({
-      ...themeSettings,
+    setLocalThemeSettings({
+      ...localThemeSettings,
       secondaryColor: event.target.value
     });
   };
@@ -111,45 +75,39 @@ const ThemeSettingsComponent: React.FC = () => {
     if (!currentUser) return;
     
     setSaving(true);
+    showLoading('Saving theme settings...');
     
     try {
-      await setDoc(doc(db, 'themes', currentUser.uid), themeSettings);
+      await updateThemeSettings(localThemeSettings);
       showSnackbar('Theme settings saved successfully', 'success');
-      
-      // In a real app, you would update the theme context here
-      // to apply the changes immediately
     } catch (error) {
       console.error('Error saving theme settings:', error);
       showSnackbar('Failed to save theme settings', 'error');
     } finally {
       setSaving(false);
+      hideLoading();
     }
   };
   
   // Reset to defaults
   const handleReset = () => {
-    setThemeSettings({
+    const defaultSettings: ThemeSettingsType = {
       mode: 'light',
       primaryColor: '#1976d2',
       secondaryColor: '#dc004e'
-    });
+    };
+    
+    setLocalThemeSettings(defaultSettings);
   };
   
-  // Show snackbar message
-  const showSnackbar = (message: string, severity: 'success' | 'error') => {
-    setSnackbarMessage(message);
-    setSnackbarSeverity(severity);
-    setSnackbarOpen(true);
+  // Determine if settings have changed
+  const hasChanges = () => {
+    return (
+      localThemeSettings.mode !== themeSettings.mode ||
+      localThemeSettings.primaryColor !== themeSettings.primaryColor ||
+      localThemeSettings.secondaryColor !== themeSettings.secondaryColor
+    );
   };
-  
-  // Close snackbar
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
-  
-  if (loading) {
-    return <Typography>Loading theme settings...</Typography>;
-  }
   
   return (
     <Box sx={{ p: 3 }}>
@@ -168,7 +126,7 @@ const ThemeSettingsComponent: React.FC = () => {
               <FormLabel component="legend">Theme Mode</FormLabel>
               <RadioGroup
                 name="theme-mode"
-                value={themeSettings.mode}
+                value={localThemeSettings.mode}
                 onChange={handleModeChange}
               >
                 <FormControlLabel value="light" control={<Radio />} label="Light" />
@@ -184,7 +142,7 @@ const ThemeSettingsComponent: React.FC = () => {
               <FormLabel component="legend">Primary Color</FormLabel>
               <RadioGroup
                 name="primary-color"
-                value={themeSettings.primaryColor}
+                value={localThemeSettings.primaryColor}
                 onChange={handlePrimaryColorChange}
               >
                 {primaryColorOptions.map((color) => (
@@ -214,7 +172,7 @@ const ThemeSettingsComponent: React.FC = () => {
               <FormLabel component="legend">Secondary Color</FormLabel>
               <RadioGroup
                 name="secondary-color"
-                value={themeSettings.secondaryColor}
+                value={localThemeSettings.secondaryColor}
                 onChange={handleSecondaryColorChange}
               >
                 {secondaryColorOptions.map((color) => (
@@ -246,17 +204,17 @@ const ThemeSettingsComponent: React.FC = () => {
             elevation={2} 
             sx={{ 
               p: 3, 
-              backgroundColor: themeSettings.mode === 'dark' ? '#121212' : '#ffffff',
-              color: themeSettings.mode === 'dark' ? '#ffffff' : '#000000'
+              backgroundColor: localThemeSettings.mode === 'dark' ? '#121212' : '#ffffff',
+              color: localThemeSettings.mode === 'dark' ? '#ffffff' : '#000000'
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 2 }}>
               <Button 
                 variant="contained" 
                 sx={{ 
-                  backgroundColor: themeSettings.primaryColor,
+                  backgroundColor: localThemeSettings.primaryColor,
                   '&:hover': {
-                    backgroundColor: themeSettings.primaryColor,
+                    backgroundColor: localThemeSettings.primaryColor,
                     opacity: 0.9
                   }
                 }}
@@ -267,9 +225,9 @@ const ThemeSettingsComponent: React.FC = () => {
               <Button 
                 variant="contained" 
                 sx={{ 
-                  backgroundColor: themeSettings.secondaryColor,
+                  backgroundColor: localThemeSettings.secondaryColor,
                   '&:hover': {
-                    backgroundColor: themeSettings.secondaryColor,
+                    backgroundColor: localThemeSettings.secondaryColor,
                     opacity: 0.9
                   }
                 }}
@@ -277,7 +235,13 @@ const ThemeSettingsComponent: React.FC = () => {
                 Secondary Button
               </Button>
               
-              <Button variant="outlined" sx={{ color: themeSettings.primaryColor, borderColor: themeSettings.primaryColor }}>
+              <Button 
+                variant="outlined" 
+                sx={{ 
+                  color: localThemeSettings.primaryColor, 
+                  borderColor: localThemeSettings.primaryColor 
+                }}
+              >
                 Outlined Button
               </Button>
             </Box>
@@ -299,24 +263,13 @@ const ThemeSettingsComponent: React.FC = () => {
           <Button 
             variant="contained" 
             onClick={handleSave}
-            disabled={saving}
+            disabled={saving || !hasChanges()}
+            startIcon={saving ? <CircularProgress size={20} color="inherit" /> : null}
           >
             {saving ? 'Saving...' : 'Save Settings'}
           </Button>
         </Box>
       </Paper>
-      
-      {/* Snackbar for notifications */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

@@ -1,29 +1,36 @@
-import React from 'react';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import React, { Suspense } from 'react';
+import { CssBaseline, CircularProgress, Box } from '@mui/material';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { UIProvider } from './contexts/UIContext';
 import AppRouter from './components/AppRouter';
 
-const App: React.FC = () => {
-  // Create a basic theme (in a real app, this would be dynamic based on user preferences)
-  const theme = createTheme({
-    palette: {
-      mode: 'light',
-      primary: {
-        main: '#1976d2',
-      },
-      secondary: {
-        main: '#dc004e',
-      },
-    },
-  });
+// Loading fallback component
+const LoadingFallback = () => (
+  <Box 
+    sx={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh' 
+    }}
+  >
+    <CircularProgress />
+  </Box>
+);
 
+const App: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <Suspense fallback={<LoadingFallback />}>
       <AuthProvider>
-        <AppRouter />
+        <ThemeProvider>
+          <CssBaseline />
+          <UIProvider>
+            <AppRouter />
+          </UIProvider>
+        </ThemeProvider>
       </AuthProvider>
-    </ThemeProvider>
+    </Suspense>
   );
 };
 

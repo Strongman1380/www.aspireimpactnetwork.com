@@ -8,35 +8,61 @@ import {
   Container, 
   Link, 
   Alert,
-  CircularProgress
+  CircularProgress,
+  InputAdornment,
+  IconButton
 } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useUI } from '../../contexts/UIContext';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+// Form validation schema
+const schema = yup.object({
+  email: yup
+    .string()
+    .required('Email is required')
+    .email('Please enter a valid email address'),
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters'),
+}).required();
+
+type FormData = {
+  email: string;
+  password: string;
+};
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   
   const { signIn } = useAuth();
+  const { showSnackbar } = useUI();
   const navigate = useNavigate();
   
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !password) {
-      setError('Please enter both email and password');
-      return;
+  const { 
+    control, 
+    handleSubmit, 
+    formState: { errors, isSubmitting } 
+  } = useForm<FormData>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      email: '',
+      password: ''
     }
-    
+  });
+  
+  const onSubmit = async (data: FormData) => {
     try {
       setError('');
-      setLoading(true);
       
-      console.log('Attempting to sign in with email:', email);
-      await signIn(email, password);
-      console.log('Sign in successful, navigating to dashboard');
+      await signIn(data.email, data.password);
+      showSnackbar('Successfully signed in', 'success');
       navigate('/');
     } catch (error: any) {
       console.error('Login error:', error);
@@ -52,9 +78,11 @@ const Login: React.FC = () => {
       } else {
         setError(`Failed to log in: ${error.message || 'Unknown error'}`);
       }
-    } finally {
-      setLoading(false);
     }
+  };
+  
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
   
   return (
@@ -79,30 +107,57 @@ const Login: React.FC = () => {
           </Alert>
         )}
         
-        <Box component="form" onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Email Address"
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+          <Controller
             name="email"
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoFocus
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                margin="normal"
+                label="Email Address"
+                type="email"
+                autoComplete="email"
+                error={!!errors.email}
+                helperText={errors.email?.message}
+                autoFocus
+                InputProps={{
+                  'aria-label': 'Email Address',
+                }}
+              />
+            )}
           />
           
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Password"
+          <Controller
             name="password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                margin="normal"
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                InputProps={{
+                  'aria-label': 'Password',
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleTogglePasswordVisibility}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            )}
           />
           
           <Button
@@ -110,9 +165,10 @@ const Login: React.FC = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            disabled={loading}
+            disabled={isSubmitting}
+            aria-label="Sign In"
           >
-            {loading ? <CircularProgress size={24} /> : 'Sign In'}
+            {isSubmitting ? <CircularProgress size={24} /> : 'Sign In'}
           </Button>
           
           <Box sx={{ mt: 2, textAlign: 'center' }}>

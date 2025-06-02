@@ -11,110 +11,57 @@ import {
   TextField, 
   InputAdornment,
   IconButton,
-  Chip,
   Divider,
   CircularProgress,
   Alert,
-  Snackbar
+  Skeleton
 } from '@mui/material';
 import { 
   Search as SearchIcon, 
   Add as AddIcon,
-  Person as PersonIcon
+  Person as PersonIcon,
+  Refresh as RefreshIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../../firebase/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-
-interface YouthProfile {
-  id: string;
-  first_name: string;
-  last_name: string;
-  dob: string;
-  fosterParentId?: string;
-  foster_worker?: string;
-}
+import { useUI } from '../../contexts/UIContext';
+import { useYouthStore, YouthProfile } from '../../store/youthStore';
 
 const YouthProfiles: React.FC = () => {
-  const [youthProfiles, setYouthProfiles] = useState<YouthProfile[]>([]);
   const [filteredProfiles, setFilteredProfiles] = useState<YouthProfile[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  
-  // Snackbar state
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error' | 'info'>('info');
   
   const { currentUser, userRole } = useAuth();
+  const { showSnackbar } = useUI();
   const navigate = useNavigate();
   
-  // Show snackbar message
-  const showSnackbar = (message: string, severity: 'success' | 'error' | 'info' = 'info') => {
-    setSnackbarMessage(message);
-    setSnackbarSeverity(severity);
-    setSnackbarOpen(true);
-  };
+  // Get youth profiles from Zustand store
+  const { 
+    youthProfiles, 
+    loading, 
+    error, 
+    fetchYouthProfiles 
+  } = useYouthStore();
   
-  // Close snackbar
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
-  
-  // Fetch youth profiles
+  // Fetch youth profiles on component mount
   useEffect(() => {
-    const fetchYouthProfiles = async () => {
-      setLoading(true);
-      setError(null);
-      
-      try {
-        console.log('Fetching youth profiles...');
-        let youthQuery;
+    const loadProfiles = async () => {
+      if (currentUser && userRole) {
+        await fetchYouthProfiles(currentUser.uid, userRole);
         
-        // If user is a foster parent, only fetch youth assigned to them
-        if (userRole === 'foster_parent' && currentUser) {
-          console.log('Fetching youth for foster parent:', currentUser.uid);
-          youthQuery = query(
-            collection(db, 'youth_profiles'),
-            where('fosterParentId', '==', currentUser.uid)
-          );
-        } else {
-          // Admin and workers can see all youth
-          console.log('Fetching all youth profiles');
-          youthQuery = collection(db, 'youth_profiles');
-        }
-        
-        const querySnapshot = await getDocs(youthQuery);
-        
-        const profiles = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as YouthProfile[];
-        
-        console.log(`Found ${profiles.length} youth profiles`);
-        setYouthProfiles(profiles);
-        setFilteredProfiles(profiles);
-        
-        if (profiles.length === 0) {
+        if (youthProfiles.length === 0) {
           showSnackbar('No youth profiles found', 'info');
         }
-      } catch (error: any) {
-        console.error('Error fetching youth profiles:', error);
-        setError('Failed to load youth profiles. Please try again.');
-        showSnackbar('Error loading youth profiles: ' + (error.message || 'Unknown error'), 'error');
-      } finally {
-        setLoading(false);
       }
     };
     
-    if (currentUser && userRole) {
-      fetchYouthProfiles();
-    } else {
-      setLoading(false);
-    }
-  }, [currentUser, userRole]);
+    loadProfiles();
+  }, [currentUser, userRole, fetchYouthProfiles, showSnackbar]);
+  
+  // Update filtered profiles when youth profiles change
+  useEffect(() => {
+    setFilteredProfiles(youthProfiles);
+  }, [youthProfiles]);
   
   // Handle search
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,6 +91,14 @@ const YouthProfiles: React.FC = () => {
     navigate('/youth-profiles/new');
   };
   
+  // Refresh youth profiles
+  const handleRefresh = async () => {
+    if (currentUser && userRole) {
+      await fetchYouthProfiles(currentUser.uid, userRole);
+      showSnackbar('Youth profiles refreshed', 'success');
+    }
+  };
+  
   // Calculate age from date of birth
   const calculateAge = (dob: string) => {
     const birthDate = new Date(dob);
@@ -159,13 +114,29 @@ const YouthProfiles: React.FC = () => {
     return age;
   };
   
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
+  // Render loading skeletons
+  const renderSkeletons = () => {
+    return Array(6).fill(0).map((_, index) => (
+      <Grid item xs={12} sm={6} md={4} key={`skeleton-${index}`}>
+        <Card>
+          <CardContent>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Skeleton variant="circular" width={40} height={40} sx={{ mr: 2 }} />
+              <Box sx={{ width: '100%' }}>
+                <Skeleton variant="text" width="80%" height={30} />
+                <Skeleton variant="text" width="40%" />
+              </Box>
+            </Box>
+            <Divider sx={{ my: 1 }} />
+            <Skeleton variant="text" width="60%" />
+          </CardContent>
+          <CardActions>
+            <Skeleton variant="rectangular" width="100%" height={36} />
+          </CardActions>
+        </Card>
+      </Grid>
+    ));
+  };
   
   return (
     <Box sx={{ p: 3 }}>
@@ -175,27 +146,45 @@ const YouthProfiles: React.FC = () => {
             {userRole === 'foster_parent' ? 'My Youth' : 'Youth Profiles'}
           </Typography>
           
-          {(userRole === 'admin' || userRole === 'worker') && (
-            <Button 
-              variant="contained" 
-              startIcon={<AddIcon />}
-              onClick={handleCreateYouth}
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button
+              variant="outlined"
+              startIcon={<RefreshIcon />}
+              onClick={handleRefresh}
+              disabled={loading}
+              aria-label="Refresh youth profiles"
             >
-              Add New Youth
+              Refresh
             </Button>
-          )}
+            
+            {(userRole === 'admin' || userRole === 'worker') && (
+              <Button 
+                variant="contained" 
+                startIcon={<AddIcon />}
+                onClick={handleCreateYouth}
+                aria-label="Add new youth profile"
+              >
+                Add New Youth
+              </Button>
+            )}
+          </Box>
         </Box>
         
         {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
+          <Alert 
+            severity="error" 
+            sx={{ mb: 3 }}
+            action={
+              <Button 
+                color="inherit" 
+                size="small" 
+                onClick={handleRefresh}
+              >
+                Retry
+              </Button>
+            }
+          >
             {error}
-            <Button 
-              size="small" 
-              sx={{ ml: 2 }} 
-              onClick={() => window.location.reload()}
-            >
-              Retry
-            </Button>
           </Alert>
         )}
         
@@ -211,11 +200,16 @@ const YouthProfiles: React.FC = () => {
                 <SearchIcon />
               </InputAdornment>
             ),
+            'aria-label': 'Search youth profiles',
           }}
           sx={{ mb: 3 }}
         />
         
-        {!error && filteredProfiles.length === 0 ? (
+        {loading ? (
+          <Grid container spacing={3}>
+            {renderSkeletons()}
+          </Grid>
+        ) : !error && filteredProfiles.length === 0 ? (
           <Paper elevation={0} sx={{ p: 4, textAlign: 'center', bgcolor: 'background.default' }}>
             <Typography align="center" color="textSecondary" variant="h6" sx={{ mb: 2 }}>
               No youth profiles found
@@ -245,7 +239,7 @@ const YouthProfiles: React.FC = () => {
         ) : (
           <Grid container spacing={3}>
             {filteredProfiles.map((youth) => (
-              <Grid component="div" item xs={12} sm={6} md={4} key={youth.id}>
+              <Grid item xs={12} sm={6} md={4} key={youth.id}>
                 <Card>
                   <CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -256,6 +250,7 @@ const YouthProfiles: React.FC = () => {
                           mr: 2
                         }}
                         disabled
+                        aria-hidden="true"
                       >
                         <PersonIcon />
                       </IconButton>
@@ -285,6 +280,7 @@ const YouthProfiles: React.FC = () => {
                       size="small" 
                       onClick={() => handleViewYouth(youth.id)}
                       fullWidth
+                      aria-label={`View profile of ${youth.first_name} ${youth.last_name}`}
                     >
                       View Profile
                     </Button>
@@ -295,18 +291,6 @@ const YouthProfiles: React.FC = () => {
           </Grid>
         )}
       </Paper>
-      
-      {/* Snackbar for notifications */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };
