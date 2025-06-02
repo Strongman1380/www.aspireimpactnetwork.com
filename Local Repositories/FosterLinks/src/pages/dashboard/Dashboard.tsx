@@ -205,82 +205,130 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
   const getDashboardContent = () => {
     if (loading) {
       return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: { xs: 2, sm: 4 } }}>
           <CircularProgress />
         </Box>
       );
     }
     
+    // Common card styles for consistency and better mobile experience
+    const cardStyles = {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+      '&:hover': {
+        transform: 'translateY(-4px)',
+        boxShadow: 4,
+      },
+    };
+    
+    const cardContentStyles = {
+      flexGrow: 1,
+      p: { xs: 2, sm: 3 },
+    };
+    
+    const cardActionStyles = {
+      p: { xs: 1.5, sm: 2 },
+      pt: 0,
+    };
+    
+    const statNumberStyles = {
+      fontSize: { xs: '1.75rem', sm: '2.125rem' },
+      fontWeight: 'bold',
+      my: 1,
+    };
+    
     switch (userRole) {
       case 'admin':
         return (
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={3}>
-              <Card>
-                <CardContent>
-                  <Typography color="textSecondary" gutterBottom>
+          <Grid container spacing={{ xs: 2, sm: 3 }}>
+            <Grid item xs={6} sm={6} md={3}>
+              <Card sx={cardStyles}>
+                <CardContent sx={cardContentStyles}>
+                  <Typography color="textSecondary" variant="body2" gutterBottom>
                     Users
                   </Typography>
-                  <Typography variant="h5" component="div">
+                  <Typography variant="h5" component="div" sx={statNumberStyles}>
                     {userCount !== null ? userCount : '...'}
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={() => handleNavigation('/user-management')}>
+                <CardActions sx={cardActionStyles}>
+                  <Button 
+                    size="small" 
+                    onClick={() => handleNavigation('/user-management')}
+                    fullWidth
+                    sx={{ textTransform: 'none' }}
+                  >
                     Manage Users
                   </Button>
                 </CardActions>
               </Card>
             </Grid>
             
-            <Grid item xs={12} md={6} lg={3}>
-              <Card>
-                <CardContent>
-                  <Typography color="textSecondary" gutterBottom>
+            <Grid item xs={6} sm={6} md={3}>
+              <Card sx={cardStyles}>
+                <CardContent sx={cardContentStyles}>
+                  <Typography color="textSecondary" variant="body2" gutterBottom>
                     Youth
                   </Typography>
-                  <Typography variant="h5" component="div">
+                  <Typography variant="h5" component="div" sx={statNumberStyles}>
                     {youthCount !== null ? youthCount : '...'}
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={() => handleNavigation('/youth-profiles')}>
+                <CardActions sx={cardActionStyles}>
+                  <Button 
+                    size="small" 
+                    onClick={() => handleNavigation('/youth-profiles')}
+                    fullWidth
+                    sx={{ textTransform: 'none' }}
+                  >
                     View Youth
                   </Button>
                 </CardActions>
               </Card>
             </Grid>
             
-            <Grid item xs={12} md={6} lg={3}>
-              <Card>
-                <CardContent>
-                  <Typography color="textSecondary" gutterBottom>
+            <Grid item xs={6} sm={6} md={3}>
+              <Card sx={cardStyles}>
+                <CardContent sx={cardContentStyles}>
+                  <Typography color="textSecondary" variant="body2" gutterBottom>
                     Foster Parents
                   </Typography>
-                  <Typography variant="h5" component="div">
+                  <Typography variant="h5" component="div" sx={statNumberStyles}>
                     {fosterParentCount !== null ? fosterParentCount : '...'}
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={() => handleNavigation('/foster-parents')}>
+                <CardActions sx={cardActionStyles}>
+                  <Button 
+                    size="small" 
+                    onClick={() => handleNavigation('/foster-parents')}
+                    fullWidth
+                    sx={{ textTransform: 'none' }}
+                  >
                     View Foster Parents
                   </Button>
                 </CardActions>
               </Card>
             </Grid>
             
-            <Grid item xs={12} md={6} lg={3}>
-              <Card>
-                <CardContent>
-                  <Typography color="textSecondary" gutterBottom>
+            <Grid item xs={6} sm={6} md={3}>
+              <Card sx={cardStyles}>
+                <CardContent sx={cardContentStyles}>
+                  <Typography color="textSecondary" variant="body2" gutterBottom>
                     Reports
                   </Typography>
-                  <Typography variant="h5" component="div">
+                  <Typography variant="h5" component="div" sx={statNumberStyles}>
                     {reportCount !== null ? reportCount : '...'}
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={() => handleNavigation('/reports')}>
+                <CardActions sx={cardActionStyles}>
+                  <Button 
+                    size="small" 
+                    onClick={() => handleNavigation('/reports')}
+                    fullWidth
+                    sx={{ textTransform: 'none' }}
+                  >
                     View Reports
                   </Button>
                 </CardActions>
@@ -288,7 +336,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
             </Grid>
             
             <Grid item xs={12}>
-              <Paper sx={{ p: 2 }}>
+              <Paper sx={{ p: { xs: 2, sm: 3 }, mt: { xs: 2, sm: 3 } }}>
                 <RecentActivity />
               </Paper>
             </Grid>
@@ -297,37 +345,47 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
         
       case 'worker':
         return (
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography color="textSecondary" gutterBottom>
+          <Grid container spacing={{ xs: 2, sm: 3 }}>
+            <Grid item xs={12} sm={6}>
+              <Card sx={cardStyles}>
+                <CardContent sx={cardContentStyles}>
+                  <Typography color="textSecondary" variant="body2" gutterBottom>
                     Assigned Youth
                   </Typography>
-                  <Typography variant="h5" component="div">
+                  <Typography variant="h5" component="div" sx={statNumberStyles}>
                     {assignedYouthCount !== null ? assignedYouthCount : '...'}
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={() => handleNavigation('/youth-profiles')}>
+                <CardActions sx={cardActionStyles}>
+                  <Button 
+                    size="small" 
+                    onClick={() => handleNavigation('/youth-profiles')}
+                    fullWidth
+                    sx={{ textTransform: 'none' }}
+                  >
                     View Youth
                   </Button>
                 </CardActions>
               </Card>
             </Grid>
             
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography color="textSecondary" gutterBottom>
+            <Grid item xs={12} sm={6}>
+              <Card sx={cardStyles}>
+                <CardContent sx={cardContentStyles}>
+                  <Typography color="textSecondary" variant="body2" gutterBottom>
                     Foster Parents
                   </Typography>
-                  <Typography variant="h5" component="div">
+                  <Typography variant="h5" component="div" sx={statNumberStyles}>
                     {fosterParentCount !== null ? fosterParentCount : '...'}
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={() => handleNavigation('/foster-parents')}>
+                <CardActions sx={cardActionStyles}>
+                  <Button 
+                    size="small" 
+                    onClick={() => handleNavigation('/foster-parents')}
+                    fullWidth
+                    sx={{ textTransform: 'none' }}
+                  >
                     View Foster Parents
                   </Button>
                 </CardActions>
@@ -335,7 +393,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
             </Grid>
             
             <Grid item xs={12}>
-              <Paper sx={{ p: 2 }}>
+              <Paper sx={{ p: { xs: 2, sm: 3 }, mt: { xs: 2, sm: 3 } }}>
                 <RecentActivity />
               </Paper>
             </Grid>
@@ -344,37 +402,47 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
         
       case 'foster_parent':
         return (
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography color="textSecondary" gutterBottom>
+          <Grid container spacing={{ xs: 2, sm: 3 }}>
+            <Grid item xs={12} sm={6}>
+              <Card sx={cardStyles}>
+                <CardContent sx={cardContentStyles}>
+                  <Typography color="textSecondary" variant="body2" gutterBottom>
                     Youth in Care
                   </Typography>
-                  <Typography variant="h5" component="div">
+                  <Typography variant="h5" component="div" sx={statNumberStyles}>
                     {youthCount !== null ? youthCount : '...'}
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={() => handleNavigation('/my-youth')}>
+                <CardActions sx={cardActionStyles}>
+                  <Button 
+                    size="small" 
+                    onClick={() => handleNavigation('/my-youth')}
+                    fullWidth
+                    sx={{ textTransform: 'none' }}
+                  >
                     View Youth
                   </Button>
                 </CardActions>
               </Card>
             </Grid>
             
-            <Grid item xs={12} md={6}>
-              <Card>
-                <CardContent>
-                  <Typography color="textSecondary" gutterBottom>
+            <Grid item xs={12} sm={6}>
+              <Card sx={cardStyles}>
+                <CardContent sx={cardContentStyles}>
+                  <Typography color="textSecondary" variant="body2" gutterBottom>
                     Medication Logs
                   </Typography>
-                  <Typography variant="h5" component="div">
+                  <Typography variant="h5" component="div" sx={statNumberStyles}>
                     {medicationLogCount !== null ? medicationLogCount : '...'}
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={() => handleNavigation('/logs')}>
+                <CardActions sx={cardActionStyles}>
+                  <Button 
+                    size="small" 
+                    onClick={() => handleNavigation('/logs')}
+                    fullWidth
+                    sx={{ textTransform: 'none' }}
+                  >
                     View Logs
                   </Button>
                 </CardActions>
@@ -382,7 +450,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
             </Grid>
             
             <Grid item xs={12}>
-              <Paper sx={{ p: 2 }}>
+              <Paper sx={{ p: { xs: 2, sm: 3 }, mt: { xs: 2, sm: 3 } }}>
                 <RecentActivity />
               </Paper>
             </Grid>
@@ -391,7 +459,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
         
       default:
         return (
-          <Typography>
+          <Typography sx={{ textAlign: 'center', py: 4 }}>
             Welcome to Foster Links. Please contact your administrator for access.
           </Typography>
         );
@@ -399,7 +467,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
   };
   
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {/* App Bar */}
       <AppBar
         position="fixed"
@@ -409,7 +477,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
           }),
-          ...(drawerOpen && {
+          ...(drawerOpen && !isMobile && {
             marginLeft: drawerWidth,
             width: `calc(100% - ${drawerWidth}px)`,
             transition: theme.transitions.create(['width', 'margin'], {
@@ -419,22 +487,38 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
           }),
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ 
+          pr: { xs: 1, sm: 2 }, // Reduce padding on small screens
+          minHeight: { xs: 56, sm: 64 } // Smaller toolbar on mobile
+        }}>
           <IconButton
             color="inherit"
-            aria-label="open drawer"
+            aria-label={drawerOpen ? "close drawer" : "open drawer"}
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2 }}
+            sx={{ mr: { xs: 1, sm: 2 } }}
           >
             <MenuIcon />
           </IconButton>
           
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          <Typography 
+            variant="h6" 
+            noWrap 
+            component="div" 
+            sx={{ 
+              flexGrow: 1,
+              fontSize: { xs: '1.1rem', sm: '1.25rem' } // Smaller font on mobile
+            }}
+          >
             Foster Links
           </Typography>
           
-          <IconButton color="inherit" onClick={handleLogout}>
+          <IconButton 
+            color="inherit" 
+            onClick={handleLogout}
+            aria-label="logout"
+            sx={{ ml: 1 }}
+          >
             <LogoutIcon />
           </IconButton>
         </Toolbar>
@@ -443,18 +527,30 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
       {/* Drawer */}
       <Drawer
         variant={isMobile ? "temporary" : "permanent"}
-        open={drawerOpen}
+        open={isMobile ? drawerOpen : true}
         onClose={isMobile ? handleDrawerToggle : undefined}
+        ModalProps={{
+          keepMounted: true, // Better mobile performance
+        }}
         sx={{
           width: drawerWidth,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
+            top: { xs: 0, sm: 'auto' }, // Full height on mobile
+            height: '100%',
           },
         }}
       >
-        <Toolbar />
+        <Toolbar 
+          sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'flex-end',
+            minHeight: { xs: 56, sm: 64 } // Match AppBar height
+          }}
+        />
         
         <Box sx={{ overflow: 'auto', mt: 2 }}>
           {currentUser && (
@@ -463,7 +559,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
                 {currentUser.displayName || currentUser.email}
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                {userRole?.charAt(0).toUpperCase() + userRole?.slice(1) || 'User'}
+                {userRole ? `${userRole.charAt(0).toUpperCase()}${userRole.slice(1).replace('_', ' ')}` : 'User'}
               </Typography>
             </Box>
           )}
@@ -473,7 +569,12 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
           <List>
             {navigationItems.map((item) => (
               <ListItem key={item} disablePadding>
-                <ListItemButton onClick={() => handleNavigation(getNavPath(item))}>
+                <ListItemButton 
+                  onClick={() => handleNavigation(getNavPath(item))}
+                  sx={{ 
+                    py: { xs: 1.5, sm: 1 }, // Taller touch targets on mobile
+                  }}
+                >
                   <ListItemIcon>
                     {getNavIcon(item)}
                   </ListItemIcon>
@@ -487,7 +588,10 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
           
           <List>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => handleNavigation('/theme-settings')}>
+              <ListItemButton 
+                onClick={() => handleNavigation('/theme-settings')}
+                sx={{ py: { xs: 1.5, sm: 1 } }}
+              >
                 <ListItemIcon>
                   <SettingsIcon />
                 </ListItemIcon>
@@ -497,7 +601,10 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
             
             {userRole === 'admin' && (
               <ListItem disablePadding>
-                <ListItemButton onClick={() => handleNavigation('/agency-settings')}>
+                <ListItemButton 
+                  onClick={() => handleNavigation('/agency-settings')}
+                  sx={{ py: { xs: 1.5, sm: 1 } }}
+                >
                   <ListItemIcon>
                     <SettingsIcon />
                   </ListItemIcon>
@@ -514,14 +621,33 @@ const Dashboard: React.FC<DashboardProps> = ({ navigationItems }) => {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          p: { xs: 2, sm: 3 }, // Less padding on mobile
+          width: '100%',
+          marginLeft: { sm: `${drawerWidth}px` },
+          transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
         }}
       >
-        <Toolbar /> {/* Spacer for fixed app bar */}
+        <Toolbar sx={{ minHeight: { xs: 56, sm: 64 } }} /> {/* Spacer for fixed app bar */}
         
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Typography variant="h4" gutterBottom>
+        <Container 
+          maxWidth="lg" 
+          sx={{ 
+            mt: { xs: 2, sm: 4 }, 
+            mb: { xs: 2, sm: 4 },
+            px: { xs: 1, sm: 2 } // Less padding on mobile
+          }}
+        >
+          <Typography 
+            variant="h4" 
+            gutterBottom
+            sx={{ 
+              fontSize: { xs: '1.5rem', sm: '2.125rem' }, // Smaller heading on mobile
+              mb: { xs: 2, sm: 3 }
+            }}
+          >
             Dashboard
           </Typography>
           
