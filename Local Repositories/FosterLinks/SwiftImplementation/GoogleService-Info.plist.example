@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Replace this file with the actual GoogleService-Info.plist from Firebase console -->
+	<key>API_KEY</key>
+	<string>AIzaSyCXda8i20YAmJsokhw_bHUpVnN-Codls6k</string>
+	<key>GCM_SENDER_ID</key>
+	<string>420676452183</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.yourcompany.FosterLinks</string>
+	<key>PROJECT_ID</key>
+	<string>fosterlinks-95182</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fosterlinks-95182.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:420676452183:ios:9cb9765cfc0393b086c812</string>
+</dict>
+</plist>
