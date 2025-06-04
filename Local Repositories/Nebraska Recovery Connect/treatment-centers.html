@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treatment Centers - Nebraska Treatment Connect</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css">
+</head>
+<body>
+    <!-- Crisis Support Banner -->
+    <div class="crisis-banner">
+        <div class="container">
+            <div class="crisis-content">
+                <i class="fas fa-phone"></i>
+                <span><strong>Crisis Support:</strong> National Suicide Prevention Lifeline <strong>988</strong> | SAMHSA National Helpline <strong>1-800-662-4357</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="hgi-stroke hgi-health"></i>
+                <h1>Nebraska Treatment Connect</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="treatment-centers.html" class="active">Treatment Centers</a></li>
+                    <li><a href="detox-centers.html">Detox Centers</a></li>
+                    <li><a href="halfway-houses.html">Halfway Houses</a></li>
+                    <li><a href="outpatient.html">Outpatient Services</a></li>
+                    <li><a href="provider-signin.html" class="provider-portal-btn">Provider Portal</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html">Home</a> / <span>Treatment Centers</span>
+                </div>
+                <h1>Residential Treatment Centers in Nebraska</h1>
+                <p>Find comprehensive inpatient treatment programs that provide 24/7 care and support for addiction and mental health recovery.</p>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section id="search-section" class="container">
+            <div class="search-header">
+                <h2>Find Treatment Centers Near You</h2>
+                <p>Search for residential treatment programs in Nebraska.</p>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-input" placeholder="Search by facility name, city, or zip code...">
+                </div>
+                <button id="search-btn">Search</button>
+            </div>
+            
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="treatment-type">Treatment Type</label>
+                    <select id="treatment-type">
+                        <option value="">All Types</option>
+                        <option value="Substance Abuse">Substance Abuse</option>
+                        <option value="Mental Health">Mental Health</option>
+                        <option value="Both">Both</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="age-group">Age Group</label>
+                    <select id="age-group">
+                        <option value="">All Ages</option>
+                        <option value="Adult">Adult (18+)</option>
+                        <option value="Juvenile">Youth (Under 18)</option>
+                        <option value="Both">Both</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="gender-served">Gender Served</label>
+                    <select id="gender-served">
+                        <option value="">All Genders</option>
+                        <option value="Male">Male Only</option>
+                        <option value="Female">Female Only</option>
+                        <option value="Co-ed">Co-ed</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="county">County</label>
+                    <select id="county">
+                        <option value="">All Counties</option>
+                        <option value="Adams">Adams</option>
+                        <option value="Box Butte">Box Butte</option>
+                        <option value="Dawson">Dawson</option>
+                        <option value="Douglas">Douglas</option>
+                        <option value="Hall">Hall</option>
+                        <option value="Holt">Holt</option>
+                        <option value="Lancaster">Lancaster</option>
+                        <option value="Lincoln">Lincoln</option>
+                        <option value="Madison">Madison</option>
+                        <option value="Platte">Platte</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="container">
+            <div class="results-header">
+                <div class="results-count">
+                    <span id="total-results-text">0</span> treatment centers found
+                </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="cards">
+                        <i class="fas fa-th-large"></i> Cards
+                    </button>
+                    <button class="view-btn" data-view="list">
+                        <i class="fas fa-list"></i> List
+                    </button>
+                </div>
+            </div>
+            <div id="facilities-list" class="cards-view">
+                <!-- Treatment center cards will be populated here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Nebraska Treatment Connect</h3>
+                    <p>Connecting people to the treatment and support they need for lasting recovery.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="footer-links.html">Resources</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Crisis Support</h4>
+                    <ul>
+                        <li>National Suicide Prevention Lifeline: <strong>988</strong></li>
+                        <li>SAMHSA National Helpline: <strong>1-800-662-4357</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Nebraska Treatment Connect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="treatment-centers-data.js"></script>
+    <script src="treatment-centers.js"></script>
+</body>
+</html>
