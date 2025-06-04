@@ -155,6 +155,7 @@ const MedicationLog: React.FC = () => {
   
   // Handle print functionality
   const handlePrint = useReactToPrint({
+    // @ts-ignore - The type definitions for react-to-print are outdated
     content: () => printRef.current,
     documentTitle: `Medication Log - ${youth?.first_name} ${youth?.last_name}`,
   });
@@ -201,7 +202,10 @@ const MedicationLog: React.FC = () => {
   };
   
   // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }> | 
+    { target: { name: string; value: unknown } }
+  ) => {
     const { name, value } = e.target;
     
     if (name === 'medicationId' && youth) {

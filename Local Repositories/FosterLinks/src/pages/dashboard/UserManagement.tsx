@@ -150,7 +150,10 @@ const UserManagement: React.FC = () => {
   };
   
   // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }> | 
+    { target: { name: string; value: unknown } }
+  ) => {
     const { name, value } = e.target;
     
     if (name) {
@@ -392,7 +395,7 @@ const UserManagement: React.FC = () => {
             </Grid>
             
             {isNewUser && (
-              <Grid component="div" item xs={12}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Password"

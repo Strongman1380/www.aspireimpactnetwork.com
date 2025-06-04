@@ -143,7 +143,10 @@ const FosterParents: React.FC = () => {
   };
   
   // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }> | 
+    { target: { name: string; value: unknown } }
+  ) => {
     const { name, value } = e.target;
     
     if (name) {

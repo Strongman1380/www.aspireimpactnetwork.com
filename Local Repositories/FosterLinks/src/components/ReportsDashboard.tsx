@@ -161,7 +161,10 @@ const ReportsDashboard: React.FC = () => {
   };
   
   // Handle filter changes
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }> | 
+    { target: { name: string; value: unknown } }
+  ) => {
     const { name, value } = e.target;
     
     if (name) {
@@ -229,6 +232,7 @@ const ReportsDashboard: React.FC = () => {
   
   // Handle print functionality
   const handlePrint = useReactToPrint({
+    // @ts-ignore - The type definitions for react-to-print are outdated
     content: () => printRef.current,
     documentTitle: 'Foster Links Reports',
   });
