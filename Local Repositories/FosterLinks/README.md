@@ -2,6 +2,8 @@
 
 FosterLinks is a secure foster care management system designed for agencies, social workers, and foster parents. The application provides tools for managing youth profiles, medication logs, reports, and more.
 
+> **Security Note**: For proper security, this application requires user documents to be created in Firestore with appropriate roles assigned. The current implementation temporarily defaults users to the admin role if their document is not found, but this is for testing purposes only and should be replaced with proper user provisioning in production.
+
 ## Features
 
 - **User Role-Based Access**: Different interfaces and permissions for administrators, social workers, and foster parents
@@ -46,7 +48,14 @@ FosterLinks is a secure foster care management system designed for agencies, soc
 3. Set up Firebase:
    - Create a Firebase project
    - Enable Authentication, Firestore, and Storage
-   - Add your Firebase configuration to `src/firebase/firebase.ts`
+   - Create a `.env.local` file based on `.env.example` and add your Firebase configuration
+   - **Important**: After registering a user, you must create a corresponding document in the Firestore 'users' collection with the user's UID as the document ID. The document should contain at minimum:
+     ```
+     {
+       email: "user@example.com",
+       role: "admin" // or "worker" or "foster_parent"
+     }
+     ```
 
 4. Start the development server:
    ```
@@ -70,18 +79,24 @@ Builds the app for production to the `build` folder.
 ## Project Structure
 
 ```
-src/
-├── components/       # Reusable UI components
-├── contexts/         # React contexts (Auth, Theme, UI)
-├── firebase/         # Firebase configuration and utilities
-├── pages/            # Application pages
-│   ├── auth/         # Authentication pages
-│   ├── dashboard/    # Dashboard pages
-│   ├── settings/     # Settings pages
-│   └── youth/        # Youth profile pages
-├── store/            # Zustand state management
-├── utils/            # Utility functions
-└── App.tsx           # Main application component
+/
+├── scripts/          # Utility scripts for Firebase setup and testing
+├── src/              # Main React application source code
+│   ├── components/   # Reusable UI components
+│   ├── contexts/     # React contexts (Auth, Theme, UI)
+│   ├── firebase/     # Firebase configuration and utilities
+│   ├── pages/        # Application pages
+│   │   ├── auth/     # Authentication pages
+│   │   ├── dashboard/# Dashboard pages
+│   │   ├── settings/ # Settings pages
+│   │   └── youth/    # Youth profile pages
+│   ├── store/        # Zustand state management
+│   ├── utils/        # Utility functions
+│   └── App.tsx       # Main application component
+├── SwiftExample/     # Example Swift implementation for iOS
+├── SwiftImplementation/ # Full Swift implementation for iOS
+├── .env.example      # Template for environment variables
+└── firebase.json     # Firebase configuration
 ```
 
 ## Key Enhancements
@@ -92,7 +107,11 @@ src/
 4. **State Management**: Global state management with Zustand
 5. **Offline Support**: Firebase offline persistence for working without internet
 6. **PWA Features**: Service worker for offline access and installable app
-7. **Enhanced Security**: Improved Firestore security rules with data validation
+7. **Enhanced Security**: 
+   - Secured Firebase configuration through environment variables
+   - Improved Firestore security rules with data validation
+   - Proper role-based authentication without insecure fallbacks
+   - Removed sensitive information from console logs
 8. **Comprehensive Testing**: Jest and React Testing Library tests
 9. **Accessibility Improvements**: ARIA labels and keyboard navigation
 10. **Performance Optimization**: Code splitting and optimized Firebase queries

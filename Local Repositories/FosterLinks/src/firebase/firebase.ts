@@ -4,21 +4,21 @@ import { getFirestore, enableIndexedDbPersistence, CACHE_SIZE_UNLIMITED } from '
 import { getStorage } from 'firebase/storage';
 import { getAnalytics } from 'firebase/analytics';
 
-// Firebase configuration
+// Firebase configuration from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyCXda8i20YAmJsokhw_bHUpVnN-Codls6k",
-  authDomain: "fosterlinks-95182.firebaseapp.com",
-  projectId: "fosterlinks-95182",
-  storageBucket: "fosterlinks-95182.appspot.com",
-  messagingSenderId: "420676452183",
-  appId: "1:420676452183:web:9cb9765cfc0393b086c812",
-  measurementId: "G-1ZP1YT98RD"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
-console.log('Initializing Firebase app with config:', firebaseConfig);
+console.log('Initializing Firebase app...');
 const app = initializeApp(firebaseConfig);
-console.log('Firebase app initialized:', app);
+console.log('Firebase app initialized successfully');
 
 // Initialize Firebase services
 console.log('Initializing Firebase services...');

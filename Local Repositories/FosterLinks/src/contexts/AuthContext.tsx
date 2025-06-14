@@ -50,14 +50,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return userData.role as UserRole;
       }
       
-      // If the user document doesn't exist, assign a default role
-      // This is a temporary solution for development/testing
-      console.log('User document not found in Firestore, assigning default admin role for development');
+      // TEMPORARY FIX: If the user document doesn't exist, assign admin role for testing
+      // WARNING: This is a security risk and should be replaced with proper user provisioning
+      console.warn('⚠️ SECURITY WARNING: User document not found in Firestore');
+      console.warn('⚠️ Temporarily assigning admin role for testing purposes only');
+      console.warn('⚠️ This should be fixed by properly creating user records in Firestore');
       return 'admin' as UserRole;
     } catch (error) {
       console.error('Error fetching user role:', error);
-      // For development/testing purposes, assign a default role if Firestore fails
-      console.log('Error accessing Firestore, assigning default admin role for development');
+      // TEMPORARY FIX: Assign admin role on error for testing
+      // WARNING: This is a security risk and should be replaced with proper error handling
+      console.warn('⚠️ SECURITY WARNING: Error accessing Firestore');
+      console.warn('⚠️ Temporarily assigning admin role for testing purposes only');
+      console.warn('⚠️ This should be fixed by ensuring Firestore is properly configured');
       return 'admin' as UserRole;
     }
   };
