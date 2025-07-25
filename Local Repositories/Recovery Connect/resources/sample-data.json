@@ -1,0 +1,92 @@
+{
+  "treatment": {
+    "treatment1": {
+      "name": "Sunrise Recovery Center",
+      "description": "A comprehensive inpatient treatment facility offering evidence-based care for substance use disorders. Our program includes medical detox, therapy, and holistic approaches to recovery.",
+      "location": "Portland, OR",
+      "phone": "555-123-4567",
+      "website": "https://example.com/sunrise",
+      "type": "inpatient",
+      "services": ["detox", "therapy", "aftercare", "family-support"]
+    },
+    "treatment2": {
+      "name": "New Horizons Outpatient",
+      "description": "Flexible outpatient services designed to fit your schedule while providing the support you need. Our team of specialists offers individual therapy, group sessions, and medication management.",
+      "location": "Seattle, WA",
+      "phone": "555-987-6543",
+      "website": "https://example.com/newhorizons",
+      "type": "outpatient",
+      "services": ["therapy", "medication-management", "group-support"]
+    },
+    "treatment3": {
+      "name": "Valley Recovery House",
+      "description": "A supportive sober living environment that bridges the gap between intensive treatment and independent living. Our structured program helps residents build life skills while maintaining sobriety.",
+      "location": "Eugene, OR",
+      "phone": "555-789-0123",
+      "website": "https://example.com/valleyrecovery",
+      "type": "sober-living",
+      "services": ["housing", "peer-support", "life-skills", "job-placement"]
+    }
+  },
+  "resources": {
+    "resource1": {
+      "title": "Understanding Addiction Workbook",
+      "description": "A comprehensive workbook for individuals seeking to understand the nature of addiction and develop strategies for recovery.",
+      "url": "https://example.com/workbook",
+      "category": "self-help",
+      "tags": ["education", "workbook", "coping-skills"]
+    },
+    "resource2": {
+      "title": "Family Support Guide",
+      "description": "Resources for family members of individuals in recovery, including communication strategies and self-care practices.",
+      "url": "https://example.com/family",
+      "category": "family",
+      "tags": ["family", "support", "communication"]
+    },
+    "resource3": {
+      "title": "Mindfulness Meditation App",
+      "description": "A free app offering guided meditations specifically designed for individuals in recovery.",
+      "url": "https://example.com/mindfulness",
+      "category": "tool",
+      "tags": ["meditation", "stress-reduction", "app"]
+    }
+  },
+  "stories": {
+    "story1": {
+      "title": "Finding Hope After Ten Years",
+      "author": "Michael R.",
+      "excerpt": "After a decade of struggling with alcohol addiction, I found a path to recovery that changed everything.",
+      "content": "I spent ten years of my life in a cycle of alcohol abuse that I couldn't seem to break. Every morning I would wake up with the same regret, the same promises to myself, and by evening, the same behaviors would return. It wasn't until I lost my job and nearly my family that I finally admitted I needed help.\n\nThe journey wasn't easy. I went through detox, then intensive outpatient therapy, and finally found a community of people who understood what I was going through. The tools I learned in therapy—identifying triggers, developing coping mechanisms, practicing mindfulness—gradually became part of my daily routine.\n\nToday, I'm five years sober. I've rebuilt my career, restored trust with my family, and found purpose in mentoring others who are just beginning their recovery journey. If you're struggling right now, please know that change is possible. It won't happen overnight, but with the right support and commitment, you can find your way to a life beyond addiction.",
+      "dateSubmitted": "2023-03-15T14:32:00.000Z",
+      "published": true
+    },
+    "story2": {
+      "title": "Recovery as a Single Parent",
+      "author": "Jessica T.",
+      "excerpt": "Balancing recovery with the responsibilities of single parenthood taught me strength I never knew I had.",
+      "content": "When I entered recovery for prescription drug addiction, my biggest fear was failing my two young children. As a single parent, I had no partner to lean on, and the guilt of how my addiction had already affected my kids was overwhelming.\n\nMy journey began with intensive outpatient treatment. I was fortunate to find a program that offered childcare, which made it possible for me to attend regular sessions. Learning to process my emotions without substance use while still managing the daily stress of parenting was incredibly challenging.\n\nWhat made the difference for me was connecting with other parents in recovery. We shared childcare, offered each other emotional support, and celebrated both recovery milestones and parenting victories. I also found that being honest with my children, in age-appropriate ways, helped heal our relationship.\n\nThree years into recovery, I can say that the skills I've learned have made me a better parent. I'm present with my children in ways I never could be before. My recovery hasn't just saved my life—it's given my children the mother they deserve.",
+      "dateSubmitted": "2023-05-22T09:17:00.000Z",
+      "published": true
+    }
+  },
+  "crisis": {
+    "crisis1": {
+      "name": "National Suicide Prevention Lifeline",
+      "description": "24/7, free and confidential support for people in distress, prevention and crisis resources for you or your loved ones.",
+      "phone": "988 or 1-800-273-8255",
+      "textLine": null
+    },
+    "crisis2": {
+      "name": "Crisis Text Line",
+      "description": "Text-based crisis support. Connect with a trained crisis counselor to receive free, 24/7 crisis support via text message.",
+      "phone": null,
+      "textLine": "Text HOME to 741741"
+    },
+    "crisis3": {
+      "name": "SAMHSA's National Helpline",
+      "description": "Treatment referral and information service (in English and Spanish) for individuals and families facing mental and/or substance use disorders.",
+      "phone": "1-800-662-4357",
+      "textLine": null
+    }
+  }
+}

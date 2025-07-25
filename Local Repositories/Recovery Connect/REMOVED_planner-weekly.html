@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Recovery Planner - Recovery Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --primary-coral: #f97316;
+            --primary-amber: #f59e0b;
+            --secondary-purple: #8b5cf6;
+            --secondary-pink: #ec4899;
+            --accent-lime: #84cc16;
+            --neutral-dark: #0f172a;
+            --neutral-medium: #334155;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+            --shadow-brutal: 8px 8px 0px #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--neutral-light);
+            padding: 2rem;
+        }
+
+        .planner-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+        }
+
+        .header h1 {
+            font-family: 'Figtree', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .week-selector {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .week-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .week-button {
+            background: var(--primary-teal);
+            color: white;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .week-button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .week-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--neutral-dark);
+        }
+
+        .planner-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .planner-section {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+        }
+
+        .section-title {
+            font-family: 'Figtree', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neutral-dark);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .weekly-calendar {
+            grid-column: 1 / -1;
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--neutral-dark);
+            border: 3px solid var(--neutral-dark);
+        }
+
+        .calendar-header {
+            background: var(--primary-teal);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+        }
+
+        .calendar-day {
+            background: white;
+            padding: 1rem;
+            min-height: 150px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background: var(--neutral-light);
+        }
+
+        .calendar-day.today {
+            background: var(--primary-amber);
+            color: white;
+        }
+
+        .day-number {
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-events {
+            font-size: 0.8rem;
+        }
+
+        .event-item {
+            background: var(--primary-coral);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            margin-bottom: 0.2rem;
+            border-radius: 2px;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        .event-item.appointment {
+            background: var(--secondary-purple);
+        }
+
+        .event-item.selfcare {
+            background: var(--accent-lime);
+        }
+
+        .goals-list {
+            list-style: none;
+        }
+
+        .goal-item {
+            background: var(--neutral-light);
+            border: 2px solid var(--neutral-dark);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .goal-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-teal);
+            margin-right: 1rem;
+        }
+
+        .goal-text {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .goal-text.completed {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .goal-remove {
+            background: var(--primary-coral);
+            color: white;
+            border: 2px solid var(--neutral-dark);
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .add-item {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .add-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 3px solid var(--neutral-dark);
+            font-family: 'Figtree', sans-serif;
+        }
+
+        .add-input:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+        }
+
+        .add-button {
+            background: var(--primary-teal);
+            color: white;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .add-button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .selfcare-checklist {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .selfcare-item {
+            background: var(--neutral-light);
+            border: 2px solid var(--neutral-dark);
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .selfcare-item:hover {
+            background: var(--primary-teal);
+            color: white;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .selfcare-item.completed {
+            background: var(--accent-lime);
+            color: white;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .selfcare-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-overview {
+            grid-column: 1 / -1;
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary-teal);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .progress-chart {
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .chart-bars {
+            display: flex;
+            justify-content: space-around;
+            align-items: end;
+            height: 200px;
+            margin: 2rem 0;
+        }
+
+        .chart-bar {
+            background: var(--primary-teal);
+            border: 2px solid var(--neutral-dark);
+            width: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            align-items: center;
+            position: relative;
+        }
+
+        .bar-value {
+            background: var(--neutral-dark);
+            color: white;
+            padding: 0.3rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            position: absolute;
+            top: -30px;
+        }
+
+        .bar-label {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--primary-teal);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--neutral-dark);
+        }
+
+        .btn-success {
+            background: var(--accent-lime);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .modal h3 {
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--neutral-dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.8rem;
+            border: 3px solid var(--neutral-dark);
+            font-family: 'Figtree', sans-serif;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .planner-container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 2rem;
+            }
+            
+            .planner-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-day {
+                min-height: 100px;
+            }
+            
+            .week-selector {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .progress-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .selfcare-checklist {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="planner-container">
+        <div class="header">
+            <h1><i class="fas fa-tasks"></i> Weekly Recovery Planner</h1>
+            <p>Plan your recovery activities, appointments, and self-care routines with this comprehensive weekly planning tool.</p>
+        </div>
+
+        <div class="week-selector">
+            <div class="week-nav">
+                <button class="week-button" onclick="changeWeek(-1)">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div class="week-display" id="weekDisplay">
+                    Week of January 1, 2025
+                </div>
+                <button class="week-button" onclick="changeWeek(1)">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <button class="week-button" onclick="goToCurrentWeek()">
+                Current Week
+            </button>
+        </div>
+
+        <div class="weekly-calendar">
+            <div class="section-title">
+                <i class="fas fa-calendar-alt"></i>
+                Weekly Calendar
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendar will be generated here -->
+            </div>
+        </div>
+
+        <div class="planner-grid">
+            <div class="planner-section">
+                <div class="section-title">
+                    <i class="fas fa-bullseye"></i>
+                    Weekly Goals
+                </div>
+                <ul class="goals-list" id="goalsList">
+                    <!-- Goals will be added here -->
+                </ul>
+                <div class="add-item">
+                    <input type="text" class="add-input" id="newGoal" placeholder="Add a recovery goal for this week...">
+                    <button class="add-button" onclick="addGoal()">Add</button>
+                </div>
+            </div>
+
+            <div class="planner-section">
+                <div class="section-title">
+                    <i class="fas fa-heart"></i>
+                    Self-Care Checklist
+                </div>
+                <div class="selfcare-checklist" id="selfcareChecklist">
+                    <!-- Self-care items will be generated here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-overview">
+            <div class="section-title">
+                <i class="fas fa-chart-line"></i>
+                Progress Overview
+            </div>
+            <div class="progress-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="goalsCompleted">0</div>
+                    <div class="stat-label">Goals Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="appointmentsScheduled">0</div>
+                    <div class="stat-label">Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="selfcareCompleted">0</div>
+                    <div class="stat-label">Self-Care Items</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="weeklyScore">0%</div>
+                    <div class="stat-label">Week Score</div>
+                </div>
+            </div>
+            <div class="progress-chart">
+                <h4>Weekly Completion Rate</h4>
+                <div class="chart-bars" id="chartBars">
+                    <!-- Chart bars will be generated here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-success" onclick="savePlanner()">
+                <i class="fas fa-save"></i> Save Plan
+            </button>
+            <button class="btn btn-secondary" onclick="exportPlanner()">
+                <i class="fas fa-download"></i> Export Plan
+            </button>
+            <button class="btn btn-secondary" onclick="shareWeek()">
+                <i class="fas fa-share"></i> Share Week
+            </button>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <h3>Add Event</h3>
+            <form class="modal-form" id="eventForm">
+                <div class="form-group">
+                    <label for="eventTitle">Event Title</label>
+                    <input type="text" id="eventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventType">Event Type</label>
+                    <select id="eventType">
+                        <option value="appointment">Appointment</option>
+                        <option value="selfcare">Self-Care</option>
+                        <option value="meeting">Meeting</option>
+                        <option value="therapy">Therapy</option>
+                        <option value="support">Support Group</option>
+                        <option value="personal">Personal</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="eventTime">Time</label>
+                    <input type="time" id="eventTime">
+                </div>
+                <div class="form-group">
+                    <label for="eventNotes">Notes</label>
+                    <textarea id="eventNotes" rows="3"></textarea>
+                </div>
+            </form>
+            <div class="modal-actions">
+                <button class="btn btn-success" onclick="saveEvent()">Save Event</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem;">
+        <a href="recovery-tools.html" class="btn btn-secondary">BACK TO TOOLS</a>
+    </div>
+
+    <script>
+        // Planner data structure
+        let plannerData = {
+            weeks: {}, // Week key -> week data
+            templates: {
+                selfcare: [
+                    { id: 'meditation', title: 'Meditation', icon: 'fas fa-om' },
+                    { id: 'exercise', title: 'Exercise', icon: 'fas fa-dumbbell' },
+                    { id: 'journal', title: 'Journaling', icon: 'fas fa-book' },
+                    { id: 'nature', title: 'Time in Nature', icon: 'fas fa-tree' },
+                    { id: 'friends', title: 'Connect with Friends', icon: 'fas fa-users' },
+                    { id: 'hobby', title: 'Pursue Hobby', icon: 'fas fa-palette' },
+                    { id: 'rest', title: 'Adequate Rest', icon: 'fas fa-bed' },
+                    { id: 'nutrition', title: 'Healthy Nutrition', icon: 'fas fa-apple-alt' }
+                ]
+            }
+        };
+
+        let currentWeekStart = null;
+        let selectedDay = null;
+
+        function initializePlanner() {
+            loadPlannerData();
+            goToCurrentWeek();
+            generateSelfcareChecklist();
+            updateDisplay();
+        }
+
+        function goToCurrentWeek() {
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0 = Sunday
+            const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Calculate Monday of current week
+            
+            currentWeekStart = new Date(today);
+            currentWeekStart.setDate(today.getDate() + mondayOffset);
+            currentWeekStart.setHours(0, 0, 0, 0);
+            
+            updateWeekDisplay();
+            generateCalendar();
+            loadWeekData();
+        }
+
+        function changeWeek(direction) {
+            currentWeekStart.setDate(currentWeekStart.getDate() + (direction * 7));
+            updateWeekDisplay();
+            generateCalendar();
+            loadWeekData();
+        }
+
+        function updateWeekDisplay() {
+            const endDate = new Date(currentWeekStart);
+            endDate.setDate(currentWeekStart.getDate() + 6);
+            
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const startStr = currentWeekStart.toLocaleDateString('en-US', options);
+            const endStr = endDate.toLocaleDateString('en-US', options);
+            
+            document.getElementById('weekDisplay').textContent = `${startStr} - ${endStr}`;
+        }
+
+        function generateCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            grid.innerHTML = '';
+            
+            // Add headers
+            days.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+            
+            // Add day cells
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(currentWeekStart);
+                dayDate.setDate(currentWeekStart.getDate() + i);
+                
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-day';
+                dayCell.onclick = () => openEventModal(dayDate);
+                
+                // Check if it's today
+                const today = new Date();
+                if (dayDate.toDateString() === today.toDateString()) {
+                    dayCell.classList.add('today');
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = dayDate.getDate();
+                
+                const dayEvents = document.createElement('div');
+                dayEvents.className = 'day-events';
+                
+                // Load events for this day
+                const weekKey = getWeekKey(currentWeekStart);
+                const weekData = plannerData.weeks[weekKey];
+                if (weekData && weekData.events) {
+                    const dayKey = dayDate.toISOString().split('T')[0];
+                    const events = weekData.events[dayKey] || [];
+                    
+                    events.forEach(event => {
+                        const eventEl = document.createElement('div');
+                        eventEl.className = `event-item ${event.type}`;
+                        eventEl.textContent = event.title;
+                        dayEvents.appendChild(eventEl);
+                    });
+                }
+                
+                dayCell.appendChild(dayNumber);
+                dayCell.appendChild(dayEvents);
+                grid.appendChild(dayCell);
+            }
+        }
+
+        function generateSelfcareChecklist() {
+            const checklist = document.getElementById('selfcareChecklist');
+            
+            checklist.innerHTML = plannerData.templates.selfcare.map(item => `
+                <div class="selfcare-item" data-id="${item.id}" onclick="toggleSelfcare('${item.id}')">
+                    <div class="selfcare-icon">
+                        <i class="${item.icon}"></i>
+                    </div>
+                    <div>${item.title}</div>
+                </div>
+            `).join('');
+        }
+
+        function loadWeekData() {
+            const weekKey = getWeekKey(currentWeekStart);
+            const weekData = plannerData.weeks[weekKey] || {
+                goals: [],
+                events: {},
+                selfcare: {},
+                completed: {}
+            };
+            
+            // Load goals
+            loadGoals(weekData.goals);
+            
+            // Load self-care completion status
+            loadSelfcareStatus(weekData.selfcare);
+            
+            // Update stats
+            updateStats(weekData);
+        }
+
+        function loadGoals(goals) {
+            const goalsList = document.getElementById('goalsList');
+            
+            goalsList.innerHTML = goals.map((goal, index) => `
+                <li class="goal-item">
+                    <input type="checkbox" class="goal-checkbox" ${goal.completed ? 'checked' : ''} 
+                           onchange="toggleGoal(${index})">
+                    <span class="goal-text ${goal.completed ? 'completed' : ''}" onclick="toggleGoal(${index})">
+                        ${goal.text}
+                    </span>
+                    <button class="goal-remove" onclick="removeGoal(${index})">×</button>
+                </li>
+            `).join('');
+        }
+
+        function loadSelfcareStatus(selfcareData) {
+            document.querySelectorAll('.selfcare-item').forEach(item => {
+                const id = item.dataset.id;
+                if (selfcareData[id]) {
+                    item.classList.add('completed');
+                } else {
+                    item.classList.remove('completed');
+                }
+            });
+        }
+
+        function addGoal() {
+            const goalInput = document.getElementById('newGoal');
+            const goalText = goalInput.value.trim();
+            
+            if (!goalText) {
+                alert('Please enter a goal.');
+                return;
+            }
+            
+            const weekKey = getWeekKey(currentWeekStart);
+            if (!plannerData.weeks[weekKey]) {
+                plannerData.weeks[weekKey] = { goals: [], events: {}, selfcare: {}, completed: {} };
+            }
+            
+            plannerData.weeks[weekKey].goals.push({
+                text: goalText,
+                completed: false,
+                created: new Date().toISOString()
+            });
+            
+            goalInput.value = '';
+            loadGoals(plannerData.weeks[weekKey].goals);
+            updateStats(plannerData.weeks[weekKey]);
+            savePlannerData();
+        }
+
+        function toggleGoal(index) {
+            const weekKey = getWeekKey(currentWeekStart);
+            const weekData = plannerData.weeks[weekKey];
+            
+            if (weekData && weekData.goals[index]) {
+                weekData.goals[index].completed = !weekData.goals[index].completed;
+                loadGoals(weekData.goals);
+                updateStats(weekData);
+                savePlannerData();
+            }
+        }
+
+        function removeGoal(index) {
+            const weekKey = getWeekKey(currentWeekStart);
+            const weekData = plannerData.weeks[weekKey];
+            
+            if (weekData && weekData.goals[index]) {
+                weekData.goals.splice(index, 1);
+                loadGoals(weekData.goals);
+                updateStats(weekData);
+                savePlannerData();
+            }
+        }
+
+        function toggleSelfcare(id) {
+            const weekKey = getWeekKey(currentWeekStart);
+            if (!plannerData.weeks[weekKey]) {
+                plannerData.weeks[weekKey] = { goals: [], events: {}, selfcare: {}, completed: {} };
+            }
+            
+            const weekData = plannerData.weeks[weekKey];
+            weekData.selfcare[id] = !weekData.selfcare[id];
+            
+            loadSelfcareStatus(weekData.selfcare);
+            updateStats(weekData);
+            savePlannerData();
+        }
+
+        function openEventModal(date) {
+            selectedDay = date;
+            document.getElementById('eventModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('eventModal').classList.remove('show');
+            document.getElementById('eventForm').reset();
+            selectedDay = null;
+        }
+
+        function saveEvent() {
+            if (!selectedDay) return;
+            
+            const title = document.getElementById('eventTitle').value.trim();
+            const type = document.getElementById('eventType').value;
+            const time = document.getElementById('eventTime').value;
+            const notes = document.getElementById('eventNotes').value.trim();
+            
+            if (!title) {
+                alert('Please enter an event title.');
+                return;
+            }
+            
+            const weekKey = getWeekKey(currentWeekStart);
+            if (!plannerData.weeks[weekKey]) {
+                plannerData.weeks[weekKey] = { goals: [], events: {}, selfcare: {}, completed: {} };
+            }
+            
+            const dayKey = selectedDay.toISOString().split('T')[0];
+            if (!plannerData.weeks[weekKey].events[dayKey]) {
+                plannerData.weeks[weekKey].events[dayKey] = [];
+            }
+            
+            plannerData.weeks[weekKey].events[dayKey].push({
+                title,
+                type,
+                time,
+                notes,
+                created: new Date().toISOString()
+            });
+            
+            generateCalendar();
+            updateStats(plannerData.weeks[weekKey]);
+            savePlannerData();
+            closeModal();
+        }
+
+        function updateStats(weekData) {
+            const goalsCompleted = weekData.goals.filter(g => g.completed).length;
+            const totalEvents = Object.values(weekData.events).flat().length;
+            const selfcareCompleted = Object.values(weekData.selfcare).filter(Boolean).length;
+            const totalSelfcare = plannerData.templates.selfcare.length;
+            
+            document.getElementById('goalsCompleted').textContent = `${goalsCompleted}/${weekData.goals.length}`;
+            document.getElementById('appointmentsScheduled').textContent = totalEvents;
+            document.getElementById('selfcareCompleted').textContent = `${selfcareCompleted}/${totalSelfcare}`;
+            
+            // Calculate week score
+            const totalItems = weekData.goals.length + totalSelfcare;
+            const completedItems = goalsCompleted + selfcareCompleted;
+            const weekScore = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+            
+            document.getElementById('weeklyScore').textContent = `${weekScore}%`;
+            
+            updateProgressChart(weekData);
+        }
+
+        function updateProgressChart(weekData) {
+            const chartBars = document.getElementById('chartBars');
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            
+            chartBars.innerHTML = days.map((day, index) => {
+                const dayDate = new Date(currentWeekStart);
+                dayDate.setDate(currentWeekStart.getDate() + index);
+                const dayKey = dayDate.toISOString().split('T')[0];
+                
+                const eventsCount = weekData.events[dayKey] ? weekData.events[dayKey].length : 0;
+                const height = Math.max(10, eventsCount * 20); // Minimum height of 10px
+                
+                return `
+                    <div class="chart-bar" style="height: ${height}px;">
+                        <div class="bar-value">${eventsCount}</div>
+                    </div>
+                    <div class="bar-label">${day}</div>
+                `;
+            }).join('');
+        }
+
+        function getWeekKey(weekStart) {
+            return weekStart.toISOString().split('T')[0];
+        }
+
+        function savePlanner() {
+            savePlannerData();
+            showToast('Weekly plan saved successfully!');
+        }
+
+        function exportPlanner() {
+            const weekKey = getWeekKey(currentWeekStart);
+            const weekData = plannerData.weeks[weekKey] || {};
+            
+            const exportData = {
+                week: weekKey,
+                data: weekData,
+                exported: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `weekly-plan-${weekKey}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('Weekly plan exported successfully!');
+        }
+
+        function shareWeek() {
+            const weekKey = getWeekKey(currentWeekStart);
+            const weekData = plannerData.weeks[weekKey] || {};
+            
+            const shareText = `My Recovery Plan for ${document.getElementById('weekDisplay').textContent}:
+            
+Goals: ${weekData.goals.length} planned
+Events: ${Object.values(weekData.events).flat().length} scheduled
+Self-Care: ${Object.values(weekData.selfcare).filter(Boolean).length}/${plannerData.templates.selfcare.length} completed
+
+#RecoveryJourney #WeeklyPlanning`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Weekly Recovery Plan',
+                    text: shareText
+                });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showToast('Weekly plan copied to clipboard!');
+                });
+            }
+        }
+
+        function loadPlannerData() {
+            const saved = localStorage.getItem('weeklyPlannerData');
+            if (saved) {
+                plannerData = { ...plannerData, ...JSON.parse(saved) };
+            }
+        }
+
+        function savePlannerData() {
+            localStorage.setItem('weeklyPlannerData', JSON.stringify(plannerData));
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--primary-teal);
+                color: white;
+                padding: 1rem 2rem;
+                border: 3px solid var(--neutral-dark);
+                box-shadow: var(--shadow-brutal);
+                z-index: 1001;
+                font-weight: 600;
+                max-width: 300px;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize planner when page loads
+        document.addEventListener('DOMContentLoaded', initializePlanner);
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

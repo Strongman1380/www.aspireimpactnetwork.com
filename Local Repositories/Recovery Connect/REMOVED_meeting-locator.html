@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Locator - Recovery Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --primary-coral: #f97316;
+            --primary-amber: #f59e0b;
+            --secondary-purple: #8b5cf6;
+            --secondary-pink: #ec4899;
+            --accent-lime: #84cc16;
+            --neutral-dark: #0f172a;
+            --neutral-medium: #334155;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+            --shadow-brutal: 8px 8px 0px #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--neutral-light);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-section {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--neutral-dark);
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .input-group input, .input-group select {
+            padding: 1rem;
+            border: 3px solid var(--neutral-dark);
+            background: var(--neutral-light);
+            font-size: 1rem;
+            font-family: 'Figtree', sans-serif;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            box-shadow: 4px 4px 0px var(--primary-teal);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: var(--primary-teal);
+            color: white;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .btn-secondary {
+            background: var(--primary-coral);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 2px solid var(--neutral-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-teal);
+            color: white;
+        }
+
+        .meetings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .meeting-card {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .meeting-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 10px 10px 0px var(--neutral-dark);
+        }
+
+        .meeting-type {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--primary-teal);
+            color: white;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .meeting-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+        }
+
+        .meeting-details {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .meeting-details div {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meeting-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .online-badge {
+            background: var(--accent-lime);
+        }
+
+        .hybrid-badge {
+            background: var(--secondary-purple);
+        }
+
+        .in-person-badge {
+            background: var(--primary-coral);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .quick-link {
+            background: var(--primary-amber);
+            color: white;
+            padding: 1.5rem;
+            text-decoration: none;
+            font-weight: 700;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            transition: all 0.3s ease;
+            text-align: center;
+            display: block;
+        }
+
+        .quick-link:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+            color: white;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                justify-content: center;
+            }
+            
+            .meetings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-map-marker-alt"></i> Meeting Locator</h1>
+            <p>Find local and online support group meetings in your area. Connect with others who understand your journey and access the support you need.</p>
+        </div>
+
+        <div class="search-section">
+            <div class="search-grid">
+                <div class="input-group">
+                    <label for="location">Location (City, State or ZIP)</label>
+                    <input type="text" id="location" placeholder="Enter your location">
+                </div>
+                <div class="input-group">
+                    <label for="distance">Distance</label>
+                    <select id="distance">
+                        <option value="5">5 miles</option>
+                        <option value="10" selected>10 miles</option>
+                        <option value="25">25 miles</option>
+                        <option value="50">50 miles</option>
+                        <option value="100">100 miles</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="day">Day of Week</label>
+                    <select id="day">
+                        <option value="">All Days</option>
+                        <option value="sunday">Sunday</option>
+                        <option value="monday">Monday</option>
+                        <option value="tuesday">Tuesday</option>
+                        <option value="wednesday">Wednesday</option>
+                        <option value="thursday">Thursday</option>
+                        <option value="friday">Friday</option>
+                        <option value="saturday">Saturday</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="time">Time of Day</label>
+                    <select id="time">
+                        <option value="">Any Time</option>
+                        <option value="morning">Morning (6AM-12PM)</option>
+                        <option value="afternoon">Afternoon (12PM-6PM)</option>
+                        <option value="evening">Evening (6PM-10PM)</option>
+                        <option value="late">Late (10PM+)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn" onclick="searchMeetings()">
+                <i class="fas fa-search"></i> Find Meetings
+            </button>
+        </div>
+
+        <div class="filters">
+            <div class="filter-btn active" data-filter="all">All Meetings</div>
+            <div class="filter-btn" data-filter="aa">Alcoholics Anonymous</div>
+            <div class="filter-btn" data-filter="na">Narcotics Anonymous</div>
+            <div class="filter-btn" data-filter="online">Online Only</div>
+            <div class="filter-btn" data-filter="in-person">In-Person Only</div>
+            <div class="filter-btn" data-filter="newcomer">Newcomer Friendly</div>
+        </div>
+
+        <div id="meetingsContainer">
+            <div class="empty-state">
+                <h3>Find Support Meetings Near You</h3>
+                <p>Enter your location above to find local and online support group meetings. We'll show you the closest meetings that match your preferences.</p>
+                <button class="btn" onclick="getMyLocation()">
+                    <i class="fas fa-location-arrow"></i> Use My Current Location
+                </button>
+            </div>
+        </div>
+
+        <div class="quick-links">
+            <a href="https://www.aa.org/find-aa" class="quick-link" target="_blank">
+                <i class="fas fa-external-link-alt"></i><br>
+                Official AA Meeting Finder
+            </a>
+            <a href="https://www.na.org/meetingsearch/" class="quick-link" target="_blank">
+                <i class="fas fa-external-link-alt"></i><br>
+                Official NA Meeting Search
+            </a>
+            <a href="https://al-anon.org/al-anon-meetings/" class="quick-link" target="_blank">
+                <i class="fas fa-external-link-alt"></i><br>
+                Al-Anon Family Groups
+            </a>
+            <a href="https://www.smartrecovery.org/local/" class="quick-link" target="_blank">
+                <i class="fas fa-external-link-alt"></i><br>
+                SMART Recovery Meetings
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Sample meeting data - in a real app, this would come from an API
+        const sampleMeetings = [
+            {
+                id: 1,
+                name: "Downtown Recovery Group",
+                type: "AA",
+                format: "in-person",
+                day: "monday",
+                time: "7:00 PM",
+                duration: "1 hour",
+                location: "Community Center, 123 Main St",
+                city: "Downtown",
+                description: "Open discussion meeting welcoming all levels of recovery",
+                tags: ["newcomer-friendly", "open-discussion"],
+                contact: "(555) 123-4567"
+            },
+            {
+                id: 2,
+                name: "Digital Recovery Circle",
+                type: "NA",
+                format: "online",
+                day: "tuesday",
+                time: "8:00 PM",
+                duration: "90 minutes",
+                location: "Zoom Meeting",
+                city: "Online",
+                description: "Virtual meeting for those who cannot attend in-person",
+                tags: ["online", "discussion"],
+                contact: "digitalrecovery@email.com",
+                meetingLink: "https://zoom.us/j/1234567890"
+            },
+            {
+                id: 3,
+                name: "Morning Meditation & Recovery",
+                type: "AA",
+                format: "hybrid",
+                day: "wednesday",
+                time: "7:00 AM",
+                duration: "45 minutes",
+                location: "Sunrise Church, 456 Oak Ave",
+                city: "Westside",
+                description: "Start your day with meditation and recovery discussion",
+                tags: ["meditation", "morning", "newcomer-friendly"],
+                contact: "(555) 987-6543"
+            },
+            {
+                id: 4,
+                name: "Young People in Recovery",
+                type: "AA",
+                format: "in-person",
+                day: "friday",
+                time: "7:30 PM",
+                duration: "1 hour",
+                location: "Youth Center, 789 Pine St",
+                city: "Eastside",
+                description: "Meeting specifically for young adults in recovery (18-35)",
+                tags: ["young-people", "discussion"],
+                contact: "(555) 456-7890"
+            },
+            {
+                id: 5,
+                name: "Weekend Warriors",
+                type: "NA",
+                format: "in-person",
+                day: "saturday",
+                time: "10:00 AM",
+                duration: "1 hour",
+                location: "Library Conference Room, 321 Cedar Dr",
+                city: "Northside",
+                description: "Saturday morning meeting for weekend support",
+                tags: ["weekend", "open-discussion"],
+                contact: "(555) 234-5678"
+            }
+        ];
+
+        let filteredMeetings = sampleMeetings;
+        let currentFilter = 'all';
+
+        function searchMeetings() {
+            const location = document.getElementById('location').value;
+            const distance = document.getElementById('distance').value;
+            const day = document.getElementById('day').value;
+            const time = document.getElementById('time').value;
+
+            // Filter meetings based on search criteria
+            filteredMeetings = sampleMeetings.filter(meeting => {
+                let matchesDay = !day || meeting.day === day;
+                let matchesTime = !time || checkTimeMatch(meeting.time, time);
+                
+                return matchesDay && matchesTime;
+            });
+
+            // Apply current filter
+            applyFilter(currentFilter);
+            displayMeetings(filteredMeetings);
+
+            if (location) {
+                showToast(`Searching for meetings near ${location}...`);
+            }
+        }
+
+        function checkTimeMatch(meetingTime, timeFilter) {
+            const hour = parseInt(meetingTime.split(':')[0]);
+            const isPM = meetingTime.includes('PM');
+            const actualHour = isPM && hour !== 12 ? hour + 12 : hour;
+
+            switch (timeFilter) {
+                case 'morning': return actualHour >= 6 && actualHour < 12;
+                case 'afternoon': return actualHour >= 12 && actualHour < 18;
+                case 'evening': return actualHour >= 18 && actualHour < 22;
+                case 'late': return actualHour >= 22 || actualHour < 6;
+                default: return true;
+            }
+        }
+
+        function applyFilter(filter) {
+            currentFilter = filter;
+            
+            if (filter === 'all') {
+                // filteredMeetings already set by search
+                return;
+            }
+
+            filteredMeetings = filteredMeetings.filter(meeting => {
+                switch (filter) {
+                    case 'aa': return meeting.type === 'AA';
+                    case 'na': return meeting.type === 'NA';
+                    case 'online': return meeting.format === 'online';
+                    case 'in-person': return meeting.format === 'in-person';
+                    case 'newcomer': return meeting.tags.includes('newcomer-friendly');
+                    default: return true;
+                }
+            });
+        }
+
+        function displayMeetings(meetings) {
+            const container = document.getElementById('meetingsContainer');
+            
+            if (meetings.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Meetings Found</h3>
+                        <p>Try adjusting your search criteria or explore online meetings that are available anytime.</p>
+                        <button class="btn" onclick="resetSearch()">Reset Search</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="meetings-grid">
+                    ${meetings.map(meeting => createMeetingCard(meeting)).join('')}
+                </div>
+            `;
+        }
+
+        function createMeetingCard(meeting) {
+            const formatBadgeClass = meeting.format === 'online' ? 'online-badge' : 
+                                   meeting.format === 'hybrid' ? 'hybrid-badge' : 'in-person-badge';
+            
+            return `
+                <div class="meeting-card">
+                    <div class="meeting-type ${formatBadgeClass}">${meeting.type} - ${meeting.format.toUpperCase()}</div>
+                    <h3 class="meeting-name">${meeting.name}</h3>
+                    <div class="meeting-details">
+                        <div><i class="fas fa-calendar"></i> ${meeting.day.charAt(0).toUpperCase() + meeting.day.slice(1)}s at ${meeting.time}</div>
+                        <div><i class="fas fa-clock"></i> ${meeting.duration}</div>
+                        <div><i class="fas fa-map-marker-alt"></i> ${meeting.location}</div>
+                        ${meeting.contact ? `<div><i class="fas fa-phone"></i> ${meeting.contact}</div>` : ''}
+                    </div>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">${meeting.description}</p>
+                    <div class="meeting-actions">
+                        ${meeting.meetingLink ? `<a href="${meeting.meetingLink}" class="btn btn-small" target="_blank"><i class="fas fa-video"></i> Join Online</a>` : ''}
+                        <button class="btn btn-small btn-secondary" onclick="addToCalendar('${meeting.name}', '${meeting.day}', '${meeting.time}')">
+                            <i class="fas fa-calendar-plus"></i> Add to Calendar
+                        </button>
+                        <button class="btn btn-small" onclick="getDirections('${meeting.location}')">
+                            <i class="fas fa-directions"></i> Directions
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getMyLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        document.getElementById('location').value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                        searchMeetings();
+                        showToast('Location detected! Searching for nearby meetings...');
+                    },
+                    (error) => {
+                        showToast('Unable to get your location. Please enter it manually.');
+                    }
+                );
+            } else {
+                showToast('Geolocation is not supported by this browser.');
+            }
+        }
+
+        function addToCalendar(name, day, time) {
+            // Create calendar event data
+            const eventData = {
+                title: name,
+                start: `${day} ${time}`,
+                description: 'Recovery support group meeting'
+            };
+            
+            showToast(`Calendar event created for ${name}`);
+        }
+
+        function getDirections(location) {
+            const encodedLocation = encodeURIComponent(location);
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        function resetSearch() {
+            document.getElementById('location').value = '';
+            document.getElementById('distance').value = '10';
+            document.getElementById('day').value = '';
+            document.getElementById('time').value = '';
+            
+            filteredMeetings = sampleMeetings;
+            applyFilter('all');
+            displayMeetings(filteredMeetings);
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--primary-teal);
+                color: white;
+                padding: 1rem 2rem;
+                border: 3px solid var(--neutral-dark);
+                box-shadow: 4px 4px 0px var(--neutral-dark);
+                z-index: 1000;
+                font-weight: 600;
+                max-width: 300px;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 3000);
+        }
+
+        // Event listeners
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filter = btn.dataset.filter;
+                filteredMeetings = sampleMeetings.filter(meeting => {
+                    // Apply search filters first
+                    const location = document.getElementById('location').value;
+                    const day = document.getElementById('day').value;
+                    const time = document.getElementById('time').value;
+                    
+                    let matchesDay = !day || meeting.day === day;
+                    let matchesTime = !time || checkTimeMatch(meeting.time, time);
+                    
+                    return matchesDay && matchesTime;
+                });
+                
+                applyFilter(filter);
+                displayMeetings(filteredMeetings);
+            });
+        });
+
+        // Initialize with sample data
+        displayMeetings(sampleMeetings);
+    </script>
+</body>
+</html>

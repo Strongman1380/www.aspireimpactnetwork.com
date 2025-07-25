@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdrawal Timeline Guide - Recovery Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --primary-coral: #f97316;
+            --primary-amber: #f59e0b;
+            --secondary-purple: #8b5cf6;
+            --secondary-pink: #ec4899;
+            --accent-lime: #84cc16;
+            --neutral-dark: #0f172a;
+            --neutral-medium: #334155;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+            --shadow-brutal: 8px 8px 0px #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--neutral-light);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .disclaimer {
+            background: var(--primary-coral);
+            color: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .disclaimer h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .substance-selector {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .selector-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .substance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .substance-btn {
+            padding: 1.5rem;
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .substance-btn:hover, .substance-btn.active {
+            background: var(--primary-teal);
+            color: white;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .timeline-container {
+            display: none;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--neutral-dark);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-content {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            width: 45%;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: 55%;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: 55%;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            top: 2rem;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-teal);
+            border: 4px solid var(--neutral-dark);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            z-index: 1;
+        }
+
+        .timeline-phase {
+            background: var(--primary-teal);
+            color: white;
+            padding: 0.5rem 1rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .timeline-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+        }
+
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .symptom-item {
+            background: var(--neutral-light);
+            border: 2px solid var(--neutral-dark);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .symptom-severity {
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 0.5rem;
+        }
+
+        .severe { color: var(--primary-coral); }
+        .moderate { color: var(--primary-amber); }
+        .mild { color: var(--accent-lime); }
+
+        .coping-strategies {
+            background: var(--accent-lime);
+            color: white;
+            border: 3px solid var(--neutral-dark);
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .coping-strategies h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .coping-strategies ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .coping-strategies li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .warning-signs {
+            background: var(--primary-coral);
+            color: white;
+            border: 3px solid var(--neutral-dark);
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .warning-signs h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .support-section {
+            background: var(--secondary-purple);
+            color: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .support-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .support-item {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            padding: 1.5rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: var(--primary-teal);
+            color: white;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+            color: white;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+                margin-right: 0 !important;
+            }
+            
+            .timeline-marker {
+                left: 20px;
+            }
+            
+            .substance-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-calendar-alt"></i> Withdrawal Timeline Guide</h1>
+            <p>Understanding what to expect during withdrawal can help you prepare and stay committed to your recovery journey. Knowledge is power in recovery.</p>
+        </div>
+
+        <div class="disclaimer">
+            <h3><i class="fas fa-exclamation-triangle"></i> Important Medical Disclaimer</h3>
+            <p>This information is for educational purposes only and should not replace professional medical advice. Withdrawal can be dangerous and potentially life-threatening. Always consult with a healthcare professional or addiction specialist before beginning withdrawal, especially for alcohol, benzodiazepines, or other substances that may require medical supervision.</p>
+            <div style="margin-top: 1rem;">
+                <strong>Emergency: Call 911 | Crisis Line: 988 | SAMHSA: 1-800-662-4357</strong>
+            </div>
+        </div>
+
+        <div class="substance-selector">
+            <h3 class="selector-title">Select Substance Type</h3>
+            <div class="substance-grid">
+                <div class="substance-btn" data-substance="alcohol">
+                    <i class="fas fa-wine-glass"></i><br>Alcohol
+                </div>
+                <div class="substance-btn" data-substance="opioids">
+                    <i class="fas fa-pills"></i><br>Opioids
+                </div>
+                <div class="substance-btn" data-substance="cocaine">
+                    <i class="fas fa-leaf"></i><br>Cocaine
+                </div>
+                <div class="substance-btn" data-substance="methamphetamine">
+                    <i class="fas fa-vials"></i><br>Methamphetamine
+                </div>
+                <div class="substance-btn" data-substance="nicotine">
+                    <i class="fas fa-smoking"></i><br>Nicotine
+                </div>
+                <div class="substance-btn" data-substance="benzodiazepines">
+                    <i class="fas fa-capsules"></i><br>Benzodiazepines
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-container" id="timelineContainer">
+            <div class="timeline" id="timeline">
+                <!-- Timeline will be generated here -->
+            </div>
+        </div>
+
+        <div class="support-section">
+            <h3 class="support-title">Professional Support Resources</h3>
+            <p>Withdrawal is safer and more successful with professional support. Don't go through this alone.</p>
+            
+            <div class="support-grid">
+                <div class="support-item">
+                    <h4><i class="fas fa-hospital"></i> Medical Detox</h4>
+                    <p>24/7 medical supervision for safe withdrawal management</p>
+                </div>
+                <div class="support-item">
+                    <h4><i class="fas fa-user-md"></i> Addiction Medicine</h4>
+                    <p>Specialists trained in addiction treatment and withdrawal</p>
+                </div>
+                <div class="support-item">
+                    <h4><i class="fas fa-phone"></i> Crisis Support</h4>
+                    <p>Immediate help when you need it most</p>
+                </div>
+                <div class="support-item">
+                    <h4><i class="fas fa-users"></i> Support Groups</h4>
+                    <p>Peer support from others who understand</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <a href="emergency-support.html" class="btn">
+                    <i class="fas fa-life-ring"></i> Get Emergency Support
+                </a>
+                <a href="meeting-locator.html" class="btn" style="background: var(--primary-coral);">
+                    <i class="fas fa-search"></i> Find Support Groups
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const withdrawalTimelines = {
+            alcohol: [
+                {
+                    phase: "6-12 Hours",
+                    title: "Early Withdrawal",
+                    symptoms: [
+                        { name: "Anxiety", severity: "mild" },
+                        { name: "Tremors", severity: "mild" },
+                        { name: "Headache", severity: "moderate" },
+                        { name: "Nausea", severity: "moderate" },
+                        { name: "Sweating", severity: "mild" },
+                        { name: "Irritability", severity: "moderate" }
+                    ],
+                    description: "Initial symptoms begin as alcohol leaves your system. This is when most people start to feel uncomfortable.",
+                    coping: [
+                        "Stay hydrated with water and electrolytes",
+                        "Rest as much as possible",
+                        "Eat light, nutritious foods",
+                        "Take vitamins (especially B-complex)",
+                        "Avoid caffeine and stimulants"
+                    ],
+                    warnings: [
+                        "Monitor for rapid heart rate",
+                        "Watch for severe shaking",
+                        "Seek help if vomiting prevents keeping fluids down"
+                    ]
+                },
+                {
+                    phase: "12-24 Hours",
+                    title: "Peak Acute Phase",
+                    symptoms: [
+                        { name: "Severe Anxiety", severity: "severe" },
+                        { name: "Hand Tremors", severity: "severe" },
+                        { name: "Rapid Heart Rate", severity: "severe" },
+                        { name: "High Blood Pressure", severity: "severe" },
+                        { name: "Confusion", severity: "moderate" },
+                        { name: "Hallucinations", severity: "severe" }
+                    ],
+                    description: "Symptoms peak and can become dangerous. This is the most critical period requiring medical supervision.",
+                    coping: [
+                        "SEEK MEDICAL ATTENTION IMMEDIATELY",
+                        "Do not attempt to manage alone",
+                        "Have someone stay with you",
+                        "Keep emergency numbers handy",
+                        "Follow medical protocols"
+                    ],
+                    warnings: [
+                        "Risk of seizures",
+                        "Delirium tremens (DTs) possible",
+                        "Life-threatening complications",
+                        "Requires immediate medical care"
+                    ]
+                },
+                {
+                    phase: "2-4 Days",
+                    title: "Acute Withdrawal",
+                    symptoms: [
+                        { name: "Anxiety", severity: "moderate" },
+                        { name: "Depression", severity: "moderate" },
+                        { name: "Fatigue", severity: "severe" },
+                        { name: "Mood Swings", severity: "moderate" },
+                        { name: "Sleep Problems", severity: "severe" },
+                        { name: "Concentration Issues", severity: "moderate" }
+                    ],
+                    description: "Physical symptoms begin to subside but psychological symptoms can be intense. Sleep and mood disturbances are common.",
+                    coping: [
+                        "Maintain medical supervision",
+                        "Focus on sleep hygiene",
+                        "Practice relaxation techniques",
+                        "Stay connected with support system",
+                        "Attend counseling sessions"
+                    ],
+                    warnings: [
+                        "Risk of severe depression",
+                        "Suicidal thoughts possible",
+                        "Still at risk for seizures",
+                        "Don't isolate yourself"
+                    ]
+                },
+                {
+                    phase: "1-2 Weeks",
+                    title: "Post-Acute Phase",
+                    symptoms: [
+                        { name: "Mild Anxiety", severity: "mild" },
+                        { name: "Cravings", severity: "moderate" },
+                        { name: "Sleep Issues", severity: "moderate" },
+                        { name: "Mood Changes", severity: "mild" },
+                        { name: "Cognitive Fog", severity: "moderate" },
+                        { name: "Low Energy", severity: "moderate" }
+                    ],
+                    description: "Most physical symptoms resolve, but psychological adjustment continues. This is when many people feel 'normal' but are still vulnerable.",
+                    coping: [
+                        "Establish healthy routines",
+                        "Join support groups",
+                        "Begin therapy or counseling",
+                        "Focus on nutrition and exercise",
+                        "Develop coping strategies"
+                    ],
+                    warnings: [
+                        "High risk of relapse",
+                        "Overconfidence can be dangerous",
+                        "PAWS may begin",
+                        "Continue professional support"
+                    ]
+                }
+            ],
+            opioids: [
+                {
+                    phase: "6-12 Hours",
+                    title: "Early Withdrawal",
+                    symptoms: [
+                        { name: "Muscle Aches", severity: "moderate" },
+                        { name: "Anxiety", severity: "moderate" },
+                        { name: "Runny Nose", severity: "mild" },
+                        { name: "Insomnia", severity: "moderate" },
+                        { name: "Sweating", severity: "mild" },
+                        { name: "Restlessness", severity: "moderate" }
+                    ],
+                    description: "Early symptoms feel like a severe flu. Discomfort increases as the drug leaves your system.",
+                    coping: [
+                        "Stay hydrated",
+                        "Use over-the-counter pain relief carefully",
+                        "Try warm baths for muscle aches",
+                        "Rest when possible",
+                        "Eat light, bland foods"
+                    ],
+                    warnings: [
+                        "Avoid driving",
+                        "Don't use other substances",
+                        "Monitor for dehydration",
+                        "Have support person available"
+                    ]
+                },
+                {
+                    phase: "1-3 Days",
+                    title: "Peak Withdrawal",
+                    symptoms: [
+                        { name: "Severe Muscle Pain", severity: "severe" },
+                        { name: "Nausea/Vomiting", severity: "severe" },
+                        { name: "Diarrhea", severity: "severe" },
+                        { name: "Dilated Pupils", severity: "moderate" },
+                        { name: "Severe Cravings", severity: "severe" },
+                        { name: "Depression", severity: "moderate" }
+                    ],
+                    description: "Symptoms peak and are most intense. This is the most difficult period but not typically life-threatening.",
+                    coping: [
+                        "Consider medical-assisted treatment",
+                        "Use comfort medications as prescribed",
+                        "Focus on hydration and electrolytes",
+                        "Practice breathing exercises",
+                        "Lean on support system heavily"
+                    ],
+                    warnings: [
+                        "High relapse risk",
+                        "Dehydration from vomiting/diarrhea",
+                        "Severe depression possible",
+                        "May need medical intervention"
+                    ]
+                },
+                {
+                    phase: "4-7 Days",
+                    title: "Improvement Phase",
+                    symptoms: [
+                        { name: "Fatigue", severity: "moderate" },
+                        { name: "Mood Swings", severity: "moderate" },
+                        { name: "Sleep Problems", severity: "moderate" },
+                        { name: "Muscle Aches", severity: "mild" },
+                        { name: "Anxiety", severity: "mild" },
+                        { name: "Cravings", severity: "moderate" }
+                    ],
+                    description: "Physical symptoms improve significantly. Energy returns gradually and mood begins to stabilize.",
+                    coping: [
+                        "Gradually increase activity",
+                        "Focus on nutrition",
+                        "Begin light exercise",
+                        "Start therapy or counseling",
+                        "Connect with recovery community"
+                    ],
+                    warnings: [
+                        "Don't overdo activities",
+                        "Cravings may return unexpectedly",
+                        "Be patient with recovery process",
+                        "Continue medical follow-up"
+                    ]
+                },
+                {
+                    phase: "1-4 Weeks",
+                    title: "Early Recovery",
+                    symptoms: [
+                        { name: "Mild Fatigue", severity: "mild" },
+                        { name: "Occasional Cravings", severity: "mild" },
+                        { name: "Sleep Normalization", severity: "mild" },
+                        { name: "Mood Stability", severity: "mild" },
+                        { name: "Cognitive Clearing", severity: "mild" },
+                        { name: "Increased Energy", severity: "mild" }
+                    ],
+                    description: "Most acute symptoms resolve. Focus shifts to psychological healing and building recovery foundation.",
+                    coping: [
+                        "Establish daily routines",
+                        "Engage in meaningful activities",
+                        "Build healthy relationships",
+                        "Practice stress management",
+                        "Celebrate milestones"
+                    ],
+                    warnings: [
+                        "PAWS may develop",
+                        "Overconfidence can lead to relapse",
+                        "Continue treatment engagement",
+                        "Be aware of triggers"
+                    ]
+                }
+            ],
+            nicotine: [
+                {
+                    phase: "1-3 Hours",
+                    title: "Initial Cravings",
+                    symptoms: [
+                        { name: "Cravings", severity: "moderate" },
+                        { name: "Irritability", severity: "mild" },
+                        { name: "Restlessness", severity: "mild" },
+                        { name: "Difficulty Concentrating", severity: "mild" },
+                        { name: "Anxiety", severity: "mild" },
+                        { name: "Hunger", severity: "mild" }
+                    ],
+                    description: "First cravings appear as nicotine levels drop. This is the beginning of the withdrawal process.",
+                    coping: [
+                        "Use nicotine replacement if planned",
+                        "Stay busy with activities",
+                        "Practice deep breathing",
+                        "Drink plenty of water",
+                        "Chew gum or use toothpicks"
+                    ],
+                    warnings: [
+                        "Don't substitute with other substances",
+                        "Avoid smoking triggers",
+                        "Have support plan ready",
+                        "Be patient with yourself"
+                    ]
+                },
+                {
+                    phase: "3-7 Days",
+                    title: "Peak Withdrawal",
+                    symptoms: [
+                        { name: "Intense Cravings", severity: "severe" },
+                        { name: "Irritability", severity: "severe" },
+                        { name: "Anxiety", severity: "moderate" },
+                        { name: "Mood Swings", severity: "moderate" },
+                        { name: "Sleep Problems", severity: "moderate" },
+                        { name: "Concentration Issues", severity: "moderate" }
+                    ],
+                    description: "Withdrawal symptoms peak. This is the most challenging time but symptoms are manageable with support.",
+                    coping: [
+                        "Use prescribed cessation aids",
+                        "Avoid triggers and high-risk situations",
+                        "Practice stress reduction techniques",
+                        "Get support from family/friends",
+                        "Reward yourself for milestones"
+                    ],
+                    warnings: [
+                        "High relapse risk",
+                        "May affect work performance",
+                        "Relationships may be strained",
+                        "Don't make major decisions"
+                    ]
+                },
+                {
+                    phase: "1-4 Weeks",
+                    title: "Gradual Improvement",
+                    symptoms: [
+                        { name: "Periodic Cravings", severity: "moderate" },
+                        { name: "Mood Changes", severity: "mild" },
+                        { name: "Sleep Improvement", severity: "mild" },
+                        { name: "Better Concentration", severity: "mild" },
+                        { name: "Increased Energy", severity: "mild" },
+                        { name: "Improved Taste/Smell", severity: "mild" }
+                    ],
+                    description: "Symptoms gradually improve. Many people notice improved energy, better sleep, and enhanced senses.",
+                    coping: [
+                        "Continue using cessation supports",
+                        "Develop new routines",
+                        "Find alternative stress relief",
+                        "Celebrate health improvements",
+                        "Stay connected to support system"
+                    ],
+                    warnings: [
+                        "Cravings can be triggered unexpectedly",
+                        "Social situations may be challenging",
+                        "Weight gain is common",
+                        "Don't become overconfident"
+                    ]
+                },
+                {
+                    phase: "1-3 Months",
+                    title: "Long-term Adjustment",
+                    symptoms: [
+                        { name: "Occasional Cravings", severity: "mild" },
+                        { name: "Stable Mood", severity: "mild" },
+                        { name: "Good Sleep", severity: "mild" },
+                        { name: "Clear Thinking", severity: "mild" },
+                        { name: "Better Physical Health", severity: "mild" },
+                        { name: "Improved Lung Function", severity: "mild" }
+                    ],
+                    description: "Most withdrawal symptoms resolve. Focus on maintaining quit and enjoying health benefits.",
+                    coping: [
+                        "Maintain healthy lifestyle changes",
+                        "Continue avoiding triggers",
+                        "Regular exercise and good nutrition",
+                        "Monitor for weight changes",
+                        "Celebrate long-term success"
+                    ],
+                    warnings: [
+                        "Remain vigilant about triggers",
+                        "Don't try 'just one'",
+                        "Stress can trigger cravings",
+                        "Continue support group participation"
+                    ]
+                }
+            ],
+            // Add other substances with similar detailed timelines...
+            cocaine: [
+                {
+                    phase: "1-3 Days",
+                    title: "Crash Phase",
+                    symptoms: [
+                        { name: "Severe Depression", severity: "severe" },
+                        { name: "Extreme Fatigue", severity: "severe" },
+                        { name: "Intense Cravings", severity: "severe" },
+                        { name: "Increased Appetite", severity: "moderate" },
+                        { name: "Sleep Disturbances", severity: "moderate" },
+                        { name: "Anxiety", severity: "moderate" }
+                    ],
+                    description: "The 'crash' after stopping cocaine use. Characterized by depression, fatigue, and intense cravings.",
+                    coping: [
+                        "Get plenty of sleep",
+                        "Eat nutritious meals regularly",
+                        "Stay hydrated",
+                        "Remove all drug paraphernalia",
+                        "Inform trusted people about your quit attempt"
+                    ],
+                    warnings: [
+                        "High suicide risk due to depression",
+                        "Extremely high relapse risk",
+                        "May need medical supervision",
+                        "Don't isolate yourself"
+                    ]
+                },
+                {
+                    phase: "4-7 Days",
+                    title: "Early Withdrawal",
+                    symptoms: [
+                        { name: "Depression", severity: "moderate" },
+                        { name: "Fatigue", severity: "moderate" },
+                        { name: "Cravings", severity: "severe" },
+                        { name: "Anxiety", severity: "moderate" },
+                        { name: "Irritability", severity: "moderate" },
+                        { name: "Sleep Problems", severity: "moderate" }
+                    ],
+                    description: "Depression and fatigue begin to lift slightly, but cravings remain intense.",
+                    coping: [
+                        "Attend counseling or therapy",
+                        "Join support groups",
+                        "Engage in light physical activity",
+                        "Practice mindfulness",
+                        "Avoid high-risk environments"
+                    ],
+                    warnings: [
+                        "Cravings can be overwhelming",
+                        "Depression may worsen temporarily",
+                        "High relapse risk continues",
+                        "May need antidepressant medication"
+                    ]
+                },
+                {
+                    phase: "1-4 Weeks",
+                    title: "Protracted Withdrawal",
+                    symptoms: [
+                        { name: "Mild Depression", severity: "mild" },
+                        { name: "Periodic Cravings", severity: "moderate" },
+                        { name: "Mood Swings", severity: "mild" },
+                        { name: "Cognitive Issues", severity: "mild" },
+                        { name: "Sleep Normalization", severity: "mild" },
+                        { name: "Energy Return", severity: "mild" }
+                    ],
+                    description: "Gradual improvement in mood and energy. Cognitive function begins to return to normal.",
+                    coping: [
+                        "Continue therapy and support groups",
+                        "Develop healthy coping strategies",
+                        "Build sober social network",
+                        "Focus on long-term goals",
+                        "Practice stress management"
+                    ],
+                    warnings: [
+                        "Triggers can cause sudden cravings",
+                        "Stress can worsen symptoms",
+                        "Don't underestimate addiction power",
+                        "Continue professional treatment"
+                    ]
+                }
+            ],
+            methamphetamine: [
+                {
+                    phase: "1-3 Days",
+                    title: "Initial Crash",
+                    symptoms: [
+                        { name: "Severe Fatigue", severity: "severe" },
+                        { name: "Depression", severity: "severe" },
+                        { name: "Intense Cravings", severity: "severe" },
+                        { name: "Increased Sleep", severity: "moderate" },
+                        { name: "Increased Appetite", severity: "moderate" },
+                        { name: "Anxiety", severity: "moderate" }
+                    ],
+                    description: "Crash phase with extreme fatigue and depression as the body recovers from methamphetamine use.",
+                    coping: [
+                        "Allow extra sleep",
+                        "Eat regular, nutritious meals",
+                        "Stay hydrated",
+                        "Remove all drug-related items",
+                        "Have 24/7 support available"
+                    ],
+                    warnings: [
+                        "Severe depression and suicidal thoughts",
+                        "Extremely high relapse risk",
+                        "May need medical monitoring",
+                        "Don't stay alone"
+                    ]
+                },
+                {
+                    phase: "4-10 Days",
+                    title: "Acute Withdrawal",
+                    symptoms: [
+                        { name: "Depression", severity: "moderate" },
+                        { name: "Fatigue", severity: "moderate" },
+                        { name: "Strong Cravings", severity: "severe" },
+                        { name: "Cognitive Issues", severity: "moderate" },
+                        { name: "Sleep Disturbances", severity: "moderate" },
+                        { name: "Mood Swings", severity: "moderate" }
+                    ],
+                    description: "Continued withdrawal symptoms with gradual improvement in energy and mood.",
+                    coping: [
+                        "Maintain medical supervision",
+                        "Attend intensive therapy",
+                        "Practice cognitive exercises",
+                        "Engage in light exercise",
+                        "Use prescribed medications as directed"
+                    ],
+                    warnings: [
+                        "Cognitive impairment may persist",
+                        "High risk of relapse",
+                        "Depression may require treatment",
+                        "Avoid stimulating environments"
+                    ]
+                },
+                {
+                    phase: "2-4 Weeks",
+                    title: "Extended Recovery",
+                    symptoms: [
+                        { name: "Mild Depression", severity: "mild" },
+                        { name: "Periodic Cravings", severity: "moderate" },
+                        { name: "Cognitive Improvement", severity: "mild" },
+                        { name: "Energy Restoration", severity: "mild" },
+                        { name: "Sleep Normalization", severity: "mild" },
+                        { name: "Mood Stabilization", severity: "mild" }
+                    ],
+                    description: "Gradual return to normal functioning. Brain chemistry slowly returns to baseline.",
+                    coping: [
+                        "Continue comprehensive treatment",
+                        "Build healthy daily routines",
+                        "Engage in recovery community",
+                        "Focus on nutrition and exercise",
+                        "Develop relapse prevention plan"
+                    ],
+                    warnings: [
+                        "Recovery is a long-term process",
+                        "Triggers can cause intense cravings",
+                        "Don't rush the healing process",
+                        "Continue professional support"
+                    ]
+                }
+            ],
+            benzodiazepines: [
+                {
+                    phase: "1-4 Days",
+                    title: "Early Withdrawal",
+                    symptoms: [
+                        { name: "Anxiety", severity: "moderate" },
+                        { name: "Insomnia", severity: "moderate" },
+                        { name: "Muscle Tension", severity: "mild" },
+                        { name: "Irritability", severity: "moderate" },
+                        { name: "Concentration Issues", severity: "mild" },
+                        { name: "Restlessness", severity: "moderate" }
+                    ],
+                    description: "Initial withdrawal symptoms appear. MEDICAL SUPERVISION IS ESSENTIAL as seizures are possible.",
+                    coping: [
+                        "MUST have medical supervision",
+                        "Follow prescribed tapering schedule",
+                        "Avoid alcohol and other drugs",
+                        "Stay in safe environment",
+                        "Have emergency contacts ready"
+                    ],
+                    warnings: [
+                        "LIFE-THREATENING SEIZURES POSSIBLE",
+                        "NEVER quit abruptly without medical help",
+                        "Requires specialized medical protocol",
+                        "May need hospitalization"
+                    ]
+                },
+                {
+                    phase: "5-14 Days",
+                    title: "Acute Phase",
+                    symptoms: [
+                        { name: "Severe Anxiety", severity: "severe" },
+                        { name: "Panic Attacks", severity: "severe" },
+                        { name: "Seizure Risk", severity: "severe" },
+                        { name: "Hallucinations", severity: "moderate" },
+                        { name: "Hypersensitivity", severity: "severe" },
+                        { name: "Memory Issues", severity: "moderate" }
+                    ],
+                    description: "Peak withdrawal period with highest risk of complications. Requires intensive medical management.",
+                    coping: [
+                        "Continuous medical monitoring required",
+                        "Follow medication protocols exactly",
+                        "Minimize stimulation (light, sound)",
+                        "Have seizure precautions in place",
+                        "Don't make important decisions"
+                    ],
+                    warnings: [
+                        "Highest seizure risk period",
+                        "Delirium possible",
+                        "Life-threatening complications",
+                        "Requires immediate medical attention for any worsening"
+                    ]
+                },
+                {
+                    phase: "2-8 Weeks",
+                    title: "Protracted Withdrawal",
+                    symptoms: [
+                        { name: "Anxiety", severity: "moderate" },
+                        { name: "Depression", severity: "moderate" },
+                        { name: "Sleep Problems", severity: "moderate" },
+                        { name: "Cognitive Issues", severity: "moderate" },
+                        { name: "Sensitivity to Stimuli", severity: "mild" },
+                        { name: "Mood Swings", severity: "mild" }
+                    ],
+                    description: "Extended withdrawal period. Symptoms may fluctuate and can last months. Patience is crucial.",
+                    coping: [
+                        "Continue medical follow-up",
+                        "Engage in therapy/counseling",
+                        "Practice stress reduction",
+                        "Join support groups",
+                        "Be patient with recovery process"
+                    ],
+                    warnings: [
+                        "Symptoms may persist for months",
+                        "Stress can worsen symptoms",
+                        "High relapse risk due to discomfort",
+                        "Don't expect quick resolution"
+                    ]
+                }
+            ]
+        };
+
+        function showTimeline(substance) {
+            const timeline = withdrawalTimelines[substance];
+            if (!timeline) return;
+
+            const container = document.getElementById('timeline');
+            container.innerHTML = timeline.map((phase, index) => `
+                <div class="timeline-item">
+                    <div class="timeline-marker">${index + 1}</div>
+                    <div class="timeline-content">
+                        <div class="timeline-phase">${phase.phase}</div>
+                        <h3 class="timeline-title">${phase.title}</h3>
+                        <p style="margin-bottom: 1rem; color: var(--text-secondary);">${phase.description}</p>
+                        
+                        <h4 style="margin-bottom: 1rem; color: var(--neutral-dark);">Common Symptoms:</h4>
+                        <div class="symptoms-grid">
+                            ${phase.symptoms.map(symptom => `
+                                <div class="symptom-item">
+                                    <div>${symptom.name}</div>
+                                    <div class="symptom-severity ${symptom.severity}">${symptom.severity.toUpperCase()}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="coping-strategies">
+                            <h4><i class="fas fa-heart"></i> Coping Strategies</h4>
+                            <ul>
+                                ${phase.coping.map(strategy => `<li><i class="fas fa-check"></i> ${strategy}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="warning-signs">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Warning Signs</h4>
+                            <ul>
+                                ${phase.warnings.map(warning => `<li><i class="fas fa-exclamation"></i> ${warning}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('timelineContainer').style.display = 'block';
+            document.getElementById('timelineContainer').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Event listeners
+        document.querySelectorAll('.substance-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.substance-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const substance = btn.dataset.substance;
+                showTimeline(substance);
+            });
+        });
+    </script>
+</body>
+</html>

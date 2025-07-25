@@ -1,0 +1,235 @@
+[
+  {
+    "id": 1,
+    "type": "Crisis Support Hotlines",
+    "title": "988 Suicide & Crisis Lifeline",
+    "contact": "Call or Text 988",
+    "description": "A 24/7, toll-free hotline connecting users to trained crisis counselors for emotional distress, substance use concerns, or suicidal thoughts. Offers Spanish-speaking counselors and interpretation in over 100 languages. Ideal for immediate crisis support and local resource referrals.",
+    "url": "https://988lifeline.org/",
+    "tags": ["suicide", "crisis", "substance use", "24/7", "multilingual"]
+  },
+  {
+    "id": 2,
+    "type": "Crisis Support Hotlines",
+    "title": "SAMHSA National Helpline",
+    "contact": "Phone: 1-800-662-HELP (4357), TTY: 1-800-487-4889",
+    "description": "A free, confidential, 24/7 service providing treatment referrals and information for substance use and mental health disorders. Connects users to local treatment facilities, support groups, and community organizations. Available in English and Spanish.",
+    "url": "https://www.samhsa.gov/find-help/national-helpline",
+    "tags": ["substance use", "mental health", "referrals", "24/7", "multilingual"]
+  },
+  {
+    "id": 3,
+    "type": "Crisis Support Hotlines",
+    "title": "Crisis Text Line",
+    "contact": "Text HOME to 741741",
+    "description": "A 24/7 text-based service connecting users with trained volunteer counselors for support with anxiety, depression, substance use, and other crises. Helps users move from distress to calm.",
+    "url": "https://www.crisistextline.org/",
+    "tags": ["text", "anxiety", "depression", "substance use", "24/7"]
+  },
+  {
+    "id": 4,
+    "type": "Crisis Support Hotlines",
+    "title": "National Mental Health Hotline",
+    "contact": "Phone: 866-903-3787",
+    "description": "A 24/7 hotline offering support for mental health crises, including those related to recovery, with guidance and resource referrals.",
+    "url": "https://mentalhealthhotline.org/",
+    "tags": ["mental health", "recovery", "referrals", "24/7"]
+  },
+  {
+    "id": 5,
+    "type": "Crisis Support Hotlines",
+    "title": "National Drug Helpline",
+    "contact": "Phone: 1-844-289-0879",
+    "description": "A 24/7, toll-free hotline providing support for substance use disorders, offering information and local resource connections.",
+    "url": "https://drughelpline.org/",
+    "tags": ["substance use", "drug addiction", "resources", "24/7"]
+  },
+  {
+    "id": 6,
+    "type": "Crisis Support Hotlines",
+    "title": "National Rehab Hotline",
+    "contact": "Phone: 866-210-1303",
+    "description": "A 24/7 service offering immediate assistance for substance use and mental health crises, with personalized safety plans and treatment referrals.",
+    "url": "https://nationalrehabhotline.org/",
+    "tags": ["substance use", "mental health", "safety plans", "treatment", "24/7"]
+  },
+  {
+    "id": 7,
+    "type": "Specialized Support Hotlines",
+    "title": "Veterans Crisis Line",
+    "contact": "Call: 988 (press 1) or 1-800-273-8255 (press 1), Text: 838255",
+    "description": "A 24/7 hotline for veterans, service members, and their families, offering support for substance use and mental health crises. Includes web chat and text options.",
+    "url": "https://www.veteranscrisisline.net/",
+    "tags": ["veterans", "military", "substance use", "mental health", "24/7"]
+  },
+  {
+    "id": 8,
+    "type": "Specialized Support Hotlines",
+    "title": "The Trevor Project",
+    "contact": "Phone: 1-866-488-7386",
+    "description": "A 24/7 service for LGBTQ+ youth, providing crisis intervention and support for substance use and identity-related issues. Offers phone, chat, and text options.",
+    "url": "https://www.thetrevorproject.org/",
+    "tags": ["LGBTQ+", "youth", "substance use", "identity", "24/7"]
+  },
+  {
+    "id": 9,
+    "type": "Specialized Support Hotlines",
+    "title": "Trans Lifeline",
+    "contact": "Phone: 1-877-565-8860",
+    "description": "A 24/7 peer-support hotline for transgender individuals, addressing substance use and mental health crises with culturally competent care.",
+    "url": "https://translifeline.org/",
+    "tags": ["transgender", "peer support", "substance use", "mental health", "24/7"]
+  },
+  {
+    "id": 10,
+    "type": "Specialized Support Hotlines",
+    "title": "Disaster Distress Helpline",
+    "contact": "Phone: 1-800-985-5990",
+    "description": "A 24/7 hotline for emotional distress related to disasters, offering multilingual support and referrals, which may impact recovery.",
+    "url": "https://www.samhsa.gov/find-help/disaster-distress-helpline",
+    "tags": ["disasters", "emotional distress", "referrals", "multilingual", "24/7"]
+  },
+  {
+    "id": 11,
+    "type": "Specialized Support Hotlines",
+    "title": "National Maternal Mental Health Hotline",
+    "contact": "Call or Text: 1-833-TLC-MAMA (1-833-852-6262)",
+    "description": "A 24/7 hotline providing free, confidential support and referrals for pregnant and postpartum mothers facing mental health challenges, including substance use.",
+    "url": "https://www.hhs.gov/about/news/2022/04/28/hhs-launches-new-maternal-mental-health-hotline.html",
+    "tags": ["maternal", "pregnancy", "postpartum", "mental health", "substance use", "24/7"]
+  },
+  {
+    "id": 12,
+    "type": "Treatment and Resource Locators",
+    "title": "FindTreatment.gov",
+    "description": "A confidential, anonymous online tool to find state-licensed treatment facilities for substance use disorders and mental health concerns. Users can filter by location, payment options, and service type.",
+    "url": "https://findtreatment.gov/",
+    "tags": ["treatment", "facilities", "substance use", "mental health", "locator"]
+  },
+  {
+    "id": 13,
+    "type": "Treatment and Resource Locators",
+    "title": "SAMHSA Behavioral Health Treatment Services Locator",
+    "description": "An online tool to locate treatment facilities for substance use and mental health disorders, offering filters for inpatient, outpatient, and telehealth services.",
+    "url": "https://findtreatment.samhsa.gov/",
+    "tags": ["treatment", "facilities", "substance use", "mental health", "inpatient", "outpatient", "telehealth"]
+  },
+  {
+    "id": 14,
+    "type": "Treatment and Resource Locators",
+    "title": "FindSupport.gov",
+    "description": "An online guide helping individuals navigate mental health and substance use support, with resources for starting the recovery journey.",
+    "url": "https://findsupport.gov/",
+    "tags": ["support", "mental health", "substance use", "recovery", "resources"]
+  },
+  {
+    "id": 15,
+    "type": "Treatment and Resource Locators",
+    "title": "StartYourRecovery.org",
+    "description": "A website offering resources on understanding addiction, treatment options, and recovery support, with tools to find local programs.",
+    "url": "https://startyourrecovery.org/",
+    "tags": ["addiction", "treatment", "recovery", "local programs", "resources"]
+  },
+
+  {
+    "id": 19,
+    "type": "Support Groups",
+    "title": "Alcoholics Anonymous (AA)",
+    "description": "A fellowship for alcohol recovery, with local meetings searchable online. Provides peer support through a 12-step program.",
+    "url": "https://www.aa.org/find-aa",
+    "tags": ["alcohol", "recovery", "12-step", "meetings", "peer support"]
+  },
+  {
+    "id": 20,
+    "type": "Support Groups",
+    "title": "Narcotics Anonymous (NA)",
+    "description": "A peer support program for drug recovery, with meeting information available online or via SAMHSA referrals.",
+    "url": "https://na.org/meetingsearch",
+    "tags": ["drugs", "recovery", "12-step", "meetings", "peer support"]
+  },
+  {
+    "id": 21,
+    "type": "Support Groups",
+    "title": "SMART Recovery",
+    "description": "A science-based, non-12-step program offering self-management and recovery training for substance use and behavioral addictions, with online and in-person meetings.",
+    "url": "https://www.smartrecovery.org/",
+    "tags": ["recovery", "non-12-step", "science-based", "meetings", "substance use", "behavioral addictions"]
+  },
+  {
+    "id": 22,
+    "type": "Recovery Stories",
+    "title": "Gina's Journey from Heroin Addiction",
+    "description": "Gina shares her 20-year struggle with heroin addiction, starting at age 13, and her recovery after a near-fatal fall, highlighting treatment's transformative power.",
+    "source": "Recovery Centers of America",
+    "url": "https://recoverycentersofamerica.com/blogs/living-recovery-true-stories-of-addiction-recovery/",
+    "tags": ["heroin", "addiction", "recovery", "treatment"]
+  },
+  {
+    "id": 23,
+    "type": "Recovery Stories",
+    "title": "Katie's Family-Inspired Sobriety",
+    "description": "Katie overcame alcohol addiction after a DUI at 22, inspired by her father's 35 years of sobriety, and now works as a counselor.",
+    "source": "Recovery Centers of America",
+    "url": "https://recoverycentersofamerica.com/blogs/living-recovery-true-stories-of-addiction-recovery/",
+    "tags": ["alcohol", "DUI", "sobriety", "family", "counseling"]
+  },
+  {
+    "id": 24,
+    "type": "Recovery Stories",
+    "title": "John Vance's Transformation",
+    "description": "John, once homeless and addicted to meth, found recovery and now helps others, demonstrating hope and community impact.",
+    "source": "Stand Together",
+    "url": "https://standtogether.org/stories/strong-safe-communities/addiction-recovery-stories-how-one-man-turned-addiction-into-hope",
+    "tags": ["meth", "homelessness", "recovery", "helping others"]
+  },
+  {
+    "id": 25,
+    "type": "Recovery Stories",
+    "title": "Ashleigh's Academic Recovery",
+    "description": "Ashleigh achieved sobriety after heroin addiction and graduated at the top of her class, showcasing academic and personal triumph.",
+    "source": "Just Think Twice",
+    "url": "https://www.justthinktwice.gov/true-stories",
+    "tags": ["heroin", "sobriety", "education", "success"]
+  },
+  {
+    "id": 26,
+    "type": "Recovery Stories",
+    "title": "Heather's Mental Health Triumph",
+    "description": "Heather recovered from depression and suicide attempts, finding purpose as a NAMI advocate.",
+    "source": "NAMI",
+    "url": "https://www.nami.org/anxiety-disorders/my-fight-for-recovery/",
+    "tags": ["depression", "suicide", "recovery", "advocacy"]
+  },
+  {
+    "id": 27,
+    "type": "Additional Resources",
+    "title": "National Institute on Drug Abuse (NIDA)",
+    "description": "Provides research-based information on drug addiction, treatment, and prevention, with resources for individuals and families.",
+    "url": "https://nida.nih.gov/",
+    "tags": ["drug addiction", "research", "treatment", "prevention", "resources"]
+  },
+  {
+    "id": 28,
+    "type": "Additional Resources",
+    "title": "National Institute on Alcohol Abuse and Alcoholism (NIAAA)",
+    "description": "Offers resources on alcohol use disorders, including screening tools and treatment navigators for recovery support.",
+    "url": "https://www.niaaa.nih.gov/",
+    "tags": ["alcohol", "screening tools", "treatment", "recovery"]
+  },
+  {
+    "id": 29,
+    "type": "Additional Resources",
+    "title": "MedlinePlus – Substance Use and Addiction",
+    "description": "An online health resource providing information on substance use disorders, treatment options, and recovery support in English and Spanish.",
+    "url": "https://medlineplus.gov/druguseandaddiction.html",
+    "tags": ["substance use", "treatment", "recovery", "multilingual", "information"]
+  },
+  {
+    "id": 30,
+    "type": "Additional Resources",
+    "title": "AddictionGuide.com",
+    "description": "Offers recovery resources specific to various substances, including forums, blogs, and recovery app recommendations.",
+    "url": "https://www.addictionguide.com/",
+    "tags": ["addiction", "recovery", "forums", "blogs", "apps"]
+  }
+]

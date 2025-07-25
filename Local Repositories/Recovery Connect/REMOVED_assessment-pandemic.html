@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Pandemic Mental Health Check-In - Recovery Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --primary-coral: #f97316;
+            --primary-amber: #f59e0b;
+            --secondary-purple: #8b5cf6;
+            --secondary-pink: #ec4899;
+            --accent-lime: #84cc16;
+            --neutral-dark: #0f172a;
+            --neutral-medium: #334155;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-brutal: 8px 8px 0px #0f172a;
+            --shadow-soft: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--neutral-light);
+            padding: 2rem;
+        }
+
+        .assessment-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-family: 'Figtree', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .question-card {
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        .question-number {
+            background: var(--primary-teal);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: inline-block;
+            border: 3px solid var(--neutral-dark);
+        }
+
+        .question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--neutral-dark);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option {
+            background: white;
+            border: 3px solid var(--neutral-dark);
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .option:hover {
+            background: var(--primary-teal);
+            color: white;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .option.selected {
+            background: var(--primary-coral);
+            color: white;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-teal);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-teal);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .btn:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--neutral-dark);
+        }
+
+        .progress-bar {
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            height: 20px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--primary-teal), var(--primary-coral));
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border: 6px solid var(--primary-teal);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem auto;
+            background: white;
+            box-shadow: var(--shadow-brutal);
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary-teal);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .score-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .interpretation {
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .interpretation h3 {
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .interpretation p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .recommendations {
+            background: white;
+            border: 3px solid var(--neutral-dark);
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .recommendations h3 {
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .recommendations li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--neutral-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .recommendations li::before {
+            content: "✓";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-teal);
+            color: white;
+            border: 2px solid var(--neutral-dark);
+            font-size: 0.7rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .assessment-container {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .score-circle {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .score-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="assessment-container">
+        <div class="header">
+            <h1><i class="fas fa-clipboard-check"></i> Post-Pandemic Mental Health Check-In</h1>
+            <p>This assessment helps evaluate your mental health status following pandemic-related stressors. Answer honestly - there are no right or wrong answers.</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div id="questions">
+            <!-- Questions will be generated here -->
+        </div>
+
+        <div class="navigation">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">Previous</button>
+            <span id="questionCounter">Question 1 of 10</span>
+            <button class="btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Your Mental Health Assessment Results</h2>
+            <div class="score-circle">
+                <div class="score-number" id="scoreNumber">0</div>
+                <div class="score-text">Total Score</div>
+            </div>
+            
+            <div class="interpretation" id="interpretation">
+                <!-- Interpretation will be populated based on score -->
+            </div>
+            
+            <div class="recommendations" id="recommendations">
+                <h3>Recommended Actions</h3>
+                <ul id="recommendationsList">
+                    <!-- Recommendations will be populated based on score -->
+                </ul>
+            </div>
+            
+            <div class="actions">
+                <button class="btn" onclick="retakeAssessment()">RETAKE ASSESSMENT</button>
+                <button class="btn btn-secondary" onclick="saveResults()">SAVE RESULTS</button>
+                <a href="recovery-tools.html" class="btn btn-secondary">BACK TO TOOLS</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "How often have you felt overwhelmed by pandemic-related changes in the past two weeks?",
+                options: [
+                    { text: "Not at all", value: 0 },
+                    { text: "Several days", value: 1 },
+                    { text: "More than half the days", value: 2 },
+                    { text: "Nearly every day", value: 3 }
+                ]
+            },
+            {
+                question: "How has your sleep quality been affected during the pandemic?",
+                options: [
+                    { text: "Much better than before", value: 0 },
+                    { text: "Slightly better", value: 1 },
+                    { text: "About the same", value: 1 },
+                    { text: "Somewhat worse", value: 2 },
+                    { text: "Much worse", value: 3 }
+                ]
+            },
+            {
+                question: "How often do you feel isolated or disconnected from others?",
+                options: [
+                    { text: "Rarely or never", value: 0 },
+                    { text: "Sometimes", value: 1 },
+                    { text: "Often", value: 2 },
+                    { text: "Most of the time", value: 3 }
+                ]
+            },
+            {
+                question: "How has your ability to concentrate been affected?",
+                options: [
+                    { text: "Much improved", value: 0 },
+                    { text: "Slightly improved", value: 1 },
+                    { text: "No change", value: 1 },
+                    { text: "Somewhat decreased", value: 2 },
+                    { text: "Significantly decreased", value: 3 }
+                ]
+            },
+            {
+                question: "How often do you feel anxious about the future?",
+                options: [
+                    { text: "Not at all", value: 0 },
+                    { text: "Occasionally", value: 1 },
+                    { text: "Frequently", value: 2 },
+                    { text: "Almost constantly", value: 3 }
+                ]
+            },
+            {
+                question: "How has your motivation for daily activities changed?",
+                options: [
+                    { text: "Significantly increased", value: 0 },
+                    { text: "Slightly increased", value: 1 },
+                    { text: "Stayed the same", value: 1 },
+                    { text: "Somewhat decreased", value: 2 },
+                    { text: "Greatly decreased", value: 3 }
+                ]
+            },
+            {
+                question: "How often do you experience mood swings or emotional instability?",
+                options: [
+                    { text: "Never", value: 0 },
+                    { text: "Rarely", value: 1 },
+                    { text: "Sometimes", value: 2 },
+                    { text: "Frequently", value: 3 }
+                ]
+            },
+            {
+                question: "How has your appetite or eating habits changed?",
+                options: [
+                    { text: "Much healthier", value: 0 },
+                    { text: "Slightly healthier", value: 1 },
+                    { text: "No significant change", value: 1 },
+                    { text: "Somewhat less healthy", value: 2 },
+                    { text: "Much less healthy", value: 3 }
+                ]
+            },
+            {
+                question: "How often do you feel hopeless about the current situation?",
+                options: [
+                    { text: "Never", value: 0 },
+                    { text: "Rarely", value: 1 },
+                    { text: "Sometimes", value: 2 },
+                    { text: "Often", value: 3 }
+                ]
+            },
+            {
+                question: "How comfortable do you feel seeking help or support when needed?",
+                options: [
+                    { text: "Very comfortable", value: 0 },
+                    { text: "Somewhat comfortable", value: 1 },
+                    { text: "Neutral", value: 2 },
+                    { text: "Uncomfortable", value: 3 }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+        let totalScore = 0;
+
+        function initializeAssessment() {
+            renderQuestion();
+            updateProgress();
+            updateNavigation();
+        }
+
+        function renderQuestion() {
+            const questionsContainer = document.getElementById('questions');
+            const question = questions[currentQuestion];
+            
+            questionsContainer.innerHTML = `
+                <div class="question-card active">
+                    <div class="question-number">Question ${currentQuestion + 1}</div>
+                    <div class="question">${question.question}</div>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectOption(${option.value})">
+                                <input type="radio" name="question${currentQuestion}" value="${option.value}" id="option${index}">
+                                <label for="option${index}">${option.text}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // Restore previous answer if exists
+            if (answers[currentQuestion] !== undefined) {
+                const selectedValue = answers[currentQuestion];
+                const options = document.querySelectorAll('.option');
+                options.forEach(option => {
+                    const radio = option.querySelector('input[type="radio"]');
+                    if (parseInt(radio.value) === selectedValue) {
+                        option.classList.add('selected');
+                        radio.checked = true;
+                    }
+                });
+            }
+        }
+
+        function selectOption(value) {
+            answers[currentQuestion] = value;
+            
+            // Update UI
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.remove('selected');
+                const radio = option.querySelector('input[type="radio"]');
+                if (parseInt(radio.value) === value) {
+                    option.classList.add('selected');
+                    radio.checked = true;
+                }
+            });
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestion] === undefined) {
+                alert('Please select an answer before continuing.');
+                return;
+            }
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+                updateProgress();
+                updateNavigation();
+            } else {
+                // Assessment complete
+                calculateResults();
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+                updateProgress();
+                updateNavigation();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('questionCounter').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.disabled = answers[currentQuestion] === undefined;
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.textContent = 'FINISH';
+            } else {
+                nextBtn.textContent = 'NEXT';
+            }
+        }
+
+        function calculateResults() {
+            totalScore = answers.reduce((sum, answer) => sum + answer, 0);
+        }
+
+        function showResults() {
+            document.getElementById('questions').style.display = 'none';
+            document.querySelector('.navigation').style.display = 'none';
+            document.getElementById('results').classList.add('show');
+            
+            // Animate score
+            animateScore();
+            
+            // Show interpretation and recommendations
+            showInterpretation();
+            showRecommendations();
+        }
+
+        function animateScore() {
+            const scoreElement = document.getElementById('scoreNumber');
+            let currentScore = 0;
+            const increment = totalScore / 50; // Animation duration
+            
+            const timer = setInterval(() => {
+                currentScore += increment;
+                if (currentScore >= totalScore) {
+                    currentScore = totalScore;
+                    clearInterval(timer);
+                }
+                scoreElement.textContent = Math.round(currentScore);
+            }, 20);
+        }
+
+        function showInterpretation() {
+            const interpretationElement = document.getElementById('interpretation');
+            let interpretation = '';
+            
+            if (totalScore <= 7) {
+                interpretation = `
+                    <h3>Low Impact (Score: ${totalScore}/30)</h3>
+                    <p>Your responses suggest that you have been managing the pandemic-related stressors relatively well. You appear to have maintained good mental health resilience during this challenging time.</p>
+                    <p>Continue with your current coping strategies and maintain your support systems. Regular self-check-ins can help you stay aware of any changes in your mental health.</p>
+                `;
+            } else if (totalScore <= 15) {
+                interpretation = `
+                    <h3>Moderate Impact (Score: ${totalScore}/30)</h3>
+                    <p>Your responses indicate that you have experienced some mental health challenges related to the pandemic. This is very normal and many people are experiencing similar difficulties.</p>
+                    <p>Consider implementing additional self-care strategies and don't hesitate to reach out for support when needed. Small changes in routine and maintaining connections can make a significant difference.</p>
+                `;
+            } else {
+                interpretation = `
+                    <h3>Significant Impact (Score: ${totalScore}/30)</h3>
+                    <p>Your responses suggest that the pandemic has had a considerable impact on your mental health. This is completely understandable given the unprecedented nature of recent events.</p>
+                    <p>We strongly recommend reaching out to a mental health professional for support. Remember that seeking help is a sign of strength, not weakness.</p>
+                `;
+            }
+            
+            interpretationElement.innerHTML = interpretation;
+        }
+
+        function showRecommendations() {
+            const recommendationsElement = document.getElementById('recommendationsList');
+            let recommendations = [];
+            
+            if (totalScore <= 7) {
+                recommendations = [
+                    "Continue your current self-care practices",
+                    "Maintain regular social connections",
+                    "Keep a consistent daily routine",
+                    "Practice gratitude and mindfulness",
+                    "Stay physically active"
+                ];
+            } else if (totalScore <= 15) {
+                recommendations = [
+                    "Establish a daily self-care routine",
+                    "Connect with friends and family regularly",
+                    "Consider mindfulness or meditation practices",
+                    "Limit news consumption if it increases anxiety",
+                    "Engage in activities you enjoy",
+                    "Consider talking to a counselor or therapist"
+                ];
+            } else {
+                recommendations = [
+                    "Reach out to a mental health professional",
+                    "Contact your primary care doctor",
+                    "Call a mental health helpline for immediate support",
+                    "Inform trusted friends or family about how you're feeling",
+                    "Consider joining a support group",
+                    "Explore therapy options (in-person or telehealth)"
+                ];
+            }
+            
+            recommendationsElement.innerHTML = recommendations.map(rec => `<li>${rec}</li>`).join('');
+        }
+
+        function retakeAssessment() {
+            currentQuestion = 0;
+            answers = [];
+            totalScore = 0;
+            
+            document.getElementById('questions').style.display = 'block';
+            document.querySelector('.navigation').style.display = 'flex';
+            document.getElementById('results').classList.remove('show');
+            
+            initializeAssessment();
+        }
+
+        function saveResults() {
+            const results = {
+                score: totalScore,
+                date: new Date().toISOString(),
+                answers: answers
+            };
+            
+            // Save to localStorage
+            const savedResults = JSON.parse(localStorage.getItem('pandemicAssessmentResults') || '[]');
+            savedResults.push(results);
+            localStorage.setItem('pandemicAssessmentResults', JSON.stringify(savedResults));
+            
+            alert('Your results have been saved! You can view your progress over time in your profile.');
+        }
+
+        // Initialize assessment when page loads
+        document.addEventListener('DOMContentLoaded', initializeAssessment);
+    </script>
+</body>
+</html>

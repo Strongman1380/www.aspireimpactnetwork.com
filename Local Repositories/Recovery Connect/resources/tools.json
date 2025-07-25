@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "title": "Post-Pandemic Mental Health Check-In: Assessment Guide",
+    "description": "Interactive assessment tool to evaluate your mental health status following pandemic-related stressors.",
+    "category": "Assessment",
+    "type": "interactive",
+    "tags": ["pandemic", "mental health", "assessment", "self-check"],
+    "url": "https://gamma.app/embed/708ookudga981kh",
+    "features": ["Interactive interface", "Personalized feedback", "Resource recommendations", "Progress tracking"]
+  },
+  {
+    "id": 2,
+    "title": "Morning Intention Setting",
+    "description": "Start your day with purpose and clarity. Set positive intentions for your recovery journey.",
+    "category": "Daily Practice",
+    "type": "meditation",
+    "duration": "5 min",
+    "tags": ["morning", "intention", "purpose", "daily routine", "mindfulness"],
+    "url": "meditation-guide.html#morning-intention",
+    "features": ["Guided meditation", "Intention prompts", "Daily reflection", "Progress tracking"],
+    "icon": "🌅"
+  },
+  {
+    "id": 3,
+    "title": "Stress Relief Meditation",
+    "description": "Release tension and find calm in the midst of challenging moments.",
+    "category": "Stress Management",
+    "type": "meditation",
+    "duration": "10 min",
+    "tags": ["stress", "calm", "relaxation", "tension relief", "mindfulness"],
+    "url": "meditation-guide.html#stress-relief",
+    "features": ["Breathing exercises", "Body scan", "Tension release", "Calming guidance"],
+    "icon": "🚀"
+  },
+  {
+    "id": 4,
+    "title": "Craving Management",
+    "description": "Navigate urges and cravings with mindfulness and self-compassion.",
+    "category": "Craving Support",
+    "type": "meditation",
+    "duration": "8 min",
+    "tags": ["cravings", "urges", "control", "mindfulness", "self-compassion"],
+    "url": "meditation-guide.html#craving-management",
+    "features": ["Urge surfing technique", "Mindful awareness", "Compassionate response", "Emergency support"],
+    "icon": "🛡️"
+  },
+  {
+    "id": 5,
+    "title": "Evening Gratitude",
+    "description": "End your day with appreciation and peaceful reflection.",
+    "category": "Evening Practice",
+    "type": "meditation",
+    "duration": "7 min",
+    "tags": ["evening", "gratitude", "peace", "reflection", "appreciation"],
+    "url": "meditation-guide.html#evening-gratitude",
+    "features": ["Gratitude practice", "Day reflection", "Peaceful closure", "Sleep preparation"],
+    "icon": "🌙"
+  },
+  {
+    "id": 6,
+    "title": "Sobriety Tracker",
+    "description": "Track your recovery progress with milestone celebrations and daily check-ins.",
+    "category": "Progress Tracking",
+    "type": "tracker",
+    "tags": ["sobriety", "progress", "milestones", "daily tracking", "motivation"],
+    "url": "sobriety-tracker.html",
+    "features": ["Daily check-ins", "Milestone tracking", "Progress visualization", "Achievement badges"]
+  },
+  {
+    "id": 7,
+    "title": "Recovery Journal",
+    "description": "Reflect on your journey with guided journaling prompts for recovery.",
+    "category": "Reflection",
+    "type": "journal",
+    "tags": ["journaling", "reflection", "emotions", "growth", "self-awareness"],
+    "url": "journal-template.html",
+    "features": ["Daily prompts", "Mood tracking", "Trigger identification", "Progress insights"]
+  },
+  {
+    "id": 8,
+    "title": "Weekly Recovery Planner",
+    "description": "Plan your week with recovery goals, self-care activities, and support meetings.",
+    "category": "Planning",
+    "type": "planner",
+    "tags": ["planning", "goals", "self-care", "organization", "weekly structure"],
+    "url": "planner-weekly.html",
+    "features": ["Goal setting", "Activity scheduling", "Self-care reminders", "Progress tracking"]
+  }
+]

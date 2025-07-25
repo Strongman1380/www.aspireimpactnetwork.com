@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Meditations - Recovery Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --primary-coral: #f97316;
+            --primary-amber: #f59e0b;
+            --secondary-purple: #8b5cf6;
+            --secondary-pink: #ec4899;
+            --accent-lime: #84cc16;
+            --neutral-dark: #0f172a;
+            --neutral-medium: #334155;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+            --shadow-brutal: 8px 8px 0px #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .meditation-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-family: 'Figtree', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .daily-quote {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .quote-text {
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .quote-author {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--primary-teal);
+        }
+
+        .meditation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .meditation-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .meditation-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--neutral-dark);
+        }
+
+        .meditation-card.completed {
+            background: var(--accent-lime);
+            color: white;
+        }
+
+        .meditation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .meditation-icon {
+            font-size: 2rem;
+            color: var(--primary-teal);
+        }
+
+        .meditation-duration {
+            background: var(--primary-coral);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--neutral-dark);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .meditation-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--neutral-dark);
+        }
+
+        .meditation-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .meditation-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: var(--neutral-light);
+            color: var(--text-secondary);
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            border: 1px solid var(--text-secondary);
+        }
+
+        .meditation-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-teal);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--neutral-dark);
+        }
+
+        .daily-streak {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .streak-counter {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--primary-teal);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 1rem;
+        }
+
+        .streak-label {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 2rem;
+        }
+
+        .calendar-day {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--neutral-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background: white;
+        }
+
+        .calendar-day.completed {
+            background: var(--accent-lime);
+            color: white;
+        }
+
+        .calendar-day.today {
+            border-color: var(--primary-teal);
+            border-width: 3px;
+        }
+
+        .meditation-player {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .meditation-player.show {
+            display: block;
+        }
+
+        .player-circle {
+            width: 150px;
+            height: 150px;
+            border: 6px solid var(--primary-teal);
+            border-radius: 50%;
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .player-circle:hover {
+            transform: scale(1.05);
+        }
+
+        .player-circle.playing {
+            animation: breathingPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes breathingPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .play-icon {
+            font-size: 2.5rem;
+            color: var(--primary-teal);
+        }
+
+        .timer-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--neutral-dark);
+            margin: 1rem 0;
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .guidance-text {
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            padding: 2rem;
+            margin: 2rem 0;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .meditation-library {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .library-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .filter-button {
+            background: white;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .filter-button.active {
+            background: var(--primary-teal);
+            color: white;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .filter-button:hover:not(.active) {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .progress-stats {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: var(--neutral-light);
+            border: 2px solid var(--neutral-dark);
+            padding: 1.5rem;
+        }
+
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary-teal);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .meditation-container {
+                padding: 1rem;
+            }
+            
+            .header, .daily-quote, .meditation-card, .daily-streak, .meditation-player, .meditation-library, .progress-stats {
+                padding: 2rem;
+            }
+            
+            .meditation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .player-circle {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .play-icon {
+                font-size: 2rem;
+            }
+            
+            .streak-counter {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="meditation-container">
+        <div class="header">
+            <h1><i class="fas fa-sun"></i> Daily Meditations</h1>
+            <p>Start each day with mindfulness and intention. Build a consistent meditation practice with guided sessions designed for recovery and personal growth.</p>
+        </div>
+
+        <div class="daily-quote" id="dailyQuote">
+            <div class="quote-text">"Today I choose peace over anxiety, love over fear, and mindfulness over mindlessness."</div>
+            <div class="quote-author">— Recovery Affirmation</div>
+        </div>
+
+        <div class="daily-streak">
+            <div class="streak-counter" id="streakCounter">0</div>
+            <div class="streak-label">Day Meditation Streak</div>
+            <div class="calendar-grid" id="streakCalendar">
+                <!-- Calendar will be generated here -->
+            </div>
+        </div>
+
+        <div class="meditation-player" id="meditationPlayer">
+            <h3 id="currentMeditationTitle">Select a meditation to begin</h3>
+            
+            <div class="player-circle" id="playerCircle">
+                <i class="fas fa-play play-icon" id="playIcon"></i>
+            </div>
+            
+            <div class="timer-display" id="timerDisplay">00:00</div>
+            
+            <div class="guidance-text" id="guidanceText">
+                Click the circle above to begin your meditation session.
+            </div>
+            
+            <div class="player-controls">
+                <button class="btn" id="playPauseBtn" onclick="toggleMeditation()">
+                    <i class="fas fa-play"></i> Start
+                </button>
+                <button class="btn btn-secondary" onclick="resetMeditation()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+                <button class="btn btn-secondary" onclick="completeMeditation()">
+                    <i class="fas fa-check"></i> Complete
+                </button>
+            </div>
+        </div>
+
+        <div class="meditation-library">
+            <h3 style="text-align: center; margin-bottom: 2rem; font-size: 1.8rem; color: var(--neutral-dark); text-transform: uppercase;">Today's Meditations</h3>
+            
+            <div class="library-filters">
+                <button class="filter-button active" data-filter="all">All Meditations</button>
+                <button class="filter-button" data-filter="morning">Morning</button>
+                <button class="filter-button" data-filter="stress">Stress Relief</button>
+                <button class="filter-button" data-filter="sleep">Sleep</button>
+                <button class="filter-button" data-filter="craving">Craving Control</button>
+            </div>
+            
+            <div class="meditation-grid" id="meditationGrid">
+                <!-- Meditation cards will be generated here -->
+            </div>
+        </div>
+
+        <div class="progress-stats">
+            <h3 style="text-align: center; margin-bottom: 2rem; font-size: 1.8rem; color: var(--neutral-dark); text-transform: uppercase;">Your Progress</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalSessions">0</div>
+                    <div class="stat-label">Total Sessions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalMinutes">0</div>
+                    <div class="stat-label">Minutes Meditated</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="consecutiveDays">0</div>
+                    <div class="stat-label">Consecutive Days</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="averageSession">0</div>
+                    <div class="stat-label">Avg Session (min)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem;">
+        <a href="recovery-tools.html" class="btn btn-secondary">BACK TO TOOLS</a>
+    </div>
+
+    <script>
+        // Daily meditation data
+        const dailyMeditations = [
+            {
+                id: 'morning-intention',
+                title: 'Morning Intention Setting',
+                description: 'Start your day with purpose and clarity. Set positive intentions for your recovery journey.',
+                duration: 300, // 5 minutes
+                category: 'morning',
+                icon: 'fas fa-sun',
+                tags: ['morning', 'intention', 'purpose'],
+                guidance: [
+                    "Take a comfortable seated position and close your eyes.",
+                    "Take three deep breaths, feeling your body settle.",
+                    "Bring to mind your intention for today's recovery.",
+                    "Visualize yourself acting from this intention throughout the day.",
+                    "Feel the strength and commitment within you.",
+                    "Carry this intention with you as you begin your day."
+                ]
+            },
+            {
+                id: 'stress-relief',
+                title: 'Stress Relief Meditation',
+                description: 'Release tension and find calm in the midst of challenging moments.',
+                duration: 600, // 10 minutes
+                category: 'stress',
+                icon: 'fas fa-leaf',
+                tags: ['stress', 'calm', 'relaxation'],
+                guidance: [
+                    "Notice any stress or tension in your body.",
+                    "Breathe deeply into areas of tension.",
+                    "With each exhale, release the stress you're holding.",
+                    "Imagine stress leaving your body like dark clouds dissolving.",
+                    "Fill the space with calm, peaceful energy.",
+                    "Rest in this peaceful state for a few moments."
+                ]
+            },
+            {
+                id: 'craving-control',
+                title: 'Craving Management',
+                description: 'Navigate urges and cravings with mindfulness and self-compassion.',
+                duration: 480, // 8 minutes
+                category: 'craving',
+                icon: 'fas fa-shield-alt',
+                tags: ['cravings', 'urges', 'control'],
+                guidance: [
+                    "Acknowledge any cravings or urges without judgment.",
+                    "Observe these feelings with curiosity, not resistance.",
+                    "Breathe deeply and remind yourself: 'This will pass.'",
+                    "Connect with your deeper values and reasons for recovery.",
+                    "Feel your inner strength and resilience.",
+                    "Trust in your ability to navigate this moment."
+                ]
+            },
+            {
+                id: 'evening-gratitude',
+                title: 'Evening Gratitude',
+                description: 'End your day with appreciation and peaceful reflection.',
+                duration: 420, // 7 minutes
+                category: 'sleep',
+                icon: 'fas fa-moon',
+                tags: ['evening', 'gratitude', 'peace'],
+                guidance: [
+                    "Reflect on your day with kindness and acceptance.",
+                    "Bring to mind three things you're grateful for today.",
+                    "Feel appreciation for your efforts in recovery.",
+                    "Send loving-kindness to yourself and others.",
+                    "Let go of any worries about tomorrow.",
+                    "Rest in a state of peaceful gratitude."
+                ]
+            },
+            {
+                id: 'self-compassion',
+                title: 'Self-Compassion Practice',
+                description: 'Cultivate kindness toward yourself, especially during difficult times.',
+                duration: 540, // 9 minutes
+                category: 'stress',
+                icon: 'fas fa-heart',
+                tags: ['compassion', 'kindness', 'self-love'],
+                guidance: [
+                    "Place your hand on your heart and feel its rhythm.",
+                    "Acknowledge any pain or difficulty you're experiencing.",
+                    "Remind yourself that suffering is part of the human experience.",
+                    "Offer yourself the same kindness you'd give a good friend.",
+                    "Repeat: 'May I be kind to myself in this moment.'",
+                    "Feel the warmth of self-compassion filling your heart."
+                ]
+            },
+            {
+                id: 'body-scan',
+                title: 'Body Scan Relaxation',
+                description: 'Release physical tension and connect with your body mindfully.',
+                duration: 720, // 12 minutes
+                category: 'stress',
+                icon: 'fas fa-body',
+                tags: ['body scan', 'relaxation', 'awareness'],
+                guidance: [
+                    "Lie down comfortably and close your eyes.",
+                    "Start by noticing your breath, without changing it.",
+                    "Bring attention to the top of your head.",
+                    "Slowly scan down through your body, part by part.",
+                    "Notice any sensations without trying to change them.",
+                    "End by appreciating your body's support in recovery."
+                ]
+            }
+        ];
+
+        const dailyQuotes = [
+            "Today I choose peace over anxiety, love over fear, and mindfulness over mindlessness.",
+            "Each breath is a new beginning, each moment a fresh start.",
+            "I am exactly where I need to be in my recovery journey.",
+            "My past does not define me; my choices today create my future.",
+            "I treat myself with the same compassion I would show a dear friend.",
+            "Every challenge is an opportunity to grow stronger in my recovery.",
+            "I am worthy of healing, happiness, and inner peace.",
+            "Today I will be present for my life and grateful for this moment.",
+            "I trust in my ability to navigate whatever comes my way.",
+            "My recovery is a gift I give not only to myself but to the world.",
+            "I choose progress over perfection, growth over stagnation.",
+            "Each day in recovery is a victory worth celebrating.",
+            "I am learning to love myself unconditionally.",
+            "My journey is unique, and I honor my own pace of healing."
+        ];
+
+        // App state
+        let currentMeditation = null;
+        let isPlaying = false;
+        let currentTime = 0;
+        let totalDuration = 0;
+        let meditationTimer = null;
+        let guidanceIndex = 0;
+
+        // Progress data
+        let progressData = {
+            totalSessions: 0,
+            totalMinutes: 0,
+            consecutiveDays: 0,
+            lastSessionDate: null,
+            sessionHistory: {},
+            completedToday: false
+        };
+
+        function initializeMeditations() {
+            loadProgressData();
+            setDailyQuote();
+            generateMeditationCards();
+            updateProgressDisplay();
+            generateStreakCalendar();
+            setupFilters();
+        }
+
+        function setDailyQuote() {
+            const today = new Date();
+            const dayIndex = today.getDate() % dailyQuotes.length;
+            document.getElementById('dailyQuote').querySelector('.quote-text').textContent = dailyQuotes[dayIndex];
+        }
+
+        function generateMeditationCards() {
+            const grid = document.getElementById('meditationGrid');
+            
+            grid.innerHTML = dailyMeditations.map(meditation => {
+                const completed = isCompletedToday(meditation.id);
+                return `
+                    <div class="meditation-card ${completed ? 'completed' : ''}" data-category="${meditation.category}" onclick="selectMeditation('${meditation.id}')">
+                        <div class="meditation-header">
+                            <i class="${meditation.icon} meditation-icon"></i>
+                            <div class="meditation-duration">${Math.floor(meditation.duration / 60)} min</div>
+                        </div>
+                        <div class="meditation-title">${meditation.title}</div>
+                        <div class="meditation-description">${meditation.description}</div>
+                        <div class="meditation-tags">
+                            ${meditation.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="meditation-actions">
+                            <button class="btn" onclick="event.stopPropagation(); selectMeditation('${meditation.id}')">
+                                ${completed ? 'Completed' : 'Start'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectMeditation(id) {
+            const meditation = dailyMeditations.find(m => m.id === id);
+            if (!meditation) return;
+
+            currentMeditation = meditation;
+            totalDuration = meditation.duration;
+            currentTime = 0;
+            guidanceIndex = 0;
+            isPlaying = false;
+
+            document.getElementById('currentMeditationTitle').textContent = meditation.title;
+            document.getElementById('meditationPlayer').classList.add('show');
+            updateTimerDisplay();
+            updatePlayButton();
+            
+            // Show initial guidance
+            document.getElementById('guidanceText').textContent = meditation.guidance[0];
+
+            // Scroll to player
+            document.getElementById('meditationPlayer').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleMeditation() {
+            if (!currentMeditation) return;
+
+            if (isPlaying) {
+                pauseMeditation();
+            } else {
+                startMeditation();
+            }
+        }
+
+        function startMeditation() {
+            isPlaying = true;
+            updatePlayButton();
+
+            meditationTimer = setInterval(() => {
+                currentTime++;
+                updateTimerDisplay();
+                updateGuidance();
+
+                if (currentTime >= totalDuration) {
+                    completeMeditation();
+                }
+            }, 1000);
+
+            document.getElementById('playerCircle').classList.add('playing');
+        }
+
+        function pauseMeditation() {
+            isPlaying = false;
+            updatePlayButton();
+
+            if (meditationTimer) {
+                clearInterval(meditationTimer);
+                meditationTimer = null;
+            }
+
+            document.getElementById('playerCircle').classList.remove('playing');
+        }
+
+        function resetMeditation() {
+            pauseMeditation();
+            currentTime = 0;
+            guidanceIndex = 0;
+            updateTimerDisplay();
+
+            if (currentMeditation) {
+                document.getElementById('guidanceText').textContent = currentMeditation.guidance[0];
+            }
+        }
+
+        function completeMeditation() {
+            pauseMeditation();
+            
+            if (currentMeditation && currentTime >= 60) { // Only count if meditated for at least 1 minute
+                recordSession();
+                showCompletionMessage();
+            }
+
+            // Mark as completed and update UI
+            markMeditationCompleted(currentMeditation.id);
+            generateMeditationCards();
+            updateProgressDisplay();
+            generateStreakCalendar();
+        }
+
+        function updatePlayButton() {
+            const playIcon = document.getElementById('playIcon');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+
+            if (isPlaying) {
+                playIcon.className = 'fas fa-pause play-icon';
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            } else {
+                playIcon.className = 'fas fa-play play-icon';
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+            }
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = currentTime % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateGuidance() {
+            if (!currentMeditation) return;
+
+            const guidanceInterval = Math.floor(totalDuration / currentMeditation.guidance.length);
+            
+            if (currentTime > 0 && currentTime % guidanceInterval === 0 && guidanceIndex < currentMeditation.guidance.length - 1) {
+                guidanceIndex++;
+                document.getElementById('guidanceText').textContent = currentMeditation.guidance[guidanceIndex];
+            }
+        }
+
+        function recordSession() {
+            const today = new Date().toDateString();
+            
+            progressData.totalSessions++;
+            progressData.totalMinutes += Math.floor(currentTime / 60);
+            
+            // Update streak
+            if (progressData.lastSessionDate === today) {
+                // Already meditated today, don't change streak
+            } else if (progressData.lastSessionDate === yesterday()) {
+                // Meditated yesterday, continue streak
+                progressData.consecutiveDays++;
+            } else {
+                // Start new streak
+                progressData.consecutiveDays = 1;
+            }
+            
+            progressData.lastSessionDate = today;
+            
+            // Record in history
+            if (!progressData.sessionHistory[today]) {
+                progressData.sessionHistory[today] = [];
+            }
+            progressData.sessionHistory[today].push({
+                meditationId: currentMeditation.id,
+                duration: currentTime,
+                timestamp: new Date().toISOString()
+            });
+            
+            saveProgressData();
+        }
+
+        function markMeditationCompleted(id) {
+            const today = new Date().toDateString();
+            if (!progressData.sessionHistory[today]) {
+                progressData.sessionHistory[today] = [];
+            }
+            
+            // Check if already completed today
+            const alreadyCompleted = progressData.sessionHistory[today].some(session => session.meditationId === id);
+            if (!alreadyCompleted) {
+                progressData.sessionHistory[today].push({
+                    meditationId: id,
+                    duration: currentTime || 1,
+                    timestamp: new Date().toISOString()
+                });
+                saveProgressData();
+            }
+        }
+
+        function isCompletedToday(meditationId) {
+            const today = new Date().toDateString();
+            const todaySessions = progressData.sessionHistory[today] || [];
+            return todaySessions.some(session => session.meditationId === meditationId);
+        }
+
+        function yesterday() {
+            const date = new Date();
+            date.setDate(date.getDate() - 1);
+            return date.toDateString();
+        }
+
+        function updateProgressDisplay() {
+            document.getElementById('totalSessions').textContent = progressData.totalSessions;
+            document.getElementById('totalMinutes').textContent = progressData.totalMinutes;
+            document.getElementById('consecutiveDays').textContent = progressData.consecutiveDays;
+            document.getElementById('streakCounter').textContent = progressData.consecutiveDays;
+            
+            const averageSession = progressData.totalSessions > 0 ? 
+                Math.round(progressData.totalMinutes / progressData.totalSessions) : 0;
+            document.getElementById('averageSession').textContent = averageSession;
+        }
+
+        function generateStreakCalendar() {
+            const calendar = document.getElementById('streakCalendar');
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today);
+            thirtyDaysAgo.setDate(today.getDate() - 29);
+            
+            calendar.innerHTML = '';
+            
+            for (let d = new Date(thirtyDaysAgo); d <= today; d.setDate(d.getDate() + 1)) {
+                const dateStr = d.toDateString();
+                const hasSession = progressData.sessionHistory[dateStr] && progressData.sessionHistory[dateStr].length > 0;
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = d.getDate();
+                
+                if (hasSession) {
+                    dayElement.classList.add('completed');
+                }
+                
+                if (dateStr === today.toDateString()) {
+                    dayElement.classList.add('today');
+                }
+                
+                calendar.appendChild(dayElement);
+            }
+        }
+
+        function setupFilters() {
+            document.querySelectorAll('.filter-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active button
+                    document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Filter meditations
+                    const filter = button.dataset.filter;
+                    filterMeditations(filter);
+                });
+            });
+        }
+
+        function filterMeditations(category) {
+            const cards = document.querySelectorAll('.meditation-card');
+            
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function showCompletionMessage() {
+            document.getElementById('guidanceText').textContent = 
+                "Wonderful! You've completed your meditation. Take a moment to notice how you feel and carry this peace with you.";
+        }
+
+        function loadProgressData() {
+            const saved = localStorage.getItem('dailyMeditationProgress');
+            if (saved) {
+                progressData = { ...progressData, ...JSON.parse(saved) };
+            }
+        }
+
+        function saveProgressData() {
+            localStorage.setItem('dailyMeditationProgress', JSON.stringify(progressData));
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeMeditations);
+
+        // Player circle click handler
+        document.getElementById('playerCircle').addEventListener('click', toggleMeditation);
+    </script>
+</body>
+</html>

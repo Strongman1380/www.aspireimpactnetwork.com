@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Sobriety Tracker - Recovery Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --primary-coral: #f97316;
+            --primary-amber: #f59e0b;
+            --secondary-purple: #8b5cf6;
+            --secondary-pink: #ec4899;
+            --accent-lime: #84cc16;
+            --neutral-dark: #0f172a;
+            --neutral-medium: #334155;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+            --shadow-brutal: 8px 8px 0px #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--neutral-light);
+            padding: 2rem;
+        }
+
+        .tracker-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+        }
+
+        .header h1 {
+            font-family: 'Figtree', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--neutral-dark);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-teal);
+            border: 3px solid var(--neutral-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--neutral-dark);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .main-counter {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .counter-circle {
+            width: 200px;
+            height: 200px;
+            border: 6px solid var(--primary-teal);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem auto;
+            background: var(--neutral-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .counter-circle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(var(--primary-teal) 0deg, transparent 0deg);
+            transition: background 1s ease;
+        }
+
+        .counter-content {
+            position: relative;
+            z-index: 2;
+            background: white;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .days-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary-teal);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .days-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .milestone-banner {
+            background: linear-gradient(45deg, var(--primary-coral), var(--primary-amber));
+            color: white;
+            padding: 1rem;
+            margin: 2rem 0;
+            text-align: center;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            display: none;
+        }
+
+        .milestone-banner.show {
+            display: block;
+            animation: celebrationPulse 2s ease-in-out;
+        }
+
+        @keyframes celebrationPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .actions-section {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 1.5rem;
+            background: var(--primary-teal);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--neutral-dark);
+        }
+
+        .btn-danger {
+            background: var(--primary-coral);
+        }
+
+        .progress-section {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .progress-chart {
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 2rem;
+        }
+
+        .calendar-day {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--neutral-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background: white;
+        }
+
+        .calendar-day.sober {
+            background: var(--accent-lime);
+            color: white;
+        }
+
+        .calendar-day.relapse {
+            background: var(--primary-coral);
+            color: white;
+        }
+
+        .calendar-day.today {
+            border-color: var(--primary-teal);
+            border-width: 3px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal h3 {
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .modal p {
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .notes-section {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .notes-section h3 {
+            color: var(--neutral-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .note-input {
+            width: 100%;
+            padding: 1rem;
+            border: 3px solid var(--neutral-dark);
+            font-family: 'Figtree', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .note-input:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+        }
+
+        .notes-list {
+            margin-top: 2rem;
+        }
+
+        .note-item {
+            background: var(--neutral-light);
+            border: 2px solid var(--neutral-dark);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .note-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .tracker-container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 2rem;
+            }
+            
+            .counter-circle {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .counter-content {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .days-number {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tracker-container">
+        <div class="header">
+            <h1><i class="fas fa-calendar-check"></i> Daily Sobriety Tracker</h1>
+            <p>Track your sobriety progress day by day. Celebrate your milestones and visualize your journey to recovery.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="stat-number" id="currentStreak">0</div>
+                <div class="stat-label">Current Streak</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-number" id="longestStreak">0</div>
+                <div class="stat-label">Longest Streak</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-number" id="totalDays">0</div>
+                <div class="stat-label">Total Sober Days</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-number" id="milestones">0</div>
+                <div class="stat-label">Milestones</div>
+            </div>
+        </div>
+
+        <div class="main-counter">
+            <h2>Days Sober</h2>
+            <div class="counter-circle" id="counterCircle">
+                <div class="counter-content">
+                    <div class="days-number" id="daysNumber">0</div>
+                    <div class="days-text">DAYS</div>
+                </div>
+            </div>
+            <div class="milestone-banner" id="milestoneBanner">
+                <h3><i class="fas fa-star"></i> Milestone Achieved! <i class="fas fa-star"></i></h3>
+                <p id="milestoneText"></p>
+            </div>
+        </div>
+
+        <div class="actions-section">
+            <h3>Daily Actions</h3>
+            <div class="actions-grid">
+                <button class="btn" onclick="markSoberDay()">
+                    <i class="fas fa-check"></i> Mark Today Sober
+                </button>
+                <button class="btn btn-danger" onclick="showRelapseModal()">
+                    <i class="fas fa-exclamation-triangle"></i> Report Relapse
+                </button>
+                <button class="btn btn-secondary" onclick="showCalendar()">
+                    <i class="fas fa-calendar"></i> View Calendar
+                </button>
+                <button class="btn btn-secondary" onclick="exportData()">
+                    <i class="fas fa-download"></i> Export Data
+                </button>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <h3>Progress Visualization</h3>
+            <div class="progress-chart">
+                <p>Last 30 Days</p>
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be generated here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="notes-section">
+            <h3>Daily Reflection</h3>
+            <textarea class="note-input" id="noteInput" placeholder="How are you feeling today? What challenged you? What helped you stay strong?"></textarea>
+            <button class="btn" onclick="saveNote()">
+                <i class="fas fa-save"></i> Save Note
+            </button>
+            <div class="notes-list" id="notesList">
+                <!-- Notes will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Relapse Modal -->
+    <div class="modal" id="relapseModal">
+        <div class="modal-content">
+            <h3>Report Relapse</h3>
+            <p>We understand that recovery is a journey with ups and downs. Reporting a relapse helps you restart and learn from the experience.</p>
+            <div class="modal-actions">
+                <button class="btn btn-danger" onclick="confirmRelapse()">Confirm Relapse</button>
+                <button class="btn btn-secondary" onclick="hideRelapseModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Modal -->
+    <div class="modal" id="calendarModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h3>Sobriety Calendar</h3>
+            <div id="fullCalendar"></div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="hideCalendar()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem;">
+        <a href="recovery-tools.html" class="btn btn-secondary">BACK TO TOOLS</a>
+    </div>
+
+    <script>
+        // Data structure to store sobriety data
+        let sobrietyData = {
+            startDate: null,
+            currentStreak: 0,
+            longestStreak: 0,
+            totalSoberDays: 0,
+            milestones: 0,
+            dailyRecords: {}, // Date string -> { sober: boolean, note: string }
+            relapses: [] // Array of relapse dates
+        };
+
+        // Milestone thresholds
+        const milestoneThresholds = [1, 7, 14, 30, 60, 90, 180, 365, 730];
+
+        function initializeTracker() {
+            loadData();
+            updateDisplay();
+            generateCalendar();
+            loadNotes();
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('sobrietyTrackerData');
+            if (saved) {
+                sobrietyData = { ...sobrietyData, ...JSON.parse(saved) };
+            } else {
+                // First time user - set start date to today
+                const today = new Date().toISOString().split('T')[0];
+                sobrietyData.startDate = today;
+                saveData();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('sobrietyTrackerData', JSON.stringify(sobrietyData));
+        }
+
+        function updateDisplay() {
+            calculateStats();
+            
+            document.getElementById('currentStreak').textContent = sobrietyData.currentStreak;
+            document.getElementById('longestStreak').textContent = sobrietyData.longestStreak;
+            document.getElementById('totalDays').textContent = sobrietyData.totalSoberDays;
+            document.getElementById('milestones').textContent = sobrietyData.milestones;
+            document.getElementById('daysNumber').textContent = sobrietyData.currentStreak;
+            
+            updateCounterCircle();
+        }
+
+        function calculateStats() {
+            const today = new Date().toISOString().split('T')[0];
+            let currentStreak = 0;
+            let longestStreak = 0;
+            let totalSoberDays = 0;
+            let tempStreak = 0;
+            
+            // Calculate from start date to today
+            const startDate = new Date(sobrietyData.startDate);
+            const endDate = new Date(today);
+            
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                const dateStr = d.toISOString().split('T')[0];
+                const record = sobrietyData.dailyRecords[dateStr];
+                
+                if (record && record.sober) {
+                    tempStreak++;
+                    totalSoberDays++;
+                    if (dateStr === today) {
+                        currentStreak = tempStreak;
+                    }
+                } else {
+                    if (tempStreak > longestStreak) {
+                        longestStreak = tempStreak;
+                    }
+                    tempStreak = 0;
+                    if (dateStr === today) {
+                        currentStreak = 0;
+                    }
+                }
+            }
+            
+            if (tempStreak > longestStreak) {
+                longestStreak = tempStreak;
+            }
+            
+            sobrietyData.currentStreak = currentStreak;
+            sobrietyData.longestStreak = longestStreak;
+            sobrietyData.totalSoberDays = totalSoberDays;
+            
+            // Calculate milestones
+            sobrietyData.milestones = milestoneThresholds.filter(threshold => currentStreak >= threshold).length;
+        }
+
+        function updateCounterCircle() {
+            const circle = document.getElementById('counterCircle');
+            const percentage = Math.min((sobrietyData.currentStreak / 365) * 100, 100);
+            const degrees = (percentage / 100) * 360;
+            
+            circle.style.background = `conic-gradient(var(--primary-teal) ${degrees}deg, var(--neutral-light) ${degrees}deg)`;
+        }
+
+        function markSoberDay() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (!sobrietyData.dailyRecords[today]) {
+                sobrietyData.dailyRecords[today] = { sober: true, note: '' };
+                
+                // Check for milestone
+                const oldMilestones = sobrietyData.milestones;
+                updateDisplay();
+                saveData();
+                
+                if (sobrietyData.milestones > oldMilestones) {
+                    showMilestone();
+                }
+                
+                generateCalendar();
+                
+                // Success feedback
+                showToast('Day marked as sober! Keep up the great work!');
+            } else {
+                showToast('Today is already marked as sober.');
+            }
+        }
+
+        function showMilestone() {
+            const banner = document.getElementById('milestoneBanner');
+            const text = document.getElementById('milestoneText');
+            
+            const currentMilestone = milestoneThresholds[sobrietyData.milestones - 1];
+            text.textContent = `You've reached ${currentMilestone} days sober! This is a significant achievement.`;
+            
+            banner.classList.add('show');
+            
+            setTimeout(() => {
+                banner.classList.remove('show');
+            }, 5000);
+        }
+
+        function showRelapseModal() {
+            document.getElementById('relapseModal').classList.add('show');
+        }
+
+        function hideRelapseModal() {
+            document.getElementById('relapseModal').classList.remove('show');
+        }
+
+        function confirmRelapse() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            sobrietyData.dailyRecords[today] = { sober: false, note: 'Relapse reported' };
+            sobrietyData.relapses.push(today);
+            
+            updateDisplay();
+            saveData();
+            generateCalendar();
+            hideRelapseModal();
+            
+            showToast('Relapse recorded. Remember, recovery is a journey. Tomorrow is a new day to start again.');
+        }
+
+        function generateCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today);
+            thirtyDaysAgo.setDate(today.getDate() - 29);
+            
+            grid.innerHTML = '';
+            
+            for (let d = new Date(thirtyDaysAgo); d <= today; d.setDate(d.getDate() + 1)) {
+                const dateStr = d.toISOString().split('T')[0];
+                const record = sobrietyData.dailyRecords[dateStr];
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = d.getDate();
+                
+                if (record) {
+                    if (record.sober) {
+                        dayElement.classList.add('sober');
+                    } else {
+                        dayElement.classList.add('relapse');
+                    }
+                }
+                
+                if (dateStr === today.toISOString().split('T')[0]) {
+                    dayElement.classList.add('today');
+                }
+                
+                grid.appendChild(dayElement);
+            }
+        }
+
+        function showCalendar() {
+            // Generate a more detailed calendar view
+            const modal = document.getElementById('calendarModal');
+            const fullCalendar = document.getElementById('fullCalendar');
+            
+            // This would be expanded with a full calendar implementation
+            fullCalendar.innerHTML = '<p>Full calendar view would be implemented here with monthly navigation and detailed day information.</p>';
+            
+            modal.classList.add('show');
+        }
+
+        function hideCalendar() {
+            document.getElementById('calendarModal').classList.remove('show');
+        }
+
+        function saveNote() {
+            const noteInput = document.getElementById('noteInput');
+            const noteText = noteInput.value.trim();
+            
+            if (!noteText) {
+                showToast('Please enter a note before saving.');
+                return;
+            }
+            
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (!sobrietyData.dailyRecords[today]) {
+                sobrietyData.dailyRecords[today] = { sober: false, note: '' };
+            }
+            
+            sobrietyData.dailyRecords[today].note = noteText;
+            noteInput.value = '';
+            
+            saveData();
+            loadNotes();
+            showToast('Note saved successfully!');
+        }
+
+        function loadNotes() {
+            const notesList = document.getElementById('notesList');
+            const sortedDates = Object.keys(sobrietyData.dailyRecords)
+                .filter(date => sobrietyData.dailyRecords[date].note)
+                .sort((a, b) => new Date(b) - new Date(a))
+                .slice(0, 10); // Show last 10 notes
+            
+            if (sortedDates.length === 0) {
+                notesList.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No notes yet. Start writing your daily reflections!</p>';
+                return;
+            }
+            
+            notesList.innerHTML = sortedDates.map(date => {
+                const record = sobrietyData.dailyRecords[date];
+                const dateObj = new Date(date);
+                const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                
+                return `
+                    <div class="note-item">
+                        <div class="note-date">${formattedDate}</div>
+                        <div>${record.note}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function exportData() {
+            const exportData = {
+                ...sobrietyData,
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = 'sobriety-tracker-data.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('Data exported successfully!');
+        }
+
+        function showToast(message) {
+            // Simple toast notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--primary-teal);
+                color: white;
+                padding: 1rem 2rem;
+                border: 3px solid var(--neutral-dark);
+                box-shadow: var(--shadow-brutal);
+                z-index: 1001;
+                font-weight: 600;
+                max-width: 300px;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize tracker when page loads
+        document.addEventListener('DOMContentLoaded', initializeTracker);
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

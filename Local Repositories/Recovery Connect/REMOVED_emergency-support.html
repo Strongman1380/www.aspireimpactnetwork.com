@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Support - Recovery Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --primary-coral: #f97316;
+            --primary-amber: #f59e0b;
+            --secondary-purple: #8b5cf6;
+            --secondary-pink: #ec4899;
+            --accent-lime: #84cc16;
+            --neutral-dark: #0f172a;
+            --neutral-medium: #334155;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+            --shadow-brutal: 8px 8px 0px #0f172a;
+            --emergency-red: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--neutral-light);
+            padding: 2rem;
+        }
+
+        .emergency-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .emergency-alert {
+            background: var(--emergency-red);
+            color: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            animation: urgentPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes urgentPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; transform: scale(1.02); }
+        }
+
+        .emergency-alert h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .emergency-alert p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .emergency-actions {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .emergency-btn {
+            background: white;
+            color: var(--emergency-red);
+            border: 4px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            padding: 1.5rem 2rem;
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .emergency-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .quick-access {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .crisis-card {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .crisis-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--neutral-dark);
+        }
+
+        .crisis-card.urgent {
+            border-color: var(--emergency-red);
+            background: #fef2f2;
+        }
+
+        .crisis-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .crisis-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--emergency-red);
+            border: 3px solid var(--neutral-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .crisis-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--neutral-dark);
+        }
+
+        .crisis-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--emergency-red);
+            text-align: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: white;
+            border: 3px solid var(--emergency-red);
+        }
+
+        .crisis-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .crisis-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-teal);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .btn-emergency {
+            background: var(--emergency-red);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--neutral-dark);
+        }
+
+        .coping-section {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--neutral-dark);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .coping-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .coping-card {
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .coping-card:hover {
+            background: var(--primary-teal);
+            color: white;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .coping-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .coping-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .safety-plan {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .plan-step {
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 2rem;
+            background: var(--primary-coral);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--neutral-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .step-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 1rem;
+            border: 3px solid var(--neutral-dark);
+            font-family: 'Figtree', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        .step-input:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .resource-card {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+        }
+
+        .resource-header {
+            border-bottom: 2px solid var(--neutral-light);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .resource-title {
+            font-weight: 700;
+            color: var(--neutral-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-type {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .resource-contacts {
+            list-style: none;
+        }
+
+        .resource-contacts li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--neutral-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-name {
+            font-weight: 600;
+        }
+
+        .contact-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--primary-teal);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal h3 {
+            color: var(--neutral-dark);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .modal p {
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .grounding-exercise {
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .grounding-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: var(--neutral-dark);
+        }
+
+        .grounding-instruction {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--primary-teal);
+        }
+
+        .grounding-countdown {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary-coral);
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .emergency-container {
+                padding: 1rem;
+            }
+            
+            .emergency-alert {
+                padding: 2rem;
+            }
+            
+            .quick-access {
+                grid-template-columns: 1fr;
+            }
+            
+            .emergency-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .crisis-actions {
+                flex-direction: column;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="emergency-container">
+        <div class="emergency-alert">
+            <h1><i class="fas fa-exclamation-triangle"></i> Need Immediate Help?</h1>
+            <p>If you're having thoughts of suicide, self-harm, or are in immediate danger, please reach out for help right now.</p>
+            <div class="emergency-actions">
+                <a href="tel:911" class="emergency-btn">
+                    <i class="fas fa-phone"></i> Call 911
+                </a>
+                <a href="tel:988" class="emergency-btn">
+                    <i class="fas fa-lifering"></i> Call 988
+                </a>
+                <button class="emergency-btn" onclick="startGroundingExercise()">
+                    <i class="fas fa-anchor"></i> Grounding Exercise
+                </button>
+            </div>
+        </div>
+
+        <div class="quick-access">
+            <div class="crisis-card urgent">
+                <div class="crisis-header">
+                    <div class="crisis-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="crisis-title">Crisis Lifeline</div>
+                </div>
+                <div class="crisis-number">988</div>
+                <div class="crisis-description">
+                    24/7 suicide and crisis lifeline. Free, confidential support for people in distress and prevention resources.
+                </div>
+                <div class="crisis-actions">
+                    <a href="tel:988" class="btn btn-emergency">Call Now</a>
+                    <a href="sms:988" class="btn btn-secondary">Text 988</a>
+                </div>
+            </div>
+
+            <div class="crisis-card">
+                <div class="crisis-header">
+                    <div class="crisis-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="crisis-title">Crisis Text Line</div>
+                </div>
+                <div class="crisis-number">741741</div>
+                <div class="crisis-description">
+                    Text "HOME" to connect with a crisis counselor. Free, 24/7 support via text message.
+                </div>
+                <div class="crisis-actions">
+                    <a href="sms:741741?body=HOME" class="btn btn-emergency">Text HOME</a>
+                    <button class="btn btn-secondary" onclick="openTextModal()">Learn More</button>
+                </div>
+            </div>
+
+            <div class="crisis-card">
+                <div class="crisis-header">
+                    <div class="crisis-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="crisis-title">SAMHSA Helpline</div>
+                </div>
+                <div class="crisis-number">1-800-662-4357</div>
+                <div class="crisis-description">
+                    Substance Abuse and Mental Health Services Administration. Treatment referral and information service.
+                </div>
+                <div class="crisis-actions">
+                    <a href="tel:18006624357" class="btn btn-emergency">Call Now</a>
+                    <button class="btn btn-secondary" onclick="openSamhsaModal()">Information</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coping-section">
+            <h2 class="section-title">Immediate Coping Strategies</h2>
+            <div class="coping-grid">
+                <div class="coping-card" onclick="startBreathingExercise()">
+                    <div class="coping-icon"><i class="fas fa-wind"></i></div>
+                    <div class="coping-title">Deep Breathing</div>
+                    <div>4-7-8 breathing technique</div>
+                </div>
+                <div class="coping-card" onclick="startGroundingExercise()">
+                    <div class="coping-icon"><i class="fas fa-anchor"></i></div>
+                    <div class="coping-title">5-4-3-2-1 Grounding</div>
+                    <div>Focus on your senses</div>
+                </div>
+                <div class="coping-card" onclick="startColdWaterTechnique()">
+                    <div class="coping-icon"><i class="fas fa-tint"></i></div>
+                    <div class="coping-title">Cold Water</div>
+                    <div>Reset your nervous system</div>
+                </div>
+                <div class="coping-card" onclick="openSafetyPlan()">
+                    <div class="coping-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="coping-title">Safety Plan</div>
+                    <div>Your personalized plan</div>
+                </div>
+                <div class="coping-card" onclick="callEmergencyContact()">
+                    <div class="coping-icon"><i class="fas fa-users"></i></div>
+                    <div class="coping-title">Call Support Person</div>
+                    <div>Reach out to someone you trust</div>
+                </div>
+                <div class="coping-card" onclick="startMindfulnessExercise()">
+                    <div class="coping-icon"><i class="fas fa-leaf"></i></div>
+                    <div class="coping-title">Mindfulness</div>
+                    <div>Present moment awareness</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="safety-plan" id="safetyPlan" style="display: none;">
+            <h2 class="section-title">Personal Safety Plan</h2>
+            <p style="text-align: center; margin-bottom: 3rem; color: var(--text-secondary);">
+                Create your personalized safety plan to help you through difficult moments. This plan will be saved securely on your device.
+            </p>
+
+            <div class="plan-step">
+                <div class="step-number">1</div>
+                <div class="step-title">Warning Signs</div>
+                <textarea class="step-input" id="warningSigns" placeholder="What are the warning signs that a crisis may be developing? (thoughts, images, moods, situations, behaviors)"></textarea>
+            </div>
+
+            <div class="plan-step">
+                <div class="step-number">2</div>
+                <div class="step-title">Coping Strategies</div>
+                <textarea class="step-input" id="copingStrategies" placeholder="What coping strategies can you use without contacting others? (activities, self-soothing techniques, distractions)"></textarea>
+            </div>
+
+            <div class="plan-step">
+                <div class="step-number">3</div>
+                <div class="step-title">Support People</div>
+                <textarea class="step-input" id="supportPeople" placeholder="List people you can reach out to for support (friends, family, mentors) and their contact information"></textarea>
+            </div>
+
+            <div class="plan-step">
+                <div class="step-number">4</div>
+                <div class="step-title">Professional Contacts</div>
+                <textarea class="step-input" id="professionalContacts" placeholder="List mental health professionals and their contact information (therapist, doctor, crisis line)"></textarea>
+            </div>
+
+            <div class="plan-step">
+                <div class="step-number">5</div>
+                <div class="step-title">Making Environment Safe</div>
+                <textarea class="step-input" id="environmentSafe" placeholder="What can you do to make your environment safer? (removing harmful items, going to a safe place)"></textarea>
+            </div>
+
+            <div class="plan-step">
+                <div class="step-number">6</div>
+                <div class="step-title">Reasons for Living</div>
+                <textarea class="step-input" id="reasonsLiving" placeholder="What are your reasons for living? What gives your life meaning and purpose?"></textarea>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn btn-emergency" onclick="saveSafetyPlan()">Save Safety Plan</button>
+                <button class="btn btn-secondary" onclick="printSafetyPlan()">Print Plan</button>
+                <button class="btn btn-secondary" onclick="hideSafetyPlan()">Hide Plan</button>
+            </div>
+        </div>
+
+        <div class="resources-grid">
+            <div class="resource-card">
+                <div class="resource-header">
+                    <div class="resource-title">Suicide Prevention</div>
+                    <div class="resource-type">24/7 Crisis Support</div>
+                </div>
+                <ul class="resource-contacts">
+                    <li>
+                        <span class="contact-name">National Suicide Prevention Lifeline</span>
+                        <span class="contact-number">988</span>
+                    </li>
+                    <li>
+                        <span class="contact-name">Crisis Text Line</span>
+                        <span class="contact-number">741741</span>
+                    </li>
+                    <li>
+                        <span class="contact-name">Veterans Crisis Line</span>
+                        <span class="contact-number">1-800-273-8255</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-header">
+                    <div class="resource-title">Substance Abuse</div>
+                    <div class="resource-type">Treatment & Support</div>
+                </div>
+                <ul class="resource-contacts">
+                    <li>
+                        <span class="contact-name">SAMHSA Helpline</span>
+                        <span class="contact-number">1-800-662-4357</span>
+                    </li>
+                    <li>
+                        <span class="contact-name">Alcoholics Anonymous</span>
+                        <span class="contact-number">1-212-870-3400</span>
+                    </li>
+                    <li>
+                        <span class="contact-name">Narcotics Anonymous</span>
+                        <span class="contact-number">1-818-773-9999</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-header">
+                    <div class="resource-title">Mental Health</div>
+                    <div class="resource-type">Professional Support</div>
+                </div>
+                <ul class="resource-contacts">
+                    <li>
+                        <span class="contact-name">NAMI Helpline</span>
+                        <span class="contact-number">1-800-950-6264</span>
+                    </li>
+                    <li>
+                        <span class="contact-name">Crisis Support Services</span>
+                        <span class="contact-number">1-800-233-4357</span>
+                    </li>
+                    <li>
+                        <span class="contact-name">Mental Health America</span>
+                        <span class="contact-number">1-800-969-6642</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-header">
+                    <div class="resource-title">Specialized Support</div>
+                    <div class="resource-type">Targeted Resources</div>
+                </div>
+                <ul class="resource-contacts">
+                    <li>
+                        <span class="contact-name">LGBTQ+ Crisis Line</span>
+                        <span class="contact-number">1-866-488-7386</span>
+                    </li>
+                    <li>
+                        <span class="contact-name">Teen Line</span>
+                        <span class="contact-number">1-800-852-8336</span>
+                    </li>
+                    <li>
+                        <span class="contact-name">Domestic Violence Hotline</span>
+                        <span class="contact-number">1-800-799-7233</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grounding Exercise Modal -->
+    <div class="modal" id="groundingModal">
+        <div class="modal-content">
+            <h3>5-4-3-2-1 Grounding Exercise</h3>
+            <div class="grounding-exercise">
+                <div class="grounding-title" id="groundingTitle">Name 5 things you can see</div>
+                <div class="grounding-instruction" id="groundingInstruction">Look around and identify 5 things you can see right now</div>
+                <div class="grounding-countdown" id="groundingCountdown">5</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-emergency" onclick="nextGroundingStep()">Next</button>
+                <button class="btn btn-secondary" onclick="closeModal('groundingModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Breathing Exercise Modal -->
+    <div class="modal" id="breathingModal">
+        <div class="modal-content">
+            <h3>4-7-8 Breathing Exercise</h3>
+            <div class="grounding-exercise">
+                <div class="grounding-title" id="breathingTitle">Breathe In</div>
+                <div class="grounding-instruction">Inhale through your nose for 4 counts</div>
+                <div class="grounding-countdown" id="breathingCountdown">4</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-emergency" id="breathingButton" onclick="startBreathing()">Start</button>
+                <button class="btn btn-secondary" onclick="closeModal('breathingModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Text Info Modal -->
+    <div class="modal" id="textModal">
+        <div class="modal-content">
+            <h3>Crisis Text Line</h3>
+            <p>The Crisis Text Line provides free, 24/7 support via text message. Simply text "HOME" to 741741 to connect with a trained crisis counselor.</p>
+            <p><strong>When to use:</strong> When you're in crisis, need emotional support, or prefer texting over calling.</p>
+            <div class="modal-actions">
+                <a href="sms:741741?body=HOME" class="btn btn-emergency">Text HOME to 741741</a>
+                <button class="btn btn-secondary" onclick="closeModal('textModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SAMHSA Info Modal -->
+    <div class="modal" id="samhsaModal">
+        <div class="modal-content">
+            <h3>SAMHSA National Helpline</h3>
+            <p>The Substance Abuse and Mental Health Services Administration (SAMHSA) provides free, confidential, 24/7 treatment referral and information services.</p>
+            <p><strong>Services include:</strong> Treatment referrals, local support groups, community organizations, and other mental health resources.</p>
+            <div class="modal-actions">
+                <a href="tel:18006624357" class="btn btn-emergency">Call 1-800-662-4357</a>
+                <button class="btn btn-secondary" onclick="closeModal('samhsaModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem;">
+        <a href="recovery-tools.html" class="btn btn-secondary">BACK TO TOOLS</a>
+    </div>
+
+    <script>
+        // Emergency support functionality
+        let groundingStep = 0;
+        let breathingStep = 0;
+        let breathingTimer = null;
+
+        const groundingSteps = [
+            { title: "Name 5 things you can see", instruction: "Look around and identify 5 things you can see right now", count: 5 },
+            { title: "Name 4 things you can touch", instruction: "Identify 4 things you can feel or touch around you", count: 4 },
+            { title: "Name 3 things you can hear", instruction: "Listen carefully and identify 3 sounds you can hear", count: 3 },
+            { title: "Name 2 things you can smell", instruction: "Focus on 2 scents or smells in your environment", count: 2 },
+            { title: "Name 1 thing you can taste", instruction: "Identify 1 taste in your mouth or something you could taste", count: 1 }
+        ];
+
+        function initializeEmergencySupport() {
+            loadSafetyPlan();
+        }
+
+        function startGroundingExercise() {
+            groundingStep = 0;
+            updateGroundingDisplay();
+            document.getElementById('groundingModal').classList.add('show');
+        }
+
+        function updateGroundingDisplay() {
+            const step = groundingSteps[groundingStep];
+            document.getElementById('groundingTitle').textContent = step.title;
+            document.getElementById('groundingInstruction').textContent = step.instruction;
+            document.getElementById('groundingCountdown').textContent = step.count;
+        }
+
+        function nextGroundingStep() {
+            groundingStep++;
+            if (groundingStep >= groundingSteps.length) {
+                // Completed all steps
+                document.getElementById('groundingTitle').textContent = "Exercise Complete";
+                document.getElementById('groundingInstruction').textContent = "Take a moment to notice how you feel. You've successfully grounded yourself in the present moment.";
+                document.getElementById('groundingCountdown').textContent = "✓";
+                
+                setTimeout(() => {
+                    closeModal('groundingModal');
+                    showToast('Grounding exercise completed. You did great!');
+                }, 3000);
+            } else {
+                updateGroundingDisplay();
+            }
+        }
+
+        function startBreathingExercise() {
+            breathingStep = 0;
+            document.getElementById('breathingModal').classList.add('show');
+        }
+
+        function startBreathing() {
+            breathingStep = 0;
+            breathingCycle();
+        }
+
+        function breathingCycle() {
+            const phases = [
+                { title: "Breathe In", instruction: "Inhale through your nose", duration: 4 },
+                { title: "Hold", instruction: "Hold your breath", duration: 7 },
+                { title: "Breathe Out", instruction: "Exhale slowly through your mouth", duration: 8 },
+                { title: "Rest", instruction: "Relax for a moment", duration: 2 }
+            ];
+            
+            const phase = phases[breathingStep % phases.length];
+            document.getElementById('breathingTitle').textContent = phase.title;
+            document.getElementById('breathingInstruction').textContent = phase.instruction;
+            
+            let count = phase.duration;
+            document.getElementById('breathingCountdown').textContent = count;
+            
+            breathingTimer = setInterval(() => {
+                count--;
+                document.getElementById('breathingCountdown').textContent = count;
+                
+                if (count <= 0) {
+                    clearInterval(breathingTimer);
+                    breathingStep++;
+                    
+                    if (breathingStep < 12) { // 3 complete cycles
+                        setTimeout(breathingCycle, 500);
+                    } else {
+                        document.getElementById('breathingTitle').textContent = "Exercise Complete";
+                        document.getElementById('breathingInstruction').textContent = "Well done! You've completed the breathing exercise.";
+                        document.getElementById('breathingCountdown').textContent = "✓";
+                        
+                        setTimeout(() => {
+                            closeModal('breathingModal');
+                            showToast('Breathing exercise completed. Notice how your body feels now.');
+                        }, 3000);
+                    }
+                }
+            }, 1000);
+        }
+
+        function startColdWaterTechnique() {
+            showToast('Try splashing cold water on your face or holding ice cubes. This activates your dive response and can help calm intense emotions.');
+        }
+
+        function startMindfulnessExercise() {
+            showToast('Focus on your breath. Notice each inhale and exhale. When your mind wanders, gently bring attention back to your breathing.');
+        }
+
+        function openSafetyPlan() {
+            document.getElementById('safetyPlan').style.display = 'block';
+            document.getElementById('safetyPlan').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function hideSafetyPlan() {
+            document.getElementById('safetyPlan').style.display = 'none';
+        }
+
+        function saveSafetyPlan() {
+            const safetyPlanData = {
+                warningSigns: document.getElementById('warningSigns').value,
+                copingStrategies: document.getElementById('copingStrategies').value,
+                supportPeople: document.getElementById('supportPeople').value,
+                professionalContacts: document.getElementById('professionalContacts').value,
+                environmentSafe: document.getElementById('environmentSafe').value,
+                reasonsLiving: document.getElementById('reasonsLiving').value,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('emergencySafetyPlan', JSON.stringify(safetyPlanData));
+            showToast('Safety plan saved successfully. This is kept private on your device.');
+        }
+
+        function loadSafetyPlan() {
+            const saved = localStorage.getItem('emergencySafetyPlan');
+            if (saved) {
+                const safetyPlanData = JSON.parse(saved);
+                document.getElementById('warningSigns').value = safetyPlanData.warningSigns || '';
+                document.getElementById('copingStrategies').value = safetyPlanData.copingStrategies || '';
+                document.getElementById('supportPeople').value = safetyPlanData.supportPeople || '';
+                document.getElementById('professionalContacts').value = safetyPlanData.professionalContacts || '';
+                document.getElementById('environmentSafe').value = safetyPlanData.environmentSafe || '';
+                document.getElementById('reasonsLiving').value = safetyPlanData.reasonsLiving || '';
+            }
+        }
+
+        function printSafetyPlan() {
+            const planContent = document.getElementById('safetyPlan').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head><title>Personal Safety Plan</title></head>
+                <body>${planContent}</body>
+                </html>
+            `);
+            printWindow.print();
+        }
+
+        function callEmergencyContact() {
+            showToast('Reach out to someone you trust - a friend, family member, therapist, or mentor. You don\'t have to go through this alone.');
+        }
+
+        function openTextModal() {
+            document.getElementById('textModal').classList.add('show');
+        }
+
+        function openSamhsaModal() {
+            document.getElementById('samhsaModal').classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+            
+            // Clear any running timers
+            if (breathingTimer) {
+                clearInterval(breathingTimer);
+                breathingTimer = null;
+            }
+        }
+
+        function showToast(message, duration = 5000) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--primary-teal);
+                color: white;
+                padding: 1rem 2rem;
+                border: 3px solid var(--neutral-dark);
+                box-shadow: var(--shadow-brutal);
+                z-index: 1001;
+                font-weight: 600;
+                max-width: 400px;
+                line-height: 1.5;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, duration);
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeEmergencySupport);
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeModal(e.target.id);
+            }
+        });
+
+        // Escape key to close modals
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.show').forEach(modal => {
+                    closeModal(modal.id);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

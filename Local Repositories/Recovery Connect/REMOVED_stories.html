@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspiring Recovery Stories - Recovery Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Figtree:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="config.js"></script>
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --primary-coral: #f97316;
+            --primary-amber: #f59e0b;
+            --secondary-purple: #8b5cf6;
+            --secondary-pink: #ec4899;
+            --accent-lime: #84cc16;
+            --neutral-dark: #0f172a;
+            --neutral-medium: #334155;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-brutal: 8px 8px 0px #0f172a;
+            --shadow-soft: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            cursor: none;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            background: var(--neutral-light);
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-teal);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 2px solid var(--primary-coral);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.3s ease;
+        }
+
+        /* Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-teal), var(--primary-coral), var(--primary-amber));
+            z-index: 1001;
+            transition: width 0.3s ease;
+        }
+
+        /* Header with Brutal Design */
+        header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            border-radius: 0;
+            padding: 1rem 2rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neutral-dark);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            background: var(--primary-teal);
+            color: white;
+            border-color: var(--neutral-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: var(--primary-coral);
+            padding: 10rem 2rem 5rem;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: var(--neutral-light);
+            clip-path: polygon(0 100%, 100% 100%, 100% 0);
+        }
+
+        .page-header h1 {
+            font-family: 'Figtree', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            text-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Stories Section */
+        .stories-section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .story-card {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            transition: all 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translate(-5px, -5px);
+            box-shadow: 13px 13px 0px var(--neutral-dark);
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--neutral-medium);
+            padding-bottom: 1rem;
+        }
+
+        .story-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-teal);
+            border: 3px solid var(--neutral-dark);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 2px 2px 0px var(--neutral-dark);
+        }
+
+        .story-author {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+        }
+
+        .story-source {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .story-content {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .story-link {
+            display: inline-block;
+            background: var(--primary-teal);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            font-weight: 700;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .story-link:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        /* Back to top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-coral);
+            color: white;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--neutral-dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary-amber);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-teal);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 2px solid var(--neutral-medium);
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                position: relative;
+                top: 0;
+                left: 0;
+                transform: none;
+                width: 100%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .page-header {
+                padding-top: 5rem;
+            }
+        }
+
+        /* Noise texture overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><filter id="noise"><feTurbulence baseFrequency="0.9" numOctaves="1" seed="1"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.4"/></svg>');
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">R_CONNECT</a>
+            <ul class="nav-links">
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="resource-library.html">Resources</a></li>
+                <li><a href="index.html#chat">Community</a></li>
+                <li><a href="index.html#testimonials">Stories</a></li>
+                <li><a href="community-guidelines.html">Guidelines</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1>INSPIRING RECOVERY STORIES</h1>
+        <p>Real stories from real people who have overcome substance abuse and mental health challenges to lead fulfilling lives in recovery</p>
+    </section>
+
+    <!-- Stories -->
+    <main class="container">
+        <section class="stories-section">
+            <div class="story-card fade-in">
+                <div class="story-header">
+                    <div class="story-avatar">G</div>
+                    <div>
+                        <h3 class="story-author">Gina's Journey from Heroin Addiction</h3>
+                        <div class="story-source">Source: Recovery Centers of America</div>
+                    </div>
+                </div>
+                <p class="story-content">
+                    Gina shares her 20-year struggle with heroin addiction, starting at age 13, and her recovery after a near-fatal fall. Her story highlights the transformative power of treatment and personal resilience. Through dedicated recovery work and support, she has rebuilt her life and now helps others find hope in their darkest moments.
+                </p>
+                <a href="https://recoverycentersofamerica.com/blogs/living-recovery-true-stories-of-addiction-recovery/" target="_blank" class="story-link">READ FULL STORY</a>
+            </div>
+
+            <div class="story-card fade-in">
+                <div class="story-header">
+                    <div class="story-avatar">K</div>
+                    <div>
+                        <h3 class="story-author">Katie's Family-Inspired Sobriety</h3>
+                        <div class="story-source">Source: Recovery Centers of America</div>
+                    </div>
+                </div>
+                <p class="story-content">
+                    Katie, inspired by her father's 35 years of sobriety, overcame alcohol addiction after a DUI at 22. She now works as a counselor, showing the impact of family legacy and professional support. Katie's journey demonstrates how having a positive role model in recovery can provide both motivation and a roadmap for success.
+                </p>
+                <a href="https://recoverycentersofamerica.com/blogs/living-recovery-true-stories-of-addiction-recovery/" target="_blank" class="story-link">READ FULL STORY</a>
+            </div>
+
+            <div class="story-card fade-in">
+                <div class="story-header">
+                    <div class="story-avatar">J</div>
+                    <div>
+                        <h3 class="story-author">John Vance's Transformation</h3>
+                        <div class="story-source">Source: Stand Together</div>
+                    </div>
+                </div>
+                <p class="story-content">
+                    John, once homeless and addicted to meth, found recovery at 3 a.m. in his car. He now helps others, demonstrating hope and community impact. John's story shows that even in the darkest moments, a decision to change can transform not only one's own life but also create ripple effects that benefit an entire community.
+                </p>
+                <a href="https://standtogether.org/stories/strong-safe-communities/addiction-recovery-stories-how-one-man-turned-addiction-into-hope" target="_blank" class="story-link">READ FULL STORY</a>
+            </div>
+
+            <div class="story-card fade-in">
+                <div class="story-header">
+                    <div class="story-avatar">A</div>
+                    <div>
+                        <h3 class="story-author">Ashleigh's Academic Recovery</h3>
+                        <div class="story-source">Source: Just Think Twice</div>
+                    </div>
+                </div>
+                <p class="story-content">
+                    Ashleigh began using heroin at 18 but achieved sobriety and graduated at the top of her class with bachelor's and master's degrees, showcasing academic and personal triumph. Her journey demonstrates that addiction does not define your potential, and with determination and support, educational achievements are possible in recovery.
+                </p>
+                <a href="https://www.justthinktwice.gov/true-stories" target="_blank" class="story-link">READ FULL STORY</a>
+            </div>
+
+            <div class="story-card fade-in">
+                <div class="story-header">
+                    <div class="story-avatar">H</div>
+                    <div>
+                        <h3 class="story-author">Heather's Mental Health Triumph</h3>
+                        <div class="story-source">Source: NAMI</div>
+                    </div>
+                </div>
+                <p class="story-content">
+                    Heather shares her recovery from depression and suicide attempts, finding purpose as a NAMI Communications Manager and advocate. Her journey illustrates how personal struggles with mental health can be transformed into a mission to help others through advocacy and open conversation.
+                </p>
+                <a href="https://www.nami.org/anxiety-disorders/my-fight-for-recovery/" target="_blank" class="story-link">READ FULL STORY</a>
+            </div>
+
+            <div class="story-card fade-in">
+                <div class="story-header">
+                    <div class="story-avatar">N</div>
+                    <div>
+                        <h3 class="story-author">NAMI Personal Stories Collection</h3>
+                        <div class="story-source">Source: NAMI</div>
+                    </div>
+                </div>
+                <p class="story-content">
+                    A diverse collection of personal stories from individuals with mental health conditions, including recovery from depression, anxiety, and co-occurring disorders. These stories provide insights into the many paths to mental health recovery and how individuals have found strength through vulnerability and community.
+                </p>
+                <a href="https://www.nami.org/personal-stories/" target="_blank" class="story-link">EXPLORE STORIES</a>
+            </div>
+
+            <div class="story-card fade-in">
+                <div class="story-header">
+                    <div class="story-avatar">N</div>
+                    <div>
+                        <h3 class="story-author">NextLevel Recovery Stories</h3>
+                        <div class="story-source">Source: Indiana Government</div>
+                    </div>
+                </div>
+                <p class="story-content">
+                    Video testimonials from Indiana residents, such as Lindsay and Lori, who overcame substance use disorders with family and community support. These stories highlight the importance of local resources and how state-level programs can make a significant difference in individual recovery journeys.
+                </p>
+                <a href="https://www.in.gov/recovery/know-the-facts/stories/" target="_blank" class="story-link">WATCH VIDEOS</a>
+            </div>
+
+            <div class="story-card fade-in">
+                <div class="story-header">
+                    <div class="story-avatar">S</div>
+                    <div>
+                        <h3 class="story-author">Shatterproof Recovery Story</h3>
+                        <div class="story-source">Source: Shatterproof</div>
+                    </div>
+                </div>
+                <p class="story-content">
+                    An anonymous individual shares how recovery revealed their inner strength, transforming negative self-perceptions into a positive outlook. This story emphasizes that recovery is not just about abstinence from substances but about discovering one's true worth and potential that addiction had previously obscured.
+                </p>
+                <a href="https://www.shatterproof.org/blog/i-am-not-defined-my-past-my-recovery-story" target="_blank" class="story-link">READ FULL STORY</a>
+            </div>
+
+            <div class="story-card fade-in">
+                <div class="story-header">
+                    <div class="story-avatar">A</div>
+                    <div>
+                        <h3 class="story-author">Addiction Hope Stories</h3>
+                        <div class="story-source">Source: Addiction Hope</div>
+                    </div>
+                </div>
+                <p class="story-content">
+                    Stories of men and women, like Stan K. and Tucker Allgood, who overcame alcoholism and drug addiction, emphasizing long-term recovery blessings. These narratives showcase the many gifts that come with sustained recovery, from restored relationships to newfound purpose and joy in everyday life.
+                </p>
+                <a href="https://www.addictionhope.com/recovery/inspirational-stories/" target="_blank" class="story-link">EXPLORE STORIES</a>
+            </div>
+
+            <div class="story-card fade-in">
+                <div class="story-header">
+                    <div class="story-avatar">Y</div>
+                    <div>
+                        <h3 class="story-author">Sober YouTube Channels</h3>
+                        <div class="story-source">Source: The Sober Curator</div>
+                    </div>
+                </div>
+                <p class="story-content">
+                    A curated list of 18 YouTube channels featuring recovery stories, including video testimonials from individuals like Kat and Alisha. These video formats offer a more personal connection to recovery stories, allowing viewers to see and hear firsthand accounts of transformation and hope.
+                </p>
+                <a href="https://thesobercurator.com/18-super-sober-youtube-channels-you-should-be-following/" target="_blank" class="story-link">EXPLORE CHANNELS</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Back to Top -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>RECOVERY CONNECT</h3>
+                <p>Supporting your journey to recovery with compassion, understanding, and evidence-based resources.</p>
+            </div>
+            <div class="footer-section">
+                <h3>RESOURCES</h3>
+                <ul class="footer-links">
+                    <li><a href="resource-library.html">Resource Library</a></li>
+                    <li><a href="index.html#chat">Community Chat</a></li>
+                    <li><a href="crisis-support.html">Crisis Support</a></li>
+
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>SUPPORT</h3>
+                <ul class="footer-links">
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="community-guidelines.html">Community Guidelines</a></li>
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms-of-service.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>CRISIS HELPLINES</h3>
+                <ul class="footer-links">
+                    <li>SAMHSA: 1-800-662-HELP</li>
+                    <li>Crisis Text Line: Text HOME to 741741</li>
+                    <li>National Suicide Prevention: 988</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 RECOVERY CONNECT. ESTABLISHED 2025. ALL RIGHTS RESERVED.</p>
+            <p>THIS PLATFORM PROVIDES PEER SUPPORT AND IS NOT A SUBSTITUTE FOR PROFESSIONAL MEDICAL CARE.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.custom-cursor');
+        const follower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                follower.style.left = e.clientX + 'px';
+                follower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Scroll Progress
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.querySelector('.scroll-progress').style.width = scrolled + '%';
+        });
+
+        // Back to top button
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+
+        backToTopButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Enhanced hover effects for story cards
+        document.querySelectorAll('.story-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                cursor.style.transform = 'scale(2)';
+                follower.style.transform = 'scale(1.5)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                cursor.style.transform = 'scale(1)';
+                follower.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

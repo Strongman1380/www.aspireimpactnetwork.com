@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crisis Support & Safety Planning - Recovery Connect</title>
+    
+    <!-- Aminos AI Chat Bot -->
+    <script src="https://app.aminos.ai/js/chat_plugin.js" data-bot-id="52714"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Figtree:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="config.js"></script>
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --primary-coral: #f97316;
+            --primary-amber: #f59e0b;
+            --secondary-purple: #8b5cf6;
+            --secondary-pink: #ec4899;
+            --accent-lime: #84cc16;
+            --neutral-dark: #0f172a;
+            --neutral-medium: #334155;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+            --shadow-brutal: 8px 8px 0px #0f172a;
+            --emergency-red: #ef4444;
+            --success-green: #22c55e;
+            --warning-yellow: #eab308;
+            --crisis-orange: #fb7185;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--neutral-light);
+        }
+
+        /* Header */
+        header {
+            background: white;
+            border-bottom: 4px solid var(--neutral-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-teal);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            background: var(--primary-teal);
+            color: white;
+            border: 3px solid var(--neutral-dark);
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .crisis-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .crisis-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--emergency-red), var(--crisis-orange));
+            color: white;
+            padding: 3rem;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+        }
+
+        .crisis-header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            text-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .crisis-header p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .ai-crisis-banner {
+            background: linear-gradient(135deg, var(--secondary-purple), var(--neutral-dark));
+            color: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .ai-crisis-banner h3 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .immediate-crisis {
+            background: var(--emergency-red);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            animation: pulse-urgent 2s infinite;
+        }
+
+        @keyframes pulse-urgent {
+            0%, 100% { transform: scale(1); box-shadow: var(--shadow-brutal); }
+            50% { transform: scale(1.02); box-shadow: 12px 12px 0px var(--neutral-dark); }
+        }
+
+        .immediate-crisis h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .crisis-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .crisis-btn {
+            background: white;
+            color: var(--emergency-red);
+            padding: 1.5rem;
+            text-decoration: none;
+            font-weight: 900;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .crisis-btn:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--neutral-dark);
+        }
+
+        .crisis-btn.emergency {
+            background: var(--emergency-red);
+            color: white;
+        }
+
+        .crisis-btn.text {
+            background: var(--primary-teal);
+            color: white;
+        }
+
+        .resource-section {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            background: var(--primary-teal);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .resource-card {
+            background: var(--neutral-light);
+            border: 3px solid var(--neutral-dark);
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 8px 8px 0px var(--neutral-dark);
+        }
+
+        .resource-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--neutral-dark);
+        }
+
+        .resource-contact {
+            background: var(--primary-teal);
+            color: white;
+            padding: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .resource-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .resource-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .resource-btn {
+            flex: 1;
+            text-align: center;
+            padding: 0.8rem;
+            background: var(--primary-teal);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            border: 2px solid var(--neutral-dark);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .resource-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .resource-btn.call {
+            background: var(--emergency-red);
+        }
+
+        .resource-btn.text {
+            background: var(--primary-coral);
+        }
+
+        /* AI Companion Section */
+        .ai-companion-section {
+            background: var(--primary-coral);
+            padding: 4rem 2rem;
+            color: white;
+            margin-bottom: 3rem;
+            position: relative;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+        }
+
+        .ai-companion-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .ai-companion-icon {
+            width: 100px;
+            height: 100px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary-coral);
+            margin-bottom: 2rem;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            border-radius: 50%;
+        }
+
+        .ai-companion-title {
+            font-family: 'Figtree', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .ai-companion-description {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .ai-companion-button {
+            background: white;
+            color: var(--primary-coral);
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        .ai-companion-button:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 8px 8px 0px var(--neutral-dark);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: var(--primary-teal);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--neutral-dark);
+        }
+
+        @media (max-width: 768px) {
+            .crisis-container {
+                padding: 1rem;
+            }
+
+            .crisis-header h1 {
+                font-size: 2rem;
+            }
+
+            .crisis-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .resource-actions {
+                flex-direction: column;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success-green);
+            color: white;
+            padding: 1rem 2rem;
+            border: 3px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            z-index: 1001;
+            font-weight: 600;
+            max-width: 350px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: var(--emergency-red);
+        }
+
+        .toast.warning {
+            background: var(--warning-yellow);
+            color: var(--neutral-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">R_CONNECT</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="crisis-support.html">Crisis Help</a></li>
+                <li><a href="recovery-tools.html">Quick Tools</a></li>
+                <li><a href="meeting-search.html">Find Meetings</a></li>
+                <li><a href="recovery-companion-demo.html">AI Help</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="crisis-container">
+        <!-- Crisis Header -->
+        <div class="crisis-header">
+            <h1><i class="fas fa-shield-alt"></i> Crisis Support</h1>
+            <p>Immediate access to crisis resources when you need them most.</p>
+        </div>
+
+        <!-- Immediate Crisis Support -->
+        <div class="immediate-crisis">
+            <h2><i class="fas fa-exclamation-triangle"></i> Need Help Right Now?</h2>
+            <p>If you're experiencing thoughts of self-harm, suicide, or are in immediate danger, please reach out for help immediately. These resources are available 24/7.</p>
+            
+            <div class="crisis-buttons">
+                <a href="tel:988" class="crisis-btn emergency">
+                    <i class="fas fa-phone-alt"></i>
+                    Call 988 - Crisis Line
+                </a>
+                <a href="sms:741741&body=HOME" class="crisis-btn text">
+                    <i class="fas fa-comment-alt"></i>
+                    Text HOME to 741741
+                </a>
+                <a href="tel:911" class="crisis-btn emergency">
+                    <i class="fas fa-ambulance"></i>
+                    Emergency: 911
+                </a>
+                <a href="meeting-search.html" class="crisis-btn text">
+                    <i class="fas fa-users"></i>
+                    Find AA/NA Meetings
+                </a>
+            </div>
+        </div>
+
+        <!-- AI Companion Section -->
+        <div class="ai-companion-section">
+            <div class="ai-companion-content">
+                <div class="ai-companion-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="ai-companion-title">AI Support Available 24/7</h3>
+                <p class="ai-companion-description">Sam is here 24/7 and understands crisis moments from personal experience. Sam can provide immediate emotional support, help you through difficult feelings, and connect you with the right crisis resources when you need them most.</p>
+                <a href="recovery-companion-demo.html" class="ai-companion-button">
+                    TALK WITH SAM NOW
+                </a>
+            </div>
+        </div>
+
+        <!-- Resource Section -->
+        <div class="resource-section">
+            <div class="section-header">
+                <h2><i class="fas fa-clipboard-list"></i> Crisis Resources</h2>
+                <p>Access these resources for immediate support during difficult times.</p>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-title">National Suicide Prevention Lifeline</div>
+                    <div class="resource-contact">988</div>
+                    <div class="resource-description">24/7 crisis support and suicide prevention. Free and confidential support for people in distress, and prevention and crisis resources for you or your loved ones.</div>
+                    <div class="resource-actions">
+                        <a href="tel:988" class="resource-btn call">Call Now</a>
+                        <a href="https://suicidepreventionlifeline.org/chat/" class="resource-btn" target="_blank">Online Chat</a>
+                    </div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-title">Crisis Text Line</div>
+                    <div class="resource-contact">Text HOME to 741741</div>
+                    <div class="resource-description">Free 24/7 support for those in crisis. Text with a trained Crisis Counselor for support with anxiety, depression, suicidal thoughts, and more.</div>
+                    <div class="resource-actions">
+                        <a href="sms:741741&body=HOME" class="resource-btn text">Text Now</a>
+                        <a href="https://www.crisistextline.org/" class="resource-btn" target="_blank">Learn More</a>
+                    </div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-title">SAMHSA's National Helpline</div>
+                    <div class="resource-contact">1-800-662-4357</div>
+                    <div class="resource-description">Treatment referral and information service for individuals and families facing mental health and/or substance use disorders.</div>
+                    <div class="resource-actions">
+                        <a href="tel:18006624357" class="resource-btn call">Call Now</a>
+                        <a href="https://www.samhsa.gov/find-help/national-helpline" class="resource-btn" target="_blank">Learn More</a>
+                    </div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-title">Veterans Crisis Line</div>
+                    <div class="resource-contact">Dial 988, then press 1</div>
+                    <div class="resource-description">Connects veterans and their families in crisis with qualified, caring Department of Veterans Affairs responders.</div>
+                    <div class="resource-actions">
+                        <a href="tel:988" class="resource-btn call">Call Now</a>
+                        <a href="https://www.veteranscrisisline.net/" class="resource-btn" target="_blank">Learn More</a>
+                    </div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-title">Emergency Services</div>
+                    <div class="resource-contact">911</div>
+                    <div class="resource-description">For immediate life-threatening emergencies or situations requiring immediate intervention.</div>
+                    <div class="resource-actions">
+                        <a href="tel:911" class="resource-btn call">Call 911</a>
+                    </div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-title">Trevor Project (LGBTQ Youth)</div>
+                    <div class="resource-contact">1-866-488-7386</div>
+                    <div class="resource-description">Crisis intervention and suicide prevention services for LGBTQ young people under 25.</div>
+                    <div class="resource-actions">
+                        <a href="tel:18664887386" class="resource-btn call">Call Now</a>
+                        <a href="https://www.thetrevorproject.org/" class="resource-btn" target="_blank">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin: 3rem 0;">
+        <a href="recovery-tools.html" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Recovery Tools
+        </a>
+    </div>
+</body>
+</html>

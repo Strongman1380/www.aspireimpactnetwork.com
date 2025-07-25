@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery Connect - Firebase Database Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- Configuration and Utilities -->
+    <script src="config.js"></script>
+    <script src="assets/js/firebase-data.js"></script>
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --primary-coral: #f97316;
+            --primary-amber: #f59e0b;
+            --secondary-purple: #8b5cf6;
+            --secondary-pink: #ec4899;
+            --accent-lime: #84cc16;
+            --neutral-dark: #0f172a;
+            --neutral-medium: #334155;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-brutal: 8px 8px 0px #0f172a;
+            --shadow-soft: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--neutral-light);
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-teal);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: var(--neutral-dark);
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+        }
+
+        .error-message {
+            color: #e11d48;
+            font-weight: 500;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .button-primary {
+            background: var(--primary-teal);
+            color: white;
+            border: none;
+        }
+
+        .button-primary:hover {
+            background: #0891b2;
+        }
+
+        .button-secondary {
+            background: var(--primary-amber);
+            color: white;
+            border: none;
+        }
+
+        .button-secondary:hover {
+            background: #d97706;
+        }
+
+        .button-text {
+            color: var(--primary-teal);
+            background: transparent;
+            border: none;
+        }
+
+        .button-text:hover {
+            color: #0891b2;
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.25rem;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .resource-card, .story-card, .crisis-resource {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .resource-meta {
+            display: flex;
+            gap: 1rem;
+            margin: 0.5rem 0 1rem;
+            color: var(--text-secondary);
+        }
+
+        .story-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .story-author {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .story-excerpt {
+            margin-bottom: 1rem;
+        }
+
+        .resource-contact {
+            margin-top: 1rem;
+        }
+
+        .tab-container {
+            margin-bottom: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 0.25rem 0.25rem 0 0;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            background: var(--primary-teal);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, .3);
+            border-radius: 50%;
+            border-top-color: var(--primary-teal);
+            animation: spin 1s ease-in-out infinite;
+            margin: 2rem auto;
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Recovery Connect</h1>
+            <p>Firebase Database Integration Demo</p>
+        </header>
+
+        <div class="card">
+            <h2>Database Connection Status</h2>
+            <div id="connection-status">
+                <div class="loader"></div>
+                <p>Checking connection to Firebase...</p>
+            </div>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" data-tab="treatment">Treatment Resources</div>
+                <div class="tab" data-tab="stories">Recovery Stories</div>
+                <div class="tab" data-tab="crisis">Crisis Resources</div>
+                <div class="tab" data-tab="submit">Submit Your Story</div>
+            </div>
+
+            <div class="tab-content active" id="treatment-tab">
+                <h2>Treatment Resources</h2>
+                <p>Find treatment options near you.</p>
+                <div id="treatment-resources">
+                    <div class="loader"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="stories-tab">
+                <h2>Recovery Stories</h2>
+                <p>Read inspiring stories from those who have been through recovery.</p>
+                <div id="recovery-stories">
+                    <div class="loader"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="crisis-tab">
+                <h2>Crisis Resources</h2>
+                <p>Immediate help for those in crisis.</p>
+                <div id="crisis-resources">
+                    <div class="loader"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="submit-tab">
+                <h2>Share Your Story</h2>
+                <p>Your experience could help others on their recovery journey.</p>
+                <form id="story-form">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Your Name or Alias</label>
+                        <input type="text" id="author" name="author" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="excerpt">Brief Summary (displayed in previews)</label>
+                        <textarea id="excerpt" name="excerpt" maxlength="200" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Your Full Story</label>
+                        <textarea id="content" name="content" required></textarea>
+                    </div>
+                    <button type="submit" class="button button-primary">Submit Story</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Firebase
+            const connectionStatus = document.getElementById('connection-status');
+            try {
+                const initialized = window.recoverConnect.initializeFirebase();
+                if (initialized) {
+                    connectionStatus.innerHTML = `
+                        <p style="color: green;"><i class="fas fa-check-circle"></i> Connected to Firebase successfully</p>
+                        <p>Database URL: ${firebaseConfig.databaseURL}</p>
+                    `;
+                    
+                    // Load data for each tab
+                    window.recoverConnect.loadTreatmentResources();
+                    window.recoverConnect.loadRecoveryStories();
+                    window.recoverConnect.loadCrisisResources();
+                } else {
+                    connectionStatus.innerHTML = `
+                        <p class="error-message"><i class="fas fa-exclamation-triangle"></i> Failed to initialize Firebase</p>
+                    `;
+                }
+            } catch (error) {
+                connectionStatus.innerHTML = `
+                    <p class="error-message"><i class="fas fa-exclamation-triangle"></i> Error connecting to Firebase: ${error.message}</p>
+                `;
+            }
+
+            // Tab switching
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Remove active class from all tabs
+                    tabs.forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    
+                    // Show selected tab content and set active class
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    tab.classList.add('active');
+                });
+            });
+
+            // Handle story submission
+            const storyForm = document.getElementById('story-form');
+            storyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const storyData = {
+                    title: document.getElementById('title').value,
+                    author: document.getElementById('author').value,
+                    excerpt: document.getElementById('excerpt').value,
+                    content: document.getElementById('content').value,
+                    dateSubmitted: new Date().toISOString(),
+                    published: false // New stories are set to unpublished by default
+                };
+                
+                const submitButton = storyForm.querySelector('button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.textContent = 'Submitting...';
+                submitButton.disabled = true;
+                
+                const success = await window.recoverConnect.submitUserStory(storyData);
+                
+                if (success) {
+                    storyForm.reset();
+                }
+                
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Integration Example</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --neutral-dark: #0f172a;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--neutral-light);
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            margin-bottom: 2rem;
+        }
+        h1 {
+            color: var(--primary-teal);
+            margin-bottom: 0.5rem;
+        }
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        h2 {
+            margin-bottom: 1rem;
+            color: var(--neutral-dark);
+        }
+        button {
+            background: var(--primary-teal);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        code {
+            display: block;
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        .output {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Firebase Integration Example</h1>
+            <p>This page demonstrates how to use the updated Firebase configuration.</p>
+        </header>
+
+        <div class="card">
+            <h2>Analytics Demo</h2>
+            <p>Click the button to log an analytics event:</p>
+            <button id="log-event">Log Page View Event</button>
+            <div class="output" id="analytics-output">Results will appear here...</div>
+        </div>
+
+        <div class="card">
+            <h2>Realtime Database Demo</h2>
+            <button id="read-data">Read Treatment Resources</button>
+            <button id="write-data">Add Sample Resource</button>
+            <button id="subscribe">Subscribe to Updates</button>
+            <div class="output" id="database-output">Results will appear here...</div>
+        </div>
+
+        <div class="card">
+            <h2>Firebase Configuration</h2>
+            <p>Current configuration being used:</p>
+            <code id="config-display">Loading configuration...</code>
+        </div>
+    </div>
+
+    <!-- Firebase will be imported by the module script -->
+    <script type="module">
+        // Import our Firebase integration module
+        import { 
+            app, 
+            analytics, 
+            logPageView, 
+            readDatabaseData, 
+            writeDatabaseData, 
+            subscribeToUpdates 
+        } from './firebase-integration.js';
+
+        // When page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Display the current configuration (sensitive info redacted)
+            document.getElementById('config-display').textContent = JSON.stringify({
+                apiKey: "AIza***************Q1Q",
+                authDomain: "lift-and-renewal-33bbb.firebaseapp.com",
+                databaseURL: "https://lift-and-renewal-33bbb-default-rtdb.firebaseio.com",
+                projectId: "lift-and-renewal-33bbb",
+                storageBucket: "lift-and-renewal-33bbb.firebasestorage.app",
+                messagingSenderId: "9455*****80",
+                appId: "1:9455*****80:web:25c****1f31edb1",
+                measurementId: "G-4QK****4SP"
+            }, null, 2);
+
+            // Set up analytics event logging
+            document.getElementById('log-event').addEventListener('click', () => {
+                logPageView('Firebase Example Page');
+                document.getElementById('analytics-output').innerHTML = 
+                    `<p>Event logged at ${new Date().toLocaleTimeString()}</p>
+                    <p>Check Firebase Analytics dashboard to see the event.</p>`;
+            });
+
+            // Set up database read
+            document.getElementById('read-data').addEventListener('click', async () => {
+                const output = document.getElementById('database-output');
+                output.innerHTML = 'Loading data...';
+                
+                try {
+                    const data = await readDatabaseData('treatment');
+                    output.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } catch (error) {
+                    output.innerHTML = `<p style="color: red">Error: ${error.message}</p>`;
+                }
+            });
+
+            // Set up database write
+            document.getElementById('write-data').addEventListener('click', async () => {
+                const output = document.getElementById('database-output');
+                output.innerHTML = 'Writing data...';
+                
+                const newResource = {
+                    name: "Sample Recovery Center",
+                    description: "A sample treatment center added via the Firebase integration.",
+                    location: "Example City, CA",
+                    phone: "555-123-4567",
+                    website: "https://example.com/sample",
+                    type: "outpatient",
+                    services: ["therapy", "support-groups", "aftercare"]
+                };
+                
+                try {
+                    // Generate a timestamp-based ID
+                    const id = `sample_${Date.now()}`;
+                    const success = await writeDatabaseData(`treatment/${id}`, newResource);
+                    
+                    if (success) {
+                        output.innerHTML = `<p>Successfully added sample resource with ID: ${id}</p>`;
+                    } else {
+                        output.innerHTML = `<p style="color: red">Failed to write data</p>`;
+                    }
+                } catch (error) {
+                    output.innerHTML = `<p style="color: red">Error: ${error.message}</p>`;
+                }
+            });
+
+            // Set up real-time subscription
+            document.getElementById('subscribe').addEventListener('click', () => {
+                const output = document.getElementById('database-output');
+                output.innerHTML = 'Subscribing to updates...';
+                
+                // Subscribe to treatment updates
+                subscribeToUpdates('treatment', (data) => {
+                    const count = data ? Object.keys(data).length : 0;
+                    const timestamp = new Date().toLocaleTimeString();
+                    
+                    output.innerHTML = `
+                        <p>Subscription active! Treatment resources count: ${count}</p>
+                        <p>Last updated: ${timestamp}</p>
+                        <p>Add or change resources to see real-time updates here.</p>
+                    `;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

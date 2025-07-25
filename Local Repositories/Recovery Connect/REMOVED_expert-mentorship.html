@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Mentorship - Recovery Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-teal: #06b6d4;
+            --color-coral: #f97316;
+            --color-amber: #f59e0b;
+            --color-purple: #8b5cf6;
+            --color-gray-900: #0f172a;
+            --color-gray-100: #f1f5f9;
+            --color-white: #ffffff;
+            --color-red: #dc2626;
+            --shadow-brutal: 8px 8px 0px var(--color-gray-900);
+            --border-brutal: 3px solid var(--color-gray-900);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            background-color: var(--color-gray-100);
+            color: var(--color-gray-900);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--color-white);
+            border: var(--border-brutal);
+            box-shadow: var(--shadow-brutal);
+        }
+
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--color-teal);
+            border: var(--border-brutal);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--color-white);
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: var(--color-amber);
+            color: var(--color-gray-900);
+            padding: 0.5rem 1rem;
+            border: var(--border-brutal);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--color-gray-900);
+        }
+
+        .interest-form {
+            background: var(--color-white);
+            border: var(--border-brutal);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--color-purple);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--color-gray-900);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 1rem;
+            border: var(--border-brutal);
+            background: var(--color-gray-100);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--color-teal);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: var(--color-coral);
+            color: var(--color-white);
+            border: var(--border-brutal);
+            padding: 1rem 2rem;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--color-gray-900);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: var(--color-white);
+            border: var(--border-brutal);
+            box-shadow: var(--shadow-brutal);
+            padding: 2rem;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--color-purple);
+            border: var(--border-brutal);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-white);
+            font-size: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--color-gray-900);
+        }
+
+        .success-message {
+            background: #10b981;
+            color: var(--color-white);
+            padding: 1rem;
+            border: var(--border-brutal);
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .back-link {
+            display: inline-block;
+            background: var(--color-gray-900);
+            color: var(--color-white);
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border: var(--border-brutal);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-link:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--color-teal);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="peer-mentorship.html" class="back-link">← Back to Peer Mentorship</a>
+        
+        <div class="header">
+            <div class="header-icon">👨‍⚕️</div>
+            <h1>Expert Mentorship</h1>
+            <p class="description">Connect with experienced recovery mentors and licensed professionals who guide your personal journey.</p>
+            <div class="status-badge">Coming Soon</div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎓</div>
+                <div class="feature-title">Licensed Professionals</div>
+                <p>Access certified therapists, counselors, and addiction specialists for professional guidance.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <div class="feature-title">Experienced Mentors</div>
+                <p>Connect with individuals who have successfully navigated their recovery journey.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <div class="feature-title">1-on-1 Sessions</div>
+                <p>Personalized mentorship sessions tailored to your specific needs and goals.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <div class="feature-title">Flexible Scheduling</div>
+                <p>Book sessions that fit your schedule with easy online booking system.</p>
+            </div>
+        </div>
+
+        <div class="interest-form">
+            <h2 class="form-title">Express Your Interest</h2>
+            <p style="margin-bottom: 1.5rem;">Join our waitlist to be notified when Expert Mentorship becomes available.</p>
+            
+            <div class="success-message" id="successMessage">
+                Thank you! Your interest has been recorded and you'll receive an email confirmation shortly.
+            </div>
+            
+            <form id="interestForm">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                
+                <div class="form-group">
+                    <label for="mentorshipType">Type of Mentorship Interest *</label>
+                    <select id="mentorshipType" name="mentorshipType" required>
+                        <option value="">Select an option</option>
+                        <option value="licensed-professional">Licensed Professional</option>
+                        <option value="peer-mentor">Experienced Peer Mentor</option>
+                        <option value="both">Both Options</option>
+                        <option value="unsure">Not Sure Yet</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="recovery-stage">Current Recovery Stage</label>
+                    <select id="recovery-stage" name="recovery-stage">
+                        <option value="">Select an option</option>
+                        <option value="considering">Considering Recovery</option>
+                        <option value="early">Early Recovery (0-1 year)</option>
+                        <option value="established">Established Recovery (1-5 years)</option>
+                        <option value="long-term">Long-term Recovery (5+ years)</option>
+                        <option value="supporting">Supporting Someone Else</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="specific-needs">Specific Areas of Interest</label>
+                    <textarea id="specific-needs" name="specific-needs" placeholder="Tell us about specific areas where you'd like mentorship support (e.g., addiction recovery, mental health, career, relationships, etc.)"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="availability">Preferred Session Times</label>
+                    <select id="availability" name="availability">
+                        <option value="">Select preference</option>
+                        <option value="morning">Morning (8AM - 12PM)</option>
+                        <option value="afternoon">Afternoon (12PM - 5PM)</option>
+                        <option value="evening">Evening (5PM - 8PM)</option>
+                        <option value="flexible">Flexible</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="additional-info">Additional Information</label>
+                    <textarea id="additional-info" name="additional-info" placeholder="Any additional information you'd like to share about your mentorship needs or expectations"></textarea>
+                </div>
+                
+                <button type="submit" class="btn">Join Waitlist</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('interestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const formObject = {};
+            
+            for (let [key, value] of formData.entries()) {
+                formObject[key] = value;
+            }
+            
+            // Add timestamp
+            formObject.timestamp = new Date().toISOString();
+            formObject.type = 'expert-mentorship-interest';
+            
+            // Store in localStorage for now
+            const existingInterests = JSON.parse(localStorage.getItem('expertMentorshipInterests') || '[]');
+            existingInterests.push(formObject);
+            localStorage.setItem('expertMentorshipInterests', JSON.stringify(existingInterests));
+            
+            // Send email (this would need backend implementation)
+            sendInterestEmail(formObject);
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            this.reset();
+            
+            // Scroll to success message
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        function sendInterestEmail(data) {
+            // Create email content
+            const emailContent = `
+New Expert Mentorship Interest Submission
+
+Name: ${data.name}
+Email: ${data.email}
+Phone: ${data.phone || 'Not provided'}
+Mentorship Type: ${data.mentorshipType}
+Recovery Stage: ${data['recovery-stage'] || 'Not specified'}
+Availability: ${data.availability || 'Not specified'}
+
+Specific Areas of Interest:
+${data['specific-needs'] || 'None specified'}
+
+Additional Information:
+${data['additional-info'] || 'None provided'}
+
+Submitted: ${new Date(data.timestamp).toLocaleString()}
+            `;
+            
+            // Create mailto link
+            const subject = encodeURIComponent('New Expert Mentorship Interest - Recovery Connect');
+            const body = encodeURIComponent(emailContent);
+            const mailtoLink = `mailto:brandon.hinrichs@apsireimpactnetwork.com?subject=${subject}&body=${body}`;
+            
+            // Open email client
+            window.open(mailtoLink);
+        }
+        
+        // Load and display stored interests (for admin purposes)
+        function loadStoredInterests() {
+            const interests = JSON.parse(localStorage.getItem('expertMentorshipInterests') || '[]');
+            console.log('Stored Expert Mentorship Interests:', interests);
+            return interests;
+        }
+        
+        // Export function for admin
+        function exportInterests() {
+            const interests = loadStoredInterests();
+            const dataStr = JSON.stringify(interests, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `expert-mentorship-interests-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Make functions available globally for console access
+        window.loadStoredInterests = loadStoredInterests;
+        window.exportInterests = exportInterests;
+    </script>
+</body>
+</html>

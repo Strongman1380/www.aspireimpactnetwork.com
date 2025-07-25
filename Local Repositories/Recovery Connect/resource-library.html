@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Library - Recovery Connect</title>
+    
+    <!-- Aminos AI Chat Bot -->
+    <script src="https://app.aminos.ai/js/chat_plugin.js" data-bot-id="52714"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Figtree:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="config.js"></script>
+    <style>
+        :root {
+            --primary-teal: #06b6d4;
+            --primary-coral: #f97316;
+            --primary-amber: #f59e0b;
+            --secondary-purple: #8b5cf6;
+            --secondary-pink: #ec4899;
+            --accent-lime: #84cc16;
+            --neutral-dark: #0f172a;
+            --neutral-medium: #334155;
+            --neutral-light: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-brutal: 8px 8px 0px #0f172a;
+            --shadow-soft: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            cursor: none;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            background: var(--neutral-light);
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-teal);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 2px solid var(--primary-coral);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.3s ease;
+        }
+
+        /* Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-teal), var(--primary-coral), var(--primary-amber));
+            z-index: 1001;
+            transition: width 0.3s ease;
+        }
+
+        /* Loading Screen with 3D Effects */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--neutral-dark) 0%, var(--neutral-medium) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease;
+        }
+
+        .loader-content {
+            text-align: center;
+            color: white;
+            transform-style: preserve-3d;
+        }
+
+        .loader-cube {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 30px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: cube-rotate 2s infinite ease-in-out;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-teal);
+            border: 2px solid var(--primary-coral);
+        }
+
+        .cube-face.front { transform: rotateY(0deg) translateZ(30px); }
+        .cube-face.back { transform: rotateY(180deg) translateZ(30px); }
+        .cube-face.right { transform: rotateY(90deg) translateZ(30px); }
+        .cube-face.left { transform: rotateY(-90deg) translateZ(30px); }
+        .cube-face.top { transform: rotateX(90deg) translateZ(30px); }
+        .cube-face.bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+        @keyframes cube-rotate {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        .loader-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px var(--primary-teal); }
+            to { text-shadow: 0 0 20px var(--primary-coral), 0 0 30px var(--primary-amber); }
+        }
+
+        /* Header with Brutal Design */
+        header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            border-radius: 0;
+            padding: 1rem 2rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neutral-dark);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            background: var(--primary-teal);
+            color: white;
+            border-color: var(--neutral-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Library Hero Section */
+        .library-hero {
+            height: 40vh;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-coral) 50%, var(--primary-amber) 100%);
+            padding-top: 100px;
+            margin-top: 20px;
+        }
+
+        .library-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') center/cover;
+            opacity: 0.1;
+            z-index: 1;
+            mix-blend-mode: overlay;
+        }
+
+        .library-hero-content {
+            text-align: center;
+            color: var(--text-light);
+            z-index: 3;
+            position: relative;
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+
+        .library-hero h1 {
+            font-family: 'Figtree', sans-serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            text-shadow: 4px 4px 0px var(--neutral-dark);
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+        }
+
+        .library-hero p {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            opacity: 0.95;
+            line-height: 1.7;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 500;
+        }
+
+        /* Library Content */
+        .library-content {
+            background: var(--neutral-light);
+            padding: 4rem 2rem 4rem;
+            position: relative;
+        }
+
+        .library-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Figtree', sans-serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 4rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .section-title .gradient-text {
+            background: linear-gradient(45deg, var(--primary-teal), var(--primary-coral), var(--primary-amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--neutral-dark);
+        }
+
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 4rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .filter-tab.active {
+            background: var(--primary-teal);
+            color: white;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .filter-tab:hover:not(.active) {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--neutral-dark);
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .resource-card {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
+        }
+
+        .resource-card:hover {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1.05);
+            box-shadow: 12px 12px 0px var(--neutral-dark);
+        }
+
+        .resource-type {
+            display: inline-block;
+            background: var(--primary-coral);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+            border: 2px solid var(--neutral-dark);
+            box-shadow: 2px 2px 0px var(--neutral-dark);
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .resource-title {
+            font-family: 'Figtree', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .resource-author {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .resource-description {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            position: relative;
+            z-index: 2;
+        }
+
+        .resource-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tag {
+            background: var(--neutral-light);
+            color: var(--text-secondary);
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--text-secondary);
+        }
+
+        .tag:hover {
+            background: var(--primary-teal);
+            color: white;
+            transform: translateY(-2px);
+            border-color: var(--primary-teal);
+        }
+
+        .resource-actions {
+            display: flex;
+            gap: 1rem;
+            position: relative;
+            z-index: 2;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            background: white;
+            color: var(--neutral-dark);
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .btn:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--neutral-dark);
+        }
+
+        .btn-primary {
+            background: var(--primary-teal);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--neutral-dark);
+        }
+
+        .resource-features {
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.3rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-teal);
+            color: white;
+            border: 2px solid var(--neutral-dark);
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 5rem 2rem;
+            color: var(--text-secondary);
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+        }
+
+        .empty-state h3 {
+            font-family: 'Figtree', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        /* AI Companion Section */
+        .ai-companion-section {
+            background: var(--primary-coral);
+            padding: 4rem 2rem;
+            color: white;
+            margin-bottom: 5rem;
+            position: relative;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+        }
+
+        .ai-companion-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .ai-companion-icon {
+            width: 100px;
+            height: 100px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary-coral);
+            margin-bottom: 2rem;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            border-radius: 50%;
+        }
+
+        .ai-companion-title {
+            font-family: 'Figtree', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .ai-companion-description {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .ai-companion-button {
+            background: white;
+            color: var(--primary-coral);
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        .ai-companion-button:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 8px 8px 0px var(--neutral-dark);
+        }
+
+        #resourceDetail {
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            padding: 3rem;
+            animation: detailEnter 0.5s ease;
+        }
+
+        @keyframes detailEnter {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        #resourceDetail h2 {
+            font-family: 'Figtree', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            color: var(--neutral-dark);
+        }
+
+        #resourceDetail p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        #resourceDetail iframe {
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+        }
+
+        /* Background shapes */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        .bg-shape-1 {
+            background: var(--primary-teal);
+            width: 300px;
+            height: 300px;
+            top: 20%;
+            right: 10%;
+        }
+
+        .bg-shape-2 {
+            background: var(--primary-coral);
+            width: 250px;
+            height: 250px;
+            bottom: 40%;
+            left: 10%;
+        }
+
+        .bg-shape-3 {
+            background: var(--primary-amber);
+            width: 200px;
+            height: 200px;
+            bottom: 10%;
+            right: 20%;
+        }
+
+        /* Floating Chat Button */
+        .floating-chat {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 70px;
+            height: 70px;
+            background: var(--primary-coral);
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            animation: float-brutal 3s ease-in-out infinite;
+        }
+
+        .floating-chat:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 8px 8px 0px var(--neutral-dark);
+        }
+
+        @keyframes float-brutal {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Chatbot */
+        .chatbot-container {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            background: white;
+            border: 4px solid var(--neutral-dark);
+            box-shadow: var(--shadow-brutal);
+            z-index: 1000;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .chatbot-container.visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .chatbot-header {
+            background: var(--primary-teal);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--neutral-dark);
+        }
+
+        .chatbot-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .chatbot-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chatbot-message {
+            max-width: 80%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--neutral-dark);
+            position: relative;
+        }
+
+        .chatbot-message.bot {
+            background: white;
+            align-self: flex-start;
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        .chatbot-message.user {
+            background: var(--primary-coral);
+            color: white;
+            align-self: flex-end;
+            box-shadow: -4px 4px 0px var(--neutral-dark);
+        }
+        
+        .chatbot-message.typing {
+            background: var(--neutral-light);
+            align-self: flex-start;
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .chatbot-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .chatbot-input-container {
+            display: flex;
+            border-top: 4px solid var(--neutral-dark);
+            padding: 0.5rem;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--neutral-dark);
+            box-shadow: 2px 2px 0px var(--neutral-dark);
+            font-family: 'Figtree', sans-serif;
+        }
+
+        .chatbot-input:focus {
+            outline: none;
+        }
+
+        .chatbot-submit {
+            background: var(--primary-teal);
+            color: white;
+            border: 2px solid var(--neutral-dark);
+            box-shadow: 2px 2px 0px var(--neutral-dark);
+            padding: 0 1rem;
+            margin-left: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-submit:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--neutral-dark);
+        }
+
+        /* Noise texture overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><filter id="noise"><feTurbulence baseFrequency="0.9" numOctaves="1" seed="1"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.4"/></svg>');
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                position: relative;
+                top: 0;
+                left: 0;
+                transform: none;
+                margin-bottom: 2rem;
+                width: 100%;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .library-hero {
+                padding-top: 0;
+                margin-top: 0;
+            }
+            
+            .library-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .library-content {
+                padding: 4rem 1rem 2rem;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-tabs {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .filter-tab {
+                width: calc(50% - 0.5rem);
+                text-align: center;
+            }
+
+            #resourceDetail {
+                padding: 2rem 1rem;
+            }
+
+            .chatbot-container {
+                width: calc(100% - 40px);
+                bottom: 80px;
+            }
+
+            .floating-chat {
+                width: 60px;
+                height: 60px;
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 0.8s ease;
+        }
+
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.8s ease;
+        }
+
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Staggered animations */
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.3s; }
+        .stagger-3 { transition-delay: 0.5s; }
+        .stagger-4 { transition-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress"></div>
+
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-cube">
+                <div class="cube-face front"></div>
+                <div class="cube-face back"></div>
+                <div class="cube-face right"></div>
+                <div class="cube-face left"></div>
+                <div class="cube-face top"></div>
+                <div class="cube-face bottom"></div>
+            </div>
+            <div class="loader-text">RESOURCE_LIBRARY</div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">R_CONNECT</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="crisis-support.html">Crisis Help</a></li>
+                <li><a href="recovery-tools.html">Quick Tools</a></li>
+                <li><a href="meeting-search.html">Find Meetings</a></li>
+                <li><a href="recovery-companion-demo.html">AI Help</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Crisis Help Banner -->
+    <section style="background: #dc2626; color: white; padding: 1.5rem 0; text-align: center;">
+        <div class="container">
+            <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">🚨 Need Help Right Now?</h2>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="tel:988" style="background: white; color: #dc2626; padding: 0.75rem 1.5rem; text-decoration: none; font-weight: bold; border-radius: 8px;">📞 Call 988</a>
+                <a href="crisis-support.html" style="background: rgba(255,255,255,0.2); color: white; padding: 0.75rem 1.5rem; text-decoration: none; font-weight: bold; border-radius: 8px;">📋 Crisis Resources</a>
+                <a href="meeting-search.html" style="background: rgba(255,255,255,0.2); color: white; padding: 0.75rem 1.5rem; text-decoration: none; font-weight: bold; border-radius: 8px;">👥 Find Meetings</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="library-hero">
+        <div class="library-hero-content fade-in">
+            <h1>RESOURCE LIBRARY</h1>
+            <p>Simple access to helpful recovery resources whenever you need them</p>
+        </div>
+    </section>
+    
+    <!-- Main Content -->
+    <section class="library-content">
+        <!-- Background shapes -->
+        <div class="bg-shape bg-shape-1"></div>
+        <div class="bg-shape bg-shape-2"></div>
+        <div class="bg-shape bg-shape-3"></div>
+        
+        <div class="library-container">
+            <div class="search-box fade-in">
+                <input type="text" id="searchInput" placeholder="SEARCH RESOURCES...">
+            </div>
+            
+            <div class="filter-tabs fade-in">
+                <div class="filter-tab active" data-category="all">ALL</div>
+                <div class="filter-tab" data-category="books">BOOKS</div>
+                <div class="filter-tab" data-category="articles">ARTICLES</div>
+                <div class="filter-tab" data-category="videos">VIDEOS</div>
+                <div class="filter-tab" data-category="tools">TOOLS</div>
+            </div>
+            
+            <div id="resourceGrid" class="resource-grid">
+                <!-- Resources will be loaded here -->
+            </div>
+            
+            <div id="resourceDetail" style="display: none; margin: 2rem auto; max-width: 900px;">
+                <button id="backButton" class="btn btn-secondary" style="margin-bottom: 2rem;">
+                    <span style="margin-right: 0.5rem;">←</span> BACK TO RESOURCES
+                </button>
+                <div id="resourceContent"></div>
+            </div>
+            
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <h3>NO RESOURCES FOUND</h3>
+                <p>Try adjusting your search or filters to find what you're looking for.</p>
+            </div>
+            
+            <!-- AI Companion Support Section -->
+            <div class="ai-companion-section fade-in">
+                <div class="ai-companion-content">
+                    <div class="ai-companion-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="ai-companion-title">Need Help Finding Resources?</h3>
+                    <p class="ai-companion-description">Sam can help you find exactly what you need and knows which resources actually work. Available 24/7 for personalized recommendations and real support from someone who's been there.</p>
+                    <a href="recovery-companion-demo.html" class="ai-companion-button">
+                        TALK WITH SAM NOW
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">
+            <div class="chatbot-title">RECOVERY COMPANION</div>
+            <button class="chatbot-close" id="chatbotClose">&times;</button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="chatbot-message bot">
+                Hey! I'm Sam, your recovery roommate. 💙 I've been through this journey myself and can help you find resources that actually work. What kind of support are you looking for right now?
+            </div>
+        </div>
+        <div class="chatbot-input-container">
+            <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Type your message...">
+            <button class="chatbot-submit" id="chatbotSubmit">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Chat Button -->
+    <a href="#" class="floating-chat" id="chatbotToggle">
+        <i class="fas fa-robot" style="font-size: 1.5rem;"></i>
+    </a>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.custom-cursor');
+        const follower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                follower.style.left = e.clientX + 'px';
+                follower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Scroll Progress
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.querySelector('.scroll-progress').style.width = scrolled + '%';
+        });
+
+        // Loading Screen
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 800);
+            }, 2000);
+        });
+
+        // Chatbot functionality
+        const chatbotToggle = document.getElementById('chatbotToggle');
+        const chatbot = document.getElementById('chatbot');
+        const chatbotClose = document.getElementById('chatbotClose');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotInput = document.getElementById('chatbotInput');
+        const chatbotSubmit = document.getElementById('chatbotSubmit');
+
+        // Toggle chatbot visibility
+        chatbotToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            chatbot.classList.toggle('visible');
+        });
+
+        chatbotClose.addEventListener('click', function() {
+            chatbot.classList.remove('visible');
+        });
+
+        // Recovery Companion AI - Enhanced with relapse support
+        async function sendMessage() {
+            const message = chatbotInput.value.trim();
+            if (message && !window.recoveryCompanion?.isProcessing()) {
+                // Add user message
+                addMessage(message, 'user');
+                chatbotInput.value = '';
+                
+                // Disable input while processing
+                chatbotSubmit.disabled = true;
+                chatbotInput.disabled = true;
+                
+                // Show typing indicator with personalized message
+                const typingIndicator = document.createElement('div');
+                typingIndicator.classList.add('chatbot-message', 'typing');
+                typingIndicator.innerHTML = '<i class="fas fa-heart"></i> Alex is thinking...';
+                chatbotMessages.appendChild(typingIndicator);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                
+                try {
+                    // Get AI response (the companion handles crisis detection internally)
+                    const response = await window.recoveryCompanion.sendMessage(message);
+                    
+                    // Remove typing indicator
+                    if (chatbotMessages.contains(typingIndicator)) {
+                        chatbotMessages.removeChild(typingIndicator);
+                    }
+                    
+                    // Add AI response
+                    addMessage(response, 'bot');
+                    
+                } catch (error) {
+                    console.error('Recovery Companion Error:', error);
+                    // Remove typing indicator
+                    if (chatbotMessages.contains(typingIndicator)) {
+                        chatbotMessages.removeChild(typingIndicator);
+                    }
+                    
+                    // Provide supportive fallback message
+                    const fallbackMessage = `I'm having some technical difficulties right now, but please know that reaching out shows incredible strength. 
+
+**Always Available:**
+• **SAMHSA Helpline**: 1-800-662-4357 (24/7)
+• **Crisis Line**: 988
+• Your support network
+
+Your recovery journey matters. 💙`;
+                    addMessage(fallbackMessage, 'bot');
+                } finally {
+                    // Re-enable input
+                    chatbotSubmit.disabled = false;
+                    chatbotInput.disabled = false;
+                    chatbotInput.focus();
+                }
+            }
+        }
+
+        function addMessage(text, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chatbot-message', sender);
+            
+            // Support markdown-style formatting for AI responses
+            if (sender === 'bot') {
+                messageElement.innerHTML = formatBotMessage(text);
+            } else {
+                messageElement.textContent = text;
+            }
+            
+            chatbotMessages.appendChild(messageElement);
+            
+            // Scroll to bottom
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        function formatBotMessage(text) {
+            // Simple formatting for bot messages
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic
+                .replace(/•/g, '&bull;') // Bullet points
+                .replace(/🆘/g, '<span style="color: #dc3545; font-weight: bold;">🆘</span>') // Emergency styling
+                .replace(/💙/g, '<span style="color: #06b6d4;">💙</span>') // Heart styling
+                .replace(/\n/g, '<br>'); // Line breaks
+        }
+
+        chatbotSubmit.addEventListener('click', sendMessage);
+        chatbotInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Resource Library Functionality
+        let allResources = [];
+        let currentFilter = 'all';
+        
+        // Sample resource data
+        function loadSampleResources() {
+            allResources = [
+                {
+                    id: 1,
+                    type: 'books',
+                    title: 'Recovery: Freedom from Our Addictions',
+                    author: 'Russell Brand',
+                    description: 'A guide to addiction recovery based on the program of the 12 steps, with personal insights from the author.',
+                    readTime: '6-8 hours reading time',
+                    tags: ['addiction', 'recovery', 'self-help', '12-steps'],
+                    url: '#',
+                    features: ['Personal stories', 'Practical exercises', 'Recovery plan']
+                },
+                {
+                    id: 2,
+                    type: 'articles',
+                    title: 'Understanding Triggers and Cravings',
+                    author: 'Recovery Research Institute',
+                    description: 'An evidence-based exploration of how triggers work and practical strategies to manage cravings.',
+                    readTime: '10 min read',
+                    tags: ['triggers', 'cravings', 'practical', 'science'],
+                    url: '#',
+                    features: ['Research-based', 'Actionable strategies', 'Self-assessment tools']
+                },
+                {
+                    id: 3,
+                    type: 'videos',
+                    title: 'The Neuroscience of Addiction',
+                    speaker: 'Dr. Kevin McCauley',
+                    description: 'A clear explanation of how addiction affects the brain and why recovery requires comprehensive support.',
+                    duration: '18 minutes',
+                    tags: ['neuroscience', 'brain', 'addiction science'],
+                    url: '#',
+                    features: ['Visual explanations', 'Expert insights', 'Simple explanations of complex concepts']
+                },
+                {
+                    id: 4,
+                    type: 'tools',
+                    title: 'Daily Recovery Check-In Template',
+                    description: 'A simple template to track your daily emotions, triggers, and coping strategies to build awareness.',
+                    tags: ['daily', 'tracking', 'self-awareness', 'emotional regulation'],
+                    url: '#',
+                    features: ['Print-friendly format', 'Simple layout', 'Evidence-based structure']
+                },
+                {
+                    id: 5,
+                    type: 'books',
+                    title: 'In the Realm of Hungry Ghosts',
+                    author: 'Dr. Gabor Maté',
+                    description: 'A compassionate exploration of addiction through the lens of trauma and human development.',
+                    readTime: '10-12 hours reading time',
+                    tags: ['trauma', 'addiction', 'compassion', 'healing'],
+                    url: '#',
+                    features: ['Case studies', 'Science-based approach', 'Trauma-informed perspective']
+                },
+                {
+                    id: 6,
+                    type: 'articles',
+                    title: 'Building a Supportive Recovery Environment',
+                    author: 'Substance Abuse and Mental Health Services Administration',
+                    description: 'Practical guidance on creating a physical and social environment that supports your recovery journey.',
+                    readTime: '7 min read',
+                    tags: ['environment', 'support', 'practical', 'lifestyle'],
+                    url: '#',
+                    features: ['Checklist', 'Action items', 'Social support strategies']
+                },
+                {
+                    id: 7,
+                    type: 'videos',
+                    title: 'Mindfulness Techniques for Recovery',
+                    speaker: 'Dr. Judson Brewer',
+                    description: 'Simple mindfulness exercises specifically designed to help during moments of craving and stress.',
+                    duration: '22 minutes',
+                    tags: ['mindfulness', 'meditation', 'cravings', 'stress'],
+                    url: '#',
+                    features: ['Guided practices', 'Scientific explanation', 'Easy to follow']
+                },
+                {
+                    id: 8,
+                    type: 'tools',
+                    title: 'Relapse Prevention Plan Template',
+                    description: 'A structured template to identify your personal triggers, warning signs, and action steps to prevent relapse.',
+                    tags: ['relapse prevention', 'planning', 'safety', 'triggers'],
+                    url: '#',
+                    features: ['Customizable', 'Based on clinical practices', 'Emergency contact section']
+                },
+                {
+                    id: 9,
+                    type: 'books',
+                    title: 'The Body Keeps the Score',
+                    author: 'Dr. Bessel van der Kolk',
+                    description: 'Essential reading on how trauma affects the body and mind, with paths toward healing.',
+                    readTime: '12-15 hours reading time',
+                    tags: ['trauma', 'healing', 'body', 'psychology'],
+                    url: '#',
+                    features: ['Scientific research', 'Treatment approaches', 'Personal stories']
+                }
+            ];
+            
+            displayResources(allResources);
+            
+            // Add fade-in animation to each card with staggered delay
+            setTimeout(() => {
+                document.querySelectorAll('.resource-card').forEach((card, index) => {
+                    card.classList.add('fade-in');
+                    card.style.transitionDelay = `${0.1 + (index * 0.05)}s`;
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, 50);
+                });
+            }, 300);
+        }
+        
+        function displayResources(resources) {
+            const grid = document.getElementById('resourceGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (resources.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            grid.style.display = 'grid';
+            emptyState.style.display = 'none';
+            
+            grid.innerHTML = resources.map(resource => createResourceCard(resource)).join('');
+        }
+        
+        function createResourceCard(resource) {
+            const typeLabels = {
+                'books': 'BOOK',
+                'articles': 'ARTICLE',
+                'videos': 'VIDEO',
+                'tools': 'TOOL'
+            };
+            
+            let content = `
+                <div class="resource-card">
+                    <div class="resource-type">${typeLabels[resource.type]}</div>
+                    <h3 class="resource-title">${resource.title}</h3>
+            `;
+            
+            if (resource.author || resource.speaker) {
+                content += `<div class="resource-author">by ${resource.author || resource.speaker}</div>`;
+            }
+            
+            if (resource.description || resource.summary) {
+                content += `<div class="resource-description">${resource.description || resource.summary}</div>`;
+            }
+            
+            if (resource.duration) {
+                content += `<div class="resource-author">Duration: ${resource.duration}</div>`;
+            }
+            
+            if (resource.readTime) {
+                content += `<div class="resource-author">${resource.readTime}</div>`;
+            }
+            
+            if (resource.tags) {
+                content += `
+                    <div class="resource-tags">
+                        ${resource.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+            }
+            
+            if (resource.features) {
+                content += `
+                    <div class="resource-features">
+                        <ul class="feature-list">
+                            ${resource.features.map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            let actionText = 'VIEW';
+            if (resource.type === 'videos') actionText = 'WATCH';
+            else if (resource.type === 'books') actionText = 'DOWNLOAD';
+            else if (resource.type === 'tools') actionText = 'USE TOOL';
+            else if (resource.type === 'articles') actionText = 'READ';
+            
+            content += `
+                    <div class="resource-actions">`;
+            
+            content += `
+                        <a href="${resource.url || '#'}" class="btn btn-primary">
+                            ${actionText}
+                        </a>`;
+            
+            content += `
+                    </div>
+                </div>
+            `;
+            
+            return content;
+        }
+        
+        function filterResources(category) {
+            currentFilter = category;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = allResources;
+            
+            if (category !== 'all') {
+                filtered = filtered.filter(resource => resource.type === category);
+            }
+            
+            if (searchTerm) {
+                filtered = filtered.filter(resource => 
+                    resource.title.toLowerCase().includes(searchTerm) ||
+                    (resource.description && resource.description.toLowerCase().includes(searchTerm)) ||
+                    (resource.summary && resource.summary.toLowerCase().includes(searchTerm)) ||
+                    (resource.tags && resource.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
+                );
+            }
+            
+            displayResources(filtered);
+            
+            // Reapply animations after filtering
+            setTimeout(() => {
+                document.querySelectorAll('.resource-card').forEach((card, index) => {
+                    card.classList.add('fade-in');
+                    card.style.transitionDelay = `${0.1 + (index * 0.05)}s`;
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, 50);
+                });
+            }, 100);
+        }
+        
+        function showResourceDetail(resource) {
+            // Hide grid and show detail view with animation
+            document.getElementById('resourceGrid').style.display = 'none';
+            const detailView = document.getElementById('resourceDetail');
+            detailView.style.display = 'block';
+            
+            let content = `
+                <h2>${resource.title}</h2>
+                <p>${resource.description || resource.summary || 'This resource is not available for direct viewing.'}</p>
+                <a href="${resource.url || '#'}" class="btn btn-primary" style="margin-top: 1rem;">
+                    ${resource.type === 'videos' ? 'WATCH VIDEO' : resource.type === 'books' ? 'DOWNLOAD BOOK' : 'VIEW RESOURCE'}
+                </a>
+            `;
+            
+            document.getElementById('resourceContent').innerHTML = content;
+            
+            // Scroll to top of detail view
+            window.scrollTo({
+                top: detailView.offsetTop - 100,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSampleResources();
+            
+            // Filter tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    filterResources(this.dataset.category);
+                });
+            });
+            
+            // Search functionality with debounce
+            let searchTimeout;
+            document.getElementById('searchInput').addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    filterResources(currentFilter);
+                }, 300);
+            });
+            
+            // Back button
+            document.getElementById('backButton').addEventListener('click', function() {
+                document.getElementById('resourceDetail').style.display = 'none';
+                document.getElementById('resourceGrid').style.display = 'grid';
+            });
+            
+            // Observe elements for animations
+            document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Enhanced hover effects
+            document.querySelectorAll('.resource-card, .btn, .filter-tab').forEach(element => {
+                element.addEventListener('mouseenter', function() {
+                    cursor.style.transform = 'scale(1.5)';
+                    follower.style.transform = 'scale(1.2)';
+                });
+                
+                element.addEventListener('mouseleave', function() {
+                    cursor.style.transform = 'scale(1)';
+                    follower.style.transform = 'scale(1)';
+                });
+            });
+
+            // Interactive noise effect
+            document.addEventListener('mousemove', (e) => {
+                const noiseOverlay = document.querySelector('.noise-overlay');
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+                noiseOverlay.style.opacity = 0.02 + (x + y) * 0.01;
+            });
+        });
+    </script>
+</body>
+</html>
