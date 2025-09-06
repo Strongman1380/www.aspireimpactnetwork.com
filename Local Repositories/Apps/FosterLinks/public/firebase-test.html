@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Test</title>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      white-space: pre-wrap;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    input {
+      padding: 8px;
+      margin-bottom: 10px;
+      width: 300px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Firebase Test Page</h1>
+  
+  <div>
+    <h2>Firebase Configuration</h2>
+    <div class="result" id="config-result"></div>
+    <button id="test-config">Test Firebase Config</button>
+  </div>
+  
+  <div>
+    <h2>Authentication</h2>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" placeholder="Email">
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" placeholder="Password">
+    </div>
+    <button id="create-user">Create User</button>
+    <button id="sign-in">Sign In</button>
+    <button id="sign-out">Sign Out</button>
+    <div class="result" id="auth-result"></div>
+  </div>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCXda8i20YAmJsokhw_bHUpVnN-Codls6k",
+      authDomain: "fosterlinks-95182.firebaseapp.com",
+      projectId: "fosterlinks-95182",
+      storageBucket: "fosterlinks-95182.appspot.com",
+      messagingSenderId: "420676452183",
+      appId: "1:420676452183:web:9cb9765cfc0393b086c812",
+      measurementId: "G-1ZP1YT98RD"
+    };
+
+    // Initialize Firebase
+    let app, auth;
+    
+    try {
+      app = firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      document.getElementById('config-result').textContent = 'Firebase initialized successfully!';
+    } catch (error) {
+      document.getElementById('config-result').textContent = `Error initializing Firebase: ${error.message}`;
+    }
+
+    // Test Firebase Config
+    document.getElementById('test-config').addEventListener('click', () => {
+      const result = document.getElementById('config-result');
+      result.textContent = `Firebase App: ${JSON.stringify(app, null, 2)}\n\nFirebase Auth: ${JSON.stringify(auth, null, 2)}`;
+    });
+
+    // Create User
+    document.getElementById('create-user').addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const result = document.getElementById('auth-result');
+      
+      if (!email || !password) {
+        result.textContent = 'Please enter both email and password';
+        return;
+      }
+      
+      try {
+        result.textContent = 'Creating user...';
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        result.textContent = `User created successfully!\n\nUser: ${JSON.stringify(userCredential.user, null, 2)}`;
+      } catch (error) {
+        result.textContent = `Error creating user: ${error.message}`;
+      }
+    });
+
+    // Sign In
+    document.getElementById('sign-in').addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const result = document.getElementById('auth-result');
+      
+      if (!email || !password) {
+        result.textContent = 'Please enter both email and password';
+        return;
+      }
+      
+      try {
+        result.textContent = 'Signing in...';
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        result.textContent = `Signed in successfully!\n\nUser: ${JSON.stringify(userCredential.user, null, 2)}`;
+      } catch (error) {
+        result.textContent = `Error signing in: ${error.message}`;
+      }
+    });
+
+    // Sign Out
+    document.getElementById('sign-out').addEventListener('click', async () => {
+      const result = document.getElementById('auth-result');
+      
+      try {
+        result.textContent = 'Signing out...';
+        await auth.signOut();
+        result.textContent = 'Signed out successfully!';
+      } catch (error) {
+        result.textContent = `Error signing out: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>

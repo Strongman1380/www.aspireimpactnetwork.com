@@ -1,0 +1,49 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isSignedIn() && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isWorker() {
+      return isSignedIn() && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'worker';
+    }
+    
+    function isFosterParent() {
+      return isSignedIn() && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'foster_parent';
+    }
+    
+    // Agency logos can be read by all authenticated users, but only admins can write
+    match /agency_logos/{fileName} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    
+    // Youth profile images
+    match /youth_profiles/{youthId}/{fileName} {
+      allow read: if isAdmin() || isWorker() || 
+                   (isFosterParent() && 
+                    firestore.get(/databases/(default)/documents/youth_profiles/$(youthId)).data.fosterParentId == request.auth.uid);
+      allow write: if isAdmin() || isWorker();
+    }
+    
+    // Documents related to youth
+    match /documents/{youthId}/{fileName} {
+      allow read: if isAdmin() || isWorker() || 
+                   (isFosterParent() && 
+                    firestore.get(/databases/(default)/documents/youth_profiles/$(youthId)).data.fosterParentId == request.auth.uid);
+      allow write: if isAdmin() || isWorker();
+    }
+    
+    // User profile images
+    match /user_profiles/{userId} {
+      allow read: if isSignedIn();
+      allow write: if request.auth.uid == userId || isAdmin();
+    }
+  }
+}

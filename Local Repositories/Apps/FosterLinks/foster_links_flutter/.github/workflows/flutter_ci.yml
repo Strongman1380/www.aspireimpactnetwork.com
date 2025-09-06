@@ -1,0 +1,26 @@
+name: Flutter CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Flutter version
+        run: flutter --version
+      - name: Fetch packages
+        working-directory: foster_links_flutter
+        run: flutter pub get
+      - name: Analyze
+        working-directory: foster_links_flutter
+        run: flutter analyze
+      - name: Run tests
+        working-directory: foster_links_flutter
+        run: flutter test --no-pub

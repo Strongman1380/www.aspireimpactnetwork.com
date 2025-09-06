@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1976d2">
+  <title>Foster Links - Offline</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/logo192.png">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 500px;
+      width: 100%;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: #1976d2;
+    }
+    
+    p {
+      margin-bottom: 20px;
+      color: #666;
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: #1976d2;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .button:hover {
+      background-color: #1565c0;
+    }
+    
+    .offline-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      color: #f44336;
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 20px;
+      }
+      
+      .logo {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .button {
+        width: 100%;
+        padding: 14px;
+      }
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #f5f5f5;
+      }
+      
+      .container {
+        background-color: #1e1e1e;
+      }
+      
+      h1 {
+        color: #90caf9;
+      }
+      
+      p {
+        color: #b0b0b0;
+      }
+      
+      .button {
+        background-color: #2196f3;
+      }
+      
+      .button:hover {
+        background-color: #1e88e5;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="/logo192.png" alt="Foster Links Logo" class="logo">
+    <div class="offline-icon">⚠️</div>
+    <h1>You're Offline</h1>
+    <p>It looks like you've lost your internet connection. Some features may be unavailable until you're back online.</p>
+    <p>You can still access previously viewed pages and cached data.</p>
+    <button class="button" onclick="tryReconnect()">Try Again</button>
+  </div>
+  
+  <script>
+    function tryReconnect() {
+      // Try to reload the page
+      window.location.reload();
+    }
+    
+    // Check if we're back online
+    window.addEventListener('online', function() {
+      window.location.reload();
+    });
+  </script>
+</body>
+</html>

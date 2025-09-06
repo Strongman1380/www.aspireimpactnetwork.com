@@ -1,0 +1,57 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-flutter:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+    - run: flutter pub get
+      working-directory: ./foster_links_flutter
+    - run: flutter build web --release
+      working-directory: ./foster_links_flutter
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: flutter-web-build
+        path: ./foster_links_flutter/build/web/
+
+  build-react:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    - run: npm install
+    - run: npm run build
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: react-build
+        path: ./build/
+
+  deploy-vercel:
+    needs: [build-react]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    - run: npm install -g vercel
+    - run: vercel --prod --yes
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
