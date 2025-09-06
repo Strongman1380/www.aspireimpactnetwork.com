@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
@@ -7,6 +8,7 @@ import 'providers/theme_provider.dart';
 import 'providers/ui_provider.dart';
 import 'services/auth_service.dart';
 import 'services/firestore_service.dart';
+import 'services/supabase_service.dart';
 import 'theme/app_theme.dart';
 import 'utils/app_router.dart';
 
@@ -17,6 +19,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
+  // Initialize Supabase
+  await SupabaseConfig.initialize();
   
   runApp(const FosterLinksApp());
 }
@@ -34,6 +39,9 @@ class FosterLinksApp extends StatelessWidget {
         ),
         Provider<FirestoreService>(
           create: (_) => FirestoreService(),
+        ),
+        Provider<SupabaseClient>(
+          create: (_) => SupabaseConfig.client,
         ),
         
         // State Providers
