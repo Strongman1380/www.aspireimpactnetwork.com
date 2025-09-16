@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Reach Out Today — Aspire Impact Network</title>
+    <meta name="description" content="Get in touch with Aspire Impact Network. Every connection starts with a spark. Let's create lasting impact, together.">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="images/logo.svg" alt="Aspire Impact Network" class="logo-img">
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <div class="nav-dropdown">
+                    <a href="services.html" class="nav-link">Services <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="aspire-digital-solutions.html">Aspire Digital Solutions</a>
+                        <a href="aspire-justice-support-services.html">Aspire Justice Support Services</a>
+                    </div>
+                </div>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link active">Contact</a>
+                <a href="testimonials.html" class="nav-link">Testimonials</a>
+                <a href="memberships.html" class="nav-link">Memberships</a>
+                <a href="admin-login.html" class="nav-link">Login</a>
+                <a href="cart.html" class="nav-link cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">(0)</span>
+                </a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p class="page-subtitle">Every connection starts with a spark. Whether you're seeking support, exploring a partnership, or just curious about our work, Aspire Impact Network is here to listen, collaborate, and build something meaningful. Reach out today—let's create lasting impact, together.</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <!-- Contact Form -->
+                <div class="contact-form-container">
+                    <h2>Send us a Message</h2>
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name *</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name *</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="newsletter" value="yes">
+                                <span class="checkmark"></span>
+                                Sign up for news and updates
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="contact-info-container">
+                    <div class="contact-card">
+                        <h3>Get in Touch</h3>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email</strong>
+                                <p>brandon.hinrichs@aspireimpactnetwork.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <strong>Phone</strong>
+                                <p>Personal Cell: (402) 759-2210</p>
+                                <p>Business Phone: (402) 759-6275</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Location</strong>
+                                <p>Geneva, Nebraska</p>
+                                <p>Fillmore County Nebraska</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-image">
+                        <img src="images/screenshot-2025-03-27.png" alt="Contact Us">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Contact Form -->
+    <section class="detailed-contact">
+        <div class="container">
+            <div class="detailed-form-container">
+                <h2>Let's work together.</h2>
+                <p>Interested in working together? Fill out some info and we will be in touch shortly! We can't wait to hear from you!</p>
+                
+                <form id="contact-form-2" class="detailed-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName2">First Name *</label>
+                            <input type="text" id="firstName2" name="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName2">Last Name *</label>
+                            <input type="text" id="lastName2" name="lastName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email2">Email *</label>
+                        <input type="email" id="email2" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone2">Phone</label>
+                        <input type="tel" id="phone2" name="phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>What services are you interested in?</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="services" value="probation">
+                                <span class="checkmark"></span>
+                                Probation Youth Support
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="services" value="digital">
+                                <span class="checkmark"></span>
+                                Digital Services
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="services" value="other">
+                                <span class="checkmark"></span>
+                                Other
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="budget">What is your budget?</label>
+                        <select id="budget" name="budget">
+                            <option value="">Select budget range</option>
+                            <option value="under-500">Under $500</option>
+                            <option value="500-1000">$500 - $1,000</option>
+                            <option value="1000-2500">$1,000 - $2,500</option>
+                            <option value="2500-5000">$2,500 - $5,000</option>
+                            <option value="over-5000">Over $5,000</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hearAbout">How did you hear about us?</label>
+                        <input type="text" id="hearAbout" name="hearAbout">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message2">Message *</label>
+                        <textarea id="message2" name="message" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section class="schedule-section">
+        <div class="container">
+            <div class="schedule-content">
+                <h2>Schedule with us here</h2>
+                <p>Ready to get started? Schedule a consultation with our team to discuss your needs and how we can help.</p>
+                <a href="https://calendly.com/brandon-hinrichs-aspireimpactnetwork/30min" target="_blank" class="btn btn-primary">Schedule Consultation</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <div class="chat-toggle" id="chat-toggle">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div class="chat-options" id="chat-options">
+            <a href="#" class="chat-option">
+                <i class="fas fa-comment"></i>
+                <span>Live Chat</span>
+            </a>
+            <a href="https://web.whatsapp.com/send?phone=14027592210" class="chat-option">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+            <a href="https://m.me/brandon.hinrichs.5" class="chat-option">
+                <i class="fab fa-facebook-messenger"></i>
+                <span>Messenger</span>
+            </a>
+            <a href="tel:4027592210" class="chat-option">
+                <i class="fas fa-phone"></i>
+                <span>Phone</span>
+            </a>
+            <a href="sms:4027592210" class="chat-option">
+                <i class="fas fa-sms"></i>
+                <span>SMS</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Aspire Impact Network</h3>
+                    <p>Empowering People. Strengthening Communities. Driving Innovation.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="testimonials.html">Testimonials</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="aspire-digital-solutions.html">Digital Solutions</a></li>
+                        <li><a href="aspire-justice-support-services.html">Justice Support</a></li>
+
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p>Geneva, Nebraska</p>
+                    <p>brandon.hinrichs@aspireimpactnetwork.com</p>
+                    <p>(402) 759-2210</p>
+                    <div style="margin-top: 20px;">
+                        <a href="https://medium.com/@bhinrichs1380" target="_blank" class="btn btn-primary" style="display: inline-block;">
+                            <i class="fab fa-medium"></i> Read Our Blog
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Aspire Impact Network. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/email-config.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

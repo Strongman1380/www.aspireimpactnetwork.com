@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Management - Aspire Impact Network</title>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2c5f41;
+            --accent-color: #4a9960;
+            --accent-light: #6bb77b;
+            --text-light: #2c3e50;
+            --text-gray: #495057;
+            --border-color: #e9ecef;
+            --bg-light: #f8f9fa;
+            --warning-color: #e74c3c;
+            --success-color: #27ae60;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .back-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .back-link:hover {
+            background: rgba(255,255,255,0.1);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .current-plan {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .current-plan h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .plan-badge {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 15px 0;
+        }
+        
+        .tier-basic {
+            background: #2c5f41;
+            color: white;
+        }
+        
+        .tier-premier {
+            background: linear-gradient(135deg, #4a9960, #667eea);
+            color: white;
+        }
+        
+        .tier-elite {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+        
+        .plan-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .detail-item {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        
+        .detail-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .plan-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .plan-card.current {
+            border: 3px solid var(--accent-color);
+            transform: scale(1.02);
+        }
+        
+        .current-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .plan-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .plan-card .price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+        
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 25px 0;
+        }
+        
+        .features-list li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+            color: var(--text-gray);
+        }
+        
+        .features-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .action-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 10px 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-danger {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .btn-disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+        }
+        
+        .btn-disabled:hover {
+            background: #ccc;
+            transform: none;
+        }
+        
+        .cancellation-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--warning-color);
+        }
+        
+        .cancellation-section h3 {
+            color: var(--warning-color);
+            margin-bottom: 20px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .modal h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .success-message,
+        .error-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .current-plan,
+            .plan-card,
+            .cancellation-section {
+                padding: 25px;
+            }
+            
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .plan-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-container">
+            <h1>🔧 Subscription Management</h1>
+            <a href="member-dashboard.html" class="back-link">← Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="current-plan">
+            <h2>Your Current Plan</h2>
+            <div class="plan-badge" id="current-tier-badge">Loading...</div>
+            <div class="plan-price" id="current-price">Loading...</div>
+            
+            <div class="plan-details">
+                <div class="detail-item">
+                    <div class="detail-label">Billing Cycle</div>
+                    <div class="detail-value" id="current-billing">Loading...</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value" id="current-status">Loading...</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Next Billing</div>
+                    <div class="detail-value" id="next-billing">Loading...</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Member Since</div>
+                    <div class="detail-value" id="member-since">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; margin: 40px 0; color: var(--primary-color);">Available Plans</h2>
+
+        <div class="plans-grid" id="plans-grid">
+            <!-- Plans will be populated by JavaScript -->
+        </div>
+
+        <div class="cancellation-section">
+            <h3>⚠️ Cancel Subscription</h3>
+            <p>Need to cancel your subscription? We're sorry to see you go. Your subscription will remain active until the end of your current billing period, and you'll continue to have access to all features until then.</p>
+            <button class="action-btn btn-danger" onclick="openCancelModal()">Cancel Subscription</button>
+        </div>
+    </div>
+
+    <!-- Change Plan Modal -->
+    <div id="changePlanModal" class="modal">
+        <div class="modal-content">
+            <h3>Change Subscription Plan</h3>
+            <p>You're about to change your subscription. This change will be effective immediately.</p>
+            
+            <div class="form-group">
+                <label for="newTier">New Plan:</label>
+                <select id="newTier">
+                    <option value="">Select a plan...</option>
+                    <option value="basic">Basic - $15/month</option>
+                    <option value="premier">Premier - $19.99/month</option>
+                    <option value="elite">Digital Services - $150/month</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="newBilling">Billing Cycle:</label>
+                <select id="newBilling">
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly (Save money!)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="changeReason">Reason for change (optional):</label>
+                <textarea id="changeReason" rows="3" placeholder="Let us know why you're making this change..."></textarea>
+            </div>
+            
+            <div id="change-message"></div>
+            
+            <div style="margin-top: 30px;">
+                <button class="action-btn btn-primary" onclick="submitPlanChange()">Confirm Change</button>
+                <button class="action-btn btn-secondary" onclick="closePlanModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Subscription Modal -->
+    <div id="cancelModal" class="modal">
+        <div class="modal-content">
+            <h3>Cancel Subscription</h3>
+            <p>Are you sure you want to cancel your subscription? This action cannot be undone, but you'll retain access until the end of your current billing period.</p>
+            
+            <div class="form-group">
+                <label for="cancelReason">Reason for cancellation (optional):</label>
+                <textarea id="cancelReason" rows="3" placeholder="Help us improve by telling us why you're leaving..."></textarea>
+            </div>
+            
+            <div id="cancel-message"></div>
+            
+            <div style="margin-top: 30px;">
+                <button class="action-btn btn-danger" onclick="submitCancellation()">Yes, Cancel Subscription</button>
+                <button class="action-btn btn-secondary" onclick="closeCancelModal()">Keep Subscription</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://vpxejnebrnwjlnokfkgu.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZweGVqbmVicm53amxub2tma2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTkwODMsImV4cCI6MjA2NjE5NTA4M30.wVHoKozEJbkEzlJ0WASQRuSEar2y1qZZQyTun0Ef-gQ';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        let currentCustomer = null;
+
+        // Plan data
+        const plans = {
+            basic: {
+                name: 'Basic',
+                monthlyPrice: 10,
+                yearlyPrice: 100,
+                features: ['Interactive worksheets', 'Family presentations', 'Parenting guidance', 'Community forum']
+            },
+            premier: {
+                name: 'Premier',
+                monthlyPrice: 19.99,
+                yearlyPrice: 179.91,
+                features: ['All Basic benefits', 'Provider content', 'IOP group resources', 'Professional articles', 'Priority support']
+            },
+            elite: {
+                name: 'Digital Services',
+                monthlyPrice: 150,
+                yearlyPrice: 1500,
+                features: ['Website build & setup', 'SEO training & analytics', 'Content posting/social', 'Monthly strategy meeting', 'Priority support']
+            }
+        };
+
+        async function loadSubscriptionData() {
+            try {
+                // Get the most recent customer (in real app, this would be authenticated user)
+                const { data: customers, error } = await supabase
+                    .from('customers')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(1);
+
+                if (error) throw error;
+
+                if (customers && customers.length > 0) {
+                    currentCustomer = customers[0];
+                    populateCurrentPlan(currentCustomer);
+                    populateAvailablePlans(currentCustomer);
+                } else {
+                    showDemoData();
+                }
+            } catch (error) {
+                console.error('Error loading subscription data:', error);
+                showDemoData();
+            }
+        }
+
+        function populateCurrentPlan(customer) {
+            const tier = customer.subscription_tier || 'basic';
+            const billing = customer.billing_cycle || 'monthly';
+            const plan = plans[tier];
+            
+            document.getElementById('current-tier-badge').textContent = plan.name + ' Membership';
+            document.getElementById('current-tier-badge').className = `plan-badge tier-${tier}`;
+            
+            const price = billing === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice;
+            const period = billing === 'monthly' ? '/month' : '/year';
+            document.getElementById('current-price').textContent = `$${price}${period}`;
+            
+            document.getElementById('current-billing').textContent = billing.charAt(0).toUpperCase() + billing.slice(1);
+            document.getElementById('current-status').textContent = customer.subscription_status || 'Active';
+            
+            // Calculate next billing date
+            const nextBilling = new Date();
+            nextBilling.setMonth(nextBilling.getMonth() + (billing === 'yearly' ? 12 : 1));
+            document.getElementById('next-billing').textContent = nextBilling.toLocaleDateString();
+            
+            const memberSince = new Date(customer.created_at).toLocaleDateString('en-US', { 
+                month: 'short', 
+                year: 'numeric' 
+            });
+            document.getElementById('member-since').textContent = memberSince;
+        }
+
+        function populateAvailablePlans(customer) {
+            const currentTier = customer.subscription_tier || 'basic';
+            const currentBilling = customer.billing_cycle || 'monthly';
+            const plansGrid = document.getElementById('plans-grid');
+            
+            plansGrid.innerHTML = Object.keys(plans).map(tierKey => {
+                const plan = plans[tierKey];
+                const isCurrent = tierKey === currentTier;
+                const monthlyPrice = plan.monthlyPrice;
+                const yearlyPrice = plan.yearlyPrice;
+                
+                return `
+                    <div class="plan-card ${isCurrent ? 'current' : ''}">
+                        ${isCurrent ? '<div class="current-badge">Current Plan</div>' : ''}
+                        <h3>${plan.name}</h3>
+                        <div class="price">
+                            $${monthlyPrice}<span style="font-size: 0.6em; color: #666;">/month</span><br>
+                            <span style="font-size: 0.6em; color: #666;">or $${yearlyPrice}/year</span>
+                        </div>
+                        <ul class="features-list">
+                            ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                        ${isCurrent ? 
+                            `<button class="action-btn btn-secondary btn-disabled">Current Plan</button>` :
+                            `<button class="action-btn btn-primary" onclick="openPlanModal('${tierKey}')">
+                                ${getTierChangeType(currentTier, tierKey)} to ${plan.name}
+                            </button>`
+                        }
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getTierChangeType(currentTier, newTier) {
+            const tierOrder = { basic: 1, premier: 2, elite: 3 };
+            return tierOrder[newTier] > tierOrder[currentTier] ? 'Upgrade' : 'Downgrade';
+        }
+
+        function showDemoData() {
+            document.getElementById('current-tier-badge').textContent = 'Basic Membership';
+            document.getElementById('current-tier-badge').className = 'plan-badge tier-basic';
+            document.getElementById('current-price').textContent = '$15/month';
+            document.getElementById('current-billing').textContent = 'Monthly';
+            document.getElementById('current-status').textContent = 'Demo';
+            document.getElementById('next-billing').textContent = 'Demo Mode';
+            document.getElementById('member-since').textContent = 'Demo';
+            
+            // Show demo plans
+            currentCustomer = { subscription_tier: 'basic', billing_cycle: 'monthly' };
+            populateAvailablePlans(currentCustomer);
+        }
+
+        function openPlanModal(tierKey) {
+            document.getElementById('newTier').value = tierKey;
+            document.getElementById('changePlanModal').classList.add('show');
+        }
+
+        function closePlanModal() {
+            document.getElementById('changePlanModal').classList.remove('show');
+            document.getElementById('change-message').innerHTML = '';
+        }
+
+        function openCancelModal() {
+            document.getElementById('cancelModal').classList.add('show');
+        }
+
+        function closeCancelModal() {
+            document.getElementById('cancelModal').classList.remove('show');
+            document.getElementById('cancel-message').innerHTML = '';
+        }
+
+        async function submitPlanChange() {
+            const newTier = document.getElementById('newTier').value;
+            const newBilling = document.getElementById('newBilling').value;
+            const reason = document.getElementById('changeReason').value;
+            const messageDiv = document.getElementById('change-message');
+
+            if (!newTier) {
+                messageDiv.innerHTML = '<div class="error-message">Please select a plan.</div>';
+                return;
+            }
+
+            try {
+                // Create subscription change request
+                const { error } = await supabase
+                    .from('subscription_changes')
+                    .insert([
+                        {
+                            customer_id: currentCustomer.id,
+                            current_tier: currentCustomer.subscription_tier,
+                            requested_tier: newTier,
+                            current_billing_cycle: currentCustomer.billing_cycle,
+                            requested_billing_cycle: newBilling,
+                            change_type: getTierChangeType(currentCustomer.subscription_tier, newTier).toLowerCase(),
+                            reason: reason,
+                            effective_date: new Date().toISOString()
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                messageDiv.innerHTML = '<div class="success-message">Change request submitted successfully! Processing may take a few minutes.</div>';
+                
+                setTimeout(() => {
+                    closePlanModal();
+                    loadSubscriptionData(); // Reload data
+                }, 2000);
+
+            } catch (error) {
+                messageDiv.innerHTML = '<div class="error-message">Error submitting change request. Please try again.</div>';
+            }
+        }
+
+        async function submitCancellation() {
+            const reason = document.getElementById('cancelReason').value;
+            const messageDiv = document.getElementById('cancel-message');
+
+            try {
+                // Create cancellation request
+                const { error } = await supabase
+                    .from('subscription_changes')
+                    .insert([
+                        {
+                            customer_id: currentCustomer.id,
+                            current_tier: currentCustomer.subscription_tier,
+                            requested_tier: null,
+                            current_billing_cycle: currentCustomer.billing_cycle,
+                            requested_billing_cycle: null,
+                            change_type: 'cancellation',
+                            reason: reason,
+                            effective_date: new Date().toISOString()
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                messageDiv.innerHTML = '<div class="success-message">Cancellation request submitted. You will retain access until the end of your billing period.</div>';
+                
+                setTimeout(() => {
+                    closeCancelModal();
+                    window.location.href = 'member-dashboard.html';
+                }, 3000);
+
+            } catch (error) {
+                messageDiv.innerHTML = '<div class="error-message">Error submitting cancellation. Please contact support.</div>';
+            }
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadSubscriptionData);
+    </script>
+</body>
+</html>

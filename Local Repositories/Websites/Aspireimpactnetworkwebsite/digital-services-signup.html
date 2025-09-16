@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Services Membership Signup - Aspire Impact Network</title>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+    <!-- Stripe Service -->
+    <script src="js/stripe-service.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .signup-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            padding: 60px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .signup-header {
+            margin-bottom: 40px;
+        }
+
+        .tier-badge {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .trial-badge {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #22c55e;
+            margin-bottom: 15px;
+        }
+
+        .price-display {
+            font-size: 3rem;
+            color: #4ade80;
+            font-weight: 800;
+            margin: 30px 0;
+        }
+
+        .price-display span {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .trial-info {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #92400e;
+        }
+
+        .trial-info h3 {
+            color: #d97706;
+            margin-bottom: 10px;
+        }
+
+        .billing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .billing-option {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .billing-option.active {
+            background: #4ade80;
+            color: white;
+        }
+
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 30px 0;
+        }
+
+        .features-list li {
+            padding: 10px 0;
+            position: relative;
+            padding-left: 30px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .features-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4ade80;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        .payment-form {
+            margin: 40px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4ade80;
+        }
+
+        #card-element {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .signup-btn {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .signup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.4);
+        }
+
+        .back-btn {
+            background: #6c757d;
+            margin: 10px 5px;
+            width: auto;
+            padding: 15px 30px;
+            font-size: 1rem;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .error-message {
+            color: #dc3545;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            color: #4ade80;
+            font-weight: 600;
+            margin: 15px 0;
+        }
+
+        .savings {
+            background: #4ade80;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .signup-container {
+                padding: 40px 30px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .price-display {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-header">
+            <div class="trial-badge">🎁 30-Day Free Trial</div>
+            <div class="tier-badge">Digital Services</div>
+            <h1>Complete Business Solution</h1>
+            <div class="trial-info">
+                <h3>🚀 Start Your Free Trial Today!</h3>
+                <p>Get full access to all Digital Services features for 30 days - no credit card required for the trial period. After your trial, continue with your chosen billing cycle.</p>
+            </div>
+            <div class="price-display" id="price-display">FREE<span> for 30 days</span></div>
+        </div>
+
+        <div class="billing-toggle">
+            <div class="billing-option active" data-cycle="monthly">Monthly</div>
+            <div class="billing-option" data-cycle="yearly">Yearly (Save $300)</div>
+        </div>
+
+        <ul class="features-list">
+            <li>All Elite membership benefits included</li>
+            <li>Complete SEO strategy & analytics</li>
+            <li>Professional social media management</li>
+            <li>Custom content creation services</li>
+            <li>Monthly strategy consultation meetings</li>
+            <li>Dedicated account manager</li>
+            <li>Custom business consultation</li>
+            <li>Priority support & implementation</li>
+            <li>Advanced reporting & insights</li>
+            <li>Custom integrations & automation</li>
+        </ul>
+
+        <form id="payment-form" class="payment-form">
+            <div class="form-group">
+                <label for="customer-name">Full Name *</label>
+                <input type="text" id="customer-name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="customer-email">Email Address *</label>
+                <input type="email" id="customer-email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="customer-phone">Phone Number *</label>
+                <input type="tel" id="customer-phone" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="company-name">Company Name (Optional)</label>
+                <input type="text" id="company-name">
+            </div>
+            
+            <div class="form-group" id="card-section" style="display: none;">
+                <label for="card-element">Card Information (for after trial) *</label>
+                <div id="card-element"></div>
+                <div id="card-errors" class="error-message" style="display: none;"></div>
+            </div>
+
+            <div class="error-message" id="error-message"></div>
+            <div class="loading" id="loading">Setting up your free trial...</div>
+
+            <button type="submit" class="signup-btn" id="submit-button">
+                🎉 Start My Free Trial
+            </button>
+        </form>
+
+        <div style="margin-top: 30px;">
+            <a href="../aspire-digital-solutions.html" class="signup-btn back-btn">← Back to Details</a>
+            <a href="index.html" class="signup-btn back-btn">🏠 Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Initialize services
+        let stripeService;
+        let supabase;
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Initialize Supabase
+                const supabaseUrl = 'https://vpxejnebrnwjlnokfkgu.supabase.co';
+                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZweGVqbmVicm53amxub2tma2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTkwODMsImV4cCI6MjA2NjE5NTA4M30.wVHoKozEJbkEzlJ0WASQRuSEar2y1qZZQyTun0Ef-gQ';
+                supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+                // Initialize Stripe Service
+                stripeService = new StripeService();
+                await stripeService.initialize('pk_live_51Rcc6ZDN7bYAn961fIpWmQnvdTHeXyWrSyVNGUWtQ3RU4B3sEjq5thzyXNB9NABoZbD8vDPgZUgzLIQ1EZlCzVR200cXmKiJUw');
+                
+                // Create card element
+                stripeService.createCardElement('card-element');
+
+                // Initialize pricing and billing toggle
+                initializePricing();
+                initializeBillingToggle();
+                initializeForm();
+
+                console.log('✅ Digital Services membership signup initialized');
+            } catch (error) {
+                console.error('❌ Initialization error:', error);
+                showError('Failed to initialize payment system. Please refresh the page.');
+            }
+        });
+
+        // Pricing configuration
+        const pricing = {
+            monthly: { 
+                amount: 150, 
+                display: '$150<span>/month</span> <small>(after trial)</small>',
+                priceId: 'price_digital_services_monthly'
+            },
+            yearly: { 
+                amount: 1500, 
+                display: '$1,500<span>/year</span> <span class="savings">(Save $300)</span> <small>(after trial)</small>',
+                priceId: 'price_digital_services_yearly'
+            }
+        };
+
+        let currentBillingCycle = 'monthly';
+
+        function initializePricing() {
+            // Set initial price display
+            const priceDisplay = document.getElementById('price-display');
+            if (priceDisplay) {
+                priceDisplay.innerHTML = 'FREE<span> for 30 days</span>';
+            }
+        }
+
+        function initializeBillingToggle() {
+            // Billing toggle functionality
+            document.querySelectorAll('.billing-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.billing-option').forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    currentBillingCycle = option.dataset.cycle;
+                    
+                    const priceDisplay = document.getElementById('price-display');
+                    if (priceDisplay) {
+                        priceDisplay.innerHTML = 'FREE<span> for 30 days</span><br><small>Then ' + pricing[currentBillingCycle].display + '</small>';
+                    }
+                });
+            });
+        }
+
+        function initializeForm() {
+            // Form submission
+            const form = document.getElementById('payment-form');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmission);
+            }
+        }
+
+        async function handleFormSubmission(event) {
+            event.preventDefault();
+            
+            const submitButton = document.getElementById('submit-button');
+            const errorMessage = document.getElementById('error-message');
+            const loading = document.getElementById('loading');
+            
+            // Disable form and show loading
+            submitButton.disabled = true;
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+
+            const customerData = {
+                name: document.getElementById('customer-name').value,
+                email: document.getElementById('customer-email').value,
+                phone: document.getElementById('customer-phone').value,
+                company: document.getElementById('company-name').value
+            };
+
+            try {
+                // Validate form data
+                if (!customerData.name || !customerData.email || !customerData.phone) {
+                    throw new Error('Please fill in all required fields');
+                }
+
+                // For free trial, we'll create the customer record without payment
+                // The actual payment setup will happen after the trial period
+                const customerRecord = {
+                    name: customerData.name,
+                    email: customerData.email,
+                    phone: customerData.phone,
+                    company_name: customerData.company,
+                    subscription_type: 'digital_services',
+                    billing_cycle: currentBillingCycle,
+                    subscription_status: 'trial',
+                    trial_start_date: new Date().toISOString(),
+                    trial_end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days from now
+                    created_at: new Date().toISOString()
+                };
+
+                // Insert customer record
+                const { data, error } = await supabase
+                    .from('customers')
+                    .insert([customerRecord])
+                    .select();
+
+                if (error) {
+                    throw new Error(`Database error: ${error.message}`);
+                }
+
+                console.log('✅ Trial signup successful:', data);
+
+                // Redirect to confirmation page
+                window.location.href = `signup-confirmation.html?trial=true&type=digital_services&email=${encodeURIComponent(customerData.email)}`;
+
+            } catch (error) {
+                console.error('❌ Signup error:', error);
+                showError(error.message || 'An error occurred during signup. Please try again.');
+            } finally {
+                // Re-enable form
+                submitButton.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

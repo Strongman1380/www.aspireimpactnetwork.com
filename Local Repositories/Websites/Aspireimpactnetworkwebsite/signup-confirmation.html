@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Confirmation - Aspire Impact Network</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .confirmation-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            padding: 60px;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4a9960, #667eea);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 2.5rem;
+            color: white;
+            animation: checkmark 0.6s ease-in-out;
+        }
+
+        @keyframes checkmark {
+            0% { transform: scale(0) rotate(45deg); }
+            50% { transform: scale(1.2) rotate(45deg); }
+            100% { transform: scale(1) rotate(45deg); }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #4a9960, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .confirmation-message {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .subscription-details {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .subscription-details h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .tier-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tier-basic {
+            background: #2c5f41;
+            color: white;
+        }
+
+        .tier-premier {
+            background: linear-gradient(135deg, #4a9960, #667eea);
+            color: white;
+        }
+
+        .tier-elite {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .price-highlight {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #4a9960;
+        }
+
+        .next-steps {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .next-steps h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .next-steps ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .next-steps li {
+            padding: 10px 0;
+            position: relative;
+            padding-left: 30px;
+            color: #555;
+        }
+
+        .next-steps li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4a9960;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .contact-info {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .contact-info h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .contact-item a {
+            color: #4a9960;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        .action-btn {
+            display: inline-block;
+            padding: 20px 40px;
+            background: linear-gradient(135deg, #4a9960, #667eea);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+        .secondary-btn {
+            background: transparent;
+            color: #4a9960;
+            border: 2px solid #4a9960;
+            padding: 15px 30px;
+            font-size: 1rem;
+        }
+
+        .secondary-btn:hover {
+            background: #4a9960;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .confirmation-container {
+                padding: 40px 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-container">
+        <div class="success-icon">✓</div>
+        
+        <h1>Welcome to Aspire Impact Network!</h1>
+        
+        <p class="confirmation-message">
+            Thank you for joining our community! Your membership has been successfully activated. 
+            We're excited to support you on your journey with our comprehensive resources and tools.
+        </p>
+
+        <div class="subscription-details">
+            <h3>Subscription Details</h3>
+            <div class="detail-row">
+                <span class="detail-label">Customer Name:</span>
+                <span class="detail-value" id="customer-name">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Email Address:</span>
+                <span class="detail-value" id="customer-email">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Membership Tier:</span>
+                <span class="detail-value">
+                    <span class="tier-badge" id="tier-badge">Loading...</span>
+                </span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Billing Cycle:</span>
+                <span class="detail-value" id="billing-cycle">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Amount:</span>
+                <span class="detail-value price-highlight" id="amount">Loading...</span>
+            </div>
+        </div>
+
+        <div class="next-steps">
+            <h3>What Happens Next?</h3>
+            <ul>
+                <li>You'll receive a confirmation email within the next few minutes</li>
+                <li>Access to your membership resources is available immediately</li>
+                <li>Check out your member dashboard to explore available content</li>
+                <li>Contact our support team if you have any questions</li>
+                <li>Your billing will start today and continue automatically</li>
+            </ul>
+        </div>
+
+        <div class="contact-info">
+            <h3>Need Help? Contact Us</h3>
+            <div class="contact-item">
+                <span>📞</span>
+                <a href="tel:+14027592210">(402) 759-2210</a>
+            </div>
+            <div class="contact-item">
+                <span>✉️</span>
+                <a href="mailto:brandon.hinrichs@aspireimpactnetwork.com">brandon.hinrichs@aspireimpactnetwork.com</a>
+            </div>
+        </div>
+        
+        <div style="margin-top: 40px;">
+            <a href="member-dashboard.html" class="action-btn">🎯 View Your Dashboard</a>
+            <a href="index.html" class="action-btn secondary-btn">🏠 Back to Home</a>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <a href="javascript:history.back()" class="secondary-btn">← Back to Signup</a>
+        </div>
+    </div>
+
+    <script>
+        // Load signup data from localStorage
+        const signupData = localStorage.getItem('signup_data');
+        
+        if (signupData) {
+            const data = JSON.parse(signupData);
+            
+            // Populate the confirmation details
+            document.getElementById('customer-name').textContent = data.customerName || 'N/A';
+            document.getElementById('customer-email').textContent = data.customerEmail || 'N/A';
+            document.getElementById('billing-cycle').textContent = 
+                data.billingCycle === 'monthly' ? 'Monthly' : 'Yearly';
+            
+            // Format and display the amount
+            const amount = data.amount / 100; // Convert from cents
+            const amountText = data.billingCycle === 'monthly' 
+                ? `$${amount.toFixed(2)}/month`
+                : `$${amount.toFixed(2)}/year`;
+            document.getElementById('amount').textContent = amountText;
+            
+            // Set tier badge
+            const tierBadge = document.getElementById('tier-badge');
+            const tierName = data.tier.charAt(0).toUpperCase() + data.tier.slice(1);
+            tierBadge.textContent = tierName + ' Membership';
+            tierBadge.className = `tier-badge tier-${data.tier}`;
+            
+            // Clear the signup data from localStorage after displaying
+            localStorage.removeItem('signup_data');
+        } else {
+            // If no signup data, show default values
+            document.getElementById('customer-name').textContent = 'Guest User';
+            document.getElementById('customer-email').textContent = 'Please contact support';
+            document.getElementById('billing-cycle').textContent = 'N/A';
+            document.getElementById('amount').textContent = 'Contact Support';
+            
+            const tierBadge = document.getElementById('tier-badge');
+            tierBadge.textContent = 'Membership';
+            tierBadge.className = 'tier-badge tier-basic';
+        }
+    </script>
+</body>
+</html>
