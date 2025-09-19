@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Membership Signup - Aspire Impact Network</title>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+    <!-- Stripe Service -->
+    <script src="js/stripe-service.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .signup-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            padding: 60px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .elite-badge {
+            position: absolute;
+            top: -15px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+            to { box-shadow: 0 5px 25px rgba(102, 126, 234, 0.5); }
+        }
+
+        .signup-header {
+            margin-bottom: 40px;
+        }
+
+        .tier-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .price-display {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            margin: 30px 0;
+        }
+
+        .price-display span {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .billing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .billing-option {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .billing-option.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 30px 0;
+        }
+
+        .features-list li {
+            padding: 10px 0;
+            position: relative;
+            padding-left: 30px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .features-list li::before {
+            content: '⭐';
+            position: absolute;
+            left: 0;
+            font-size: 1.3rem;
+        }
+
+        .payment-form {
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        #card-element {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .signup-btn {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signup-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .signup-btn:hover::before {
+            left: 100%;
+        }
+
+        .signup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .signup-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 1rem;
+        }
+
+        .back-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin: 15px 0;
+            padding: 15px;
+            background: #fdf2f2;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .signup-container {
+                padding: 40px 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .price-display {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="elite-badge">Elite AI-Powered</div>
+        
+        <div class="signup-header">
+            <div class="tier-badge">Elite Membership</div>
+            <h1>Experience The Future</h1>
+            <p>AI-powered excellence for cutting-edge social work and advanced solutions.</p>
+        </div>
+
+        <div class="price-display" id="price-display">
+            $35<span>/month</span>
+        </div>
+
+        <div class="billing-toggle">
+            <div class="billing-option active" data-cycle="monthly">Monthly</div>
+            <div class="billing-option" data-cycle="yearly">Yearly (Save 17%)</div>
+        </div>
+
+        <ul class="features-list">
+            <li>All Premier membership benefits</li>
+            <li>AI social work integration</li>
+            <li>Custom GPT solutions</li>
+            <li>Specialized AI requests</li>
+            <li>1-on-1 coaching sessions</li>
+            <li>VIP priority support</li>
+        </ul>
+
+        <form id="payment-form" class="payment-form">
+            <div class="form-group">
+                <label for="customer-name">Full Name *</label>
+                <input type="text" id="customer-name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="customer-email">Email Address *</label>
+                <input type="email" id="customer-email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="customer-phone">Phone Number (Optional)</label>
+                <input type="tel" id="customer-phone">
+            </div>
+            
+            <div class="form-group">
+                <label for="card-element">Card Information *</label>
+                <div id="card-element"></div>
+                <div id="card-errors" class="error-message" style="display: none;"></div>
+            </div>
+
+            <div class="error-message" id="error-message"></div>
+            <div class="loading" id="loading">Processing your payment...</div>
+
+            <button type="submit" class="signup-btn" id="submit-button">
+                Unlock Elite AI
+            </button>
+        </form>
+
+        <div style="margin-top: 30px;">
+            <a href="../aspire-digital-solutions.html" class="signup-btn back-btn">← Back to Details</a>
+            <a href="index.html" class="signup-btn back-btn">🏠 Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Initialize services
+        let stripeService;
+        let supabase;
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Initialize Supabase
+                const supabaseUrl = 'https://vpxejnebrnwjlnokfkgu.supabase.co';
+                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZweGVqbmVicm53amxub2tma2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTkwODMsImV4cCI6MjA2NjE5NTA4M30.wVHoKozEJbkEzlJ0WASQRuSEar2y1qZZQyTun0Ef-gQ';
+                supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+                // Initialize Stripe Service
+                stripeService = new StripeService();
+                await stripeService.initialize('pk_live_51Rcc6ZDN7bYAn961fIpWmQnvdTHeXyWrSyVNGUWtQ3RU4B3sEjq5thzyXNB9NABoZbD8vDPgZUgzLIQ1EZlCzVR200cXmKiJUw');
+                
+                // Create card element
+                stripeService.createCardElement('card-element');
+
+                // Initialize pricing and billing toggle
+                initializePricing();
+                initializeBillingToggle();
+                initializeForm();
+
+                console.log('✅ Professional membership signup initialized');
+            } catch (error) {
+                console.error('❌ Initialization error:', error);
+                showError('Failed to initialize payment system. Please refresh the page.');
+            }
+        });
+
+        // Pricing configuration
+        const pricing = {
+            monthly: { 
+                amount: 20, 
+                display: '$20<span>/month</span>',
+                priceId: 'price_elite_monthly'
+            },
+            yearly: { 
+                amount: 200, 
+                display: '$200<span>/year</span> <span class="savings">(Save $40)</span>',
+                priceId: 'price_elite_yearly'
+            }
+        };
+
+        let currentBillingCycle = 'monthly';
+
+        function initializePricing() {
+            // Set initial price display
+            const priceDisplay = document.getElementById('price-display');
+            if (priceDisplay) {
+                priceDisplay.innerHTML = pricing[currentBillingCycle].display;
+            }
+        }
+
+        function initializeBillingToggle() {
+            // Billing toggle functionality
+            document.querySelectorAll('.billing-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.billing-option').forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    currentBillingCycle = option.dataset.cycle;
+                    
+                    const priceDisplay = document.getElementById('price-display');
+                    if (priceDisplay) {
+                        priceDisplay.innerHTML = pricing[currentBillingCycle].display;
+                    }
+                });
+            });
+        }
+
+        function initializeForm() {
+            // Form submission
+            const form = document.getElementById('payment-form');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmission);
+            }
+        }
+
+        async function handleFormSubmission(event) {
+            event.preventDefault();
+            
+            const submitButton = document.getElementById('submit-button');
+            const errorMessage = document.getElementById('error-message');
+            const loading = document.getElementById('loading');
+            
+            // Disable form and show loading
+            submitButton.disabled = true;
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+
+            const customerData = {
+                name: document.getElementById('customer-name').value,
+                email: document.getElementById('customer-email').value,
+                phone: document.getElementById('customer-phone').value
+            };
+
+            try {
+                // Validate form data
+                if (!customerData.name || !customerData.email) {
+                    throw new Error('Please fill in all required fields');
+                }
+
+                // Create subscription using Stripe service
+                const result = await stripeService.createSubscription(
+                    customerData,
+                    'professional',
+                    currentBillingCycle
+                );
+
+                if (result.success) {
+                    // Save customer data to Supabase
+                    const { data: customer, error: customerError } = await supabase
+                        .from('customers')
+                        .insert([
+                            {
+                                email: customerData.email,
+                                full_name: customerData.name,
+                                phone: customerData.phone,
+                                subscription_tier: 'professional',
+                                billing_cycle: currentBillingCycle,
+                                subscription_status: 'active',
+                                stripe_customer_id: result.customerId,
+                                stripe_subscription_id: result.subscriptionId
+                            }
+                        ])
+                        .select()
+                        .single();
+
+                    if (customerError) {
+                        console.error('Database error:', customerError);
+                        // Continue anyway - payment was successful
+                    }
+
+                    // Store signup data for confirmation page
+                    localStorage.setItem('signup_data', JSON.stringify({
+                        customerName: customerData.name,
+                        customerEmail: customerData.email,
+                        tier: 'professional',
+                        billingCycle: currentBillingCycle,
+                        amount: pricing[currentBillingCycle].amount,
+                        subscriptionId: result.subscriptionId,
+                        customerId: result.customerId
+                    }));
+                    
+                    // Redirect to confirmation page
+                    window.location.href = 'signup-confirmation.html';
+                } else {
+                    throw new Error('Payment processing failed');
+                }
+
+            } catch (error) {
+                console.error('Subscription error:', error);
+                showError(error.message);
+                submitButton.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('error-message');
+            if (errorMessage) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        function hideError() {
+            const errorMessage = document.getElementById('error-message');
+            if (errorMessage) {
+                errorMessage.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

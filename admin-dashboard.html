@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Aspire Impact Network</title>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Authentication check - redirect to login if not authenticated
+        function checkAuthentication() {
+            const session = localStorage.getItem('adminSession');
+            if (!session) {
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            
+            try {
+                const sessionData = JSON.parse(session);
+                const loginTime = new Date(sessionData.loginTime);
+                const now = new Date();
+                const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
+                
+                // Session valid for 24 hours
+                if (hoursDiff >= 24) {
+                    localStorage.removeItem('adminSession');
+                    window.location.href = 'admin-login.html';
+                    return false;
+                }
+                
+                // Update page title with authenticated user
+                document.title = `Admin Dashboard - ${sessionData.email} - Aspire Impact Network`;
+                return true;
+                
+            } catch (error) {
+                console.error('Session parsing error:', error);
+                localStorage.removeItem('adminSession');
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+        }
+
+        // Add logout functionality
+        function adminLogout() {
+            localStorage.removeItem('adminSession');
+            window.location.href = 'admin-login.html';
+        }
+
+        // Check authentication immediately
+        if (!checkAuthentication()) {
+            // If authentication fails, the page will redirect
+            document.body.style.display = 'none';
+        }
+    </script>
+    
+    <style>
+        :root {
+            --primary-color: #2c5f41;
+            --accent-color: #4a9960;
+            --accent-light: #6bb77b;
+            --text-light: #2c3e50;
+            --text-gray: #495057;
+            --border-color: #e9ecef;
+            --bg-light: #f8f9fa;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --info-color: #3498db;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .admin-nav {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255,255,255,0.1);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .icon-customers { background: var(--info-color); }
+        .icon-revenue { background: var(--success-color); }
+        .icon-subscriptions { background: var(--accent-color); }
+        .icon-support { background: var(--warning-color); }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: var(--text-gray);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        .tab-container {
+            margin-bottom: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-gray);
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--accent-color);
+            border-bottom: 3px solid var(--accent-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table th {
+            background: var(--bg-light);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(74, 153, 96, 0.05);
+        }
+        
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .badge-active { background: #d4edda; color: #155724; }
+        .badge-inactive { background: #f8d7da; color: #721c24; }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-basic { background: #2c5f41; color: white; }
+        .badge-premier { background: linear-gradient(135deg, #4a9960, #667eea); color: white; }
+        .badge-elite { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin: 2px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-color);
+        }
+        
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-secondary {
+            background: var(--text-gray);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--text-light);
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .filter-select {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            min-width: 150px;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .quick-action {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quick-action:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: var(--text-gray);
+        }
+        
+        @media (max-width: 768px) {
+            .admin-nav {
+                display: none;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .data-table {
+                font-size: 0.9rem;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="header-container">
+            <h1 class="admin-title">🛠️ Admin Dashboard</h1>
+            <nav class="admin-nav">
+                <a href="admin-access.html" class="nav-item">🛡️ Admin Portal</a>
+                <a href="#overview" class="nav-item active" onclick="showSection('overview')">Overview</a>
+                <a href="#customers" class="nav-item" onclick="showSection('customers')">Customers</a>
+                <a href="#subscriptions" class="nav-item" onclick="showSection('subscriptions')">Subscriptions</a>
+                <a href="#support" class="nav-item" onclick="showSection('support')">Support</a>
+                <a href="index.html" class="nav-item">← Main Site</a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Overview Section -->
+        <div id="overview-section" class="section-content">
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-icon icon-customers">👥</div>
+                    <div class="stat-value" id="total-customers">Loading...</div>
+                    <div class="stat-label">Total Customers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-revenue">💰</div>
+                    <div class="stat-value" id="monthly-revenue">Loading...</div>
+                    <div class="stat-label">Monthly Revenue</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-subscriptions">📊</div>
+                    <div class="stat-value" id="active-subscriptions">Loading...</div>
+                    <div class="stat-label">Active Subscriptions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-support">🎫</div>
+                    <div class="stat-value" id="open-tickets">Loading...</div>
+                    <div class="stat-label">Open Tickets</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Quick Actions</h2>
+                </div>
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="exportCustomers()">
+                        <h3>📊 Export Data</h3>
+                        <p>Download customer data</p>
+                    </div>
+                    <div class="quick-action" onclick="sendNewsletter()">
+                        <h3>📧 Send Newsletter</h3>
+                        <p>Broadcast to all customers</p>
+                    </div>
+                    <div class="quick-action" onclick="viewAnalytics()">
+                        <h3>📈 Analytics</h3>
+                        <p>Detailed reports</p>
+                    </div>
+                    <div class="quick-action" onclick="manageSubscriptions()">
+                        <h3>⚙️ Bulk Actions</h3>
+                        <p>Manage subscriptions</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Revenue Analytics</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers Section -->
+        <div id="customers-section" class="section-content" style="display: none;">
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Customer Management</h2>
+                    <button class="action-btn btn-primary" onclick="addNewCustomer()">+ Add Customer</button>
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search customers..." id="customer-search">
+                    <select class="filter-select" id="customer-filter">
+                        <option value="">All Customers</option>
+                        <option value="basic">Basic Tier</option>
+                        <option value="premier">Premier Tier</option>
+                    <option value="elite">Digital Services</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    <button class="action-btn btn-primary" onclick="searchCustomers()">Search</button>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Email</th>
+                            <th>Tier</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customers-table">
+                        <tr><td colspan="6" class="loading">Loading customers...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Subscriptions Section -->
+        <div id="subscriptions-section" class="section-content" style="display: none;">
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Subscription Management</h2>
+                </div>
+                
+                <div class="tab-container">
+                    <div class="tabs">
+                        <button class="tab active" onclick="showTab('active-subs')">Active Subscriptions</button>
+                        <button class="tab" onclick="showTab('change-requests')">Change Requests</button>
+                        <button class="tab" onclick="showTab('cancellations')">Cancellations</button>
+                    </div>
+                    
+                    <div id="active-subs" class="tab-content active">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Plan</th>
+                                    <th>Billing</th>
+                                    <th>Status</th>
+                                    <th>Next Billing</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="active-subscriptions-table">
+                                <tr><td colspan="6" class="loading">Loading subscriptions...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="change-requests" class="tab-content">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Current Plan</th>
+                                    <th>Requested Plan</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="change-requests-table">
+                                <tr><td colspan="6" class="loading">Loading change requests...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="cancellations" class="tab-content">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Plan</th>
+                                    <th>Reason</th>
+                                    <th>Requested Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cancellations-table">
+                                <tr><td colspan="6" class="loading">Loading cancellations...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Section -->
+        <div id="support-section" class="section-content" style="display: none;">
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Support Tickets</h2>
+                    <button class="action-btn btn-primary" onclick="createTicket()">+ New Ticket</button>
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search tickets..." id="ticket-search">
+                    <select class="filter-select" id="ticket-filter">
+                        <option value="">All Tickets</option>
+                        <option value="open">Open</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="waiting_customer">Waiting for Customer</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                    <select class="filter-select" id="priority-filter">
+                        <option value="">All Priorities</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Ticket #</th>
+                            <th>Customer</th>
+                            <th>Subject</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="support-tickets-table">
+                        <tr><td colspan="7" class="loading">Loading support tickets...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://vpxejnebrnwjlnokfkgu.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZweGVqbmVicm53amxub2tma2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTkwODMsImV4cCI6MjA2NjE5NTA4M30.wVHoKozEJbkEzlJ0WASQRuSEar2y1qZZQyTun0Ef-gQ';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        let currentSection = 'overview';
+
+        // Navigation functions
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Remove active class from nav items
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(section + '-section').style.display = 'block';
+            
+            // Add active class to current nav item
+            event.target.classList.add('active');
+            
+            currentSection = section;
+            
+            // Load section-specific data
+            switch(section) {
+                case 'overview':
+                    loadOverviewData();
+                    break;
+                case 'customers':
+                    loadCustomersData();
+                    break;
+                case 'subscriptions':
+                    loadSubscriptionsData();
+                    break;
+                case 'support':
+                    loadSupportData();
+                    break;
+            }
+        }
+
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Remove active class from tabs
+            document.querySelectorAll('.tab').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Data loading functions
+        async function loadOverviewData() {
+            try {
+                // Load statistics
+                const { data: customers } = await supabase.from('customers').select('*');
+                const { data: subscriptionChanges } = await supabase.from('subscription_changes').select('*');
+                
+                document.getElementById('total-customers').textContent = customers?.length || 0;
+                document.getElementById('active-subscriptions').textContent = 
+                    customers?.filter(c => c.subscription_status === 'active').length || 0;
+                document.getElementById('open-tickets').textContent = '0'; // Placeholder
+                
+                // Calculate revenue
+                const revenue = calculateMonthlyRevenue(customers || []);
+                document.getElementById('monthly-revenue').textContent = `$${revenue.toFixed(2)}`;
+                
+                // Create revenue chart
+                createRevenueChart();
+                
+            } catch (error) {
+                console.error('Error loading overview data:', error);
+            }
+        }
+
+        async function loadCustomersData() {
+            try {
+                const { data: customers, error } = await supabase
+                    .from('customers')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const tableBody = document.getElementById('customers-table');
+                
+                if (!customers || customers.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No customers found</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = customers.map(customer => `
+                    <tr>
+                        <td>${customer.full_name}</td>
+                        <td>${customer.email}</td>
+                        <td><span class="badge badge-${customer.subscription_tier || 'basic'}">${(customer.subscription_tier || 'basic').toUpperCase()}</span></td>
+                        <td><span class="badge badge-${customer.subscription_status === 'active' ? 'active' : 'inactive'}">${customer.subscription_status || 'inactive'}</span></td>
+                        <td>${new Date(customer.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="action-btn btn-primary" onclick="viewCustomer('${customer.id}')">View</button>
+                            <button class="action-btn btn-warning" onclick="editCustomer('${customer.id}')">Edit</button>
+                            <button class="action-btn btn-secondary" onclick="emailCustomer('${customer.id}')">Email</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error loading customers:', error);
+                document.getElementById('customers-table').innerHTML = 
+                    '<tr><td colspan="6" style="text-align: center; color: red;">Error loading customers</td></tr>';
+            }
+        }
+
+        async function loadSubscriptionsData() {
+            try {
+                // Load active subscriptions
+                const { data: customers } = await supabase
+                    .from('customers')
+                    .select('*')
+                    .eq('subscription_status', 'active')
+                    .order('created_at', { ascending: false });
+
+                const activeTable = document.getElementById('active-subscriptions-table');
+                if (customers && customers.length > 0) {
+                    activeTable.innerHTML = customers.map(customer => `
+                        <tr>
+                            <td>${customer.full_name}</td>
+                            <td><span class="badge badge-${customer.subscription_tier || 'basic'}">${(customer.subscription_tier || 'basic').toUpperCase()}</span></td>
+                            <td>${customer.billing_cycle || 'monthly'}</td>
+                            <td><span class="badge badge-active">Active</span></td>
+                            <td>${getNextBillingDate(customer.created_at, customer.billing_cycle)}</td>
+                            <td>
+                                <button class="action-btn btn-primary" onclick="manageSubscription('${customer.id}')">Manage</button>
+                                <button class="action-btn btn-warning" onclick="pauseSubscription('${customer.id}')">Pause</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    activeTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No active subscriptions</td></tr>';
+                }
+
+                // Load change requests
+                const { data: changes } = await supabase
+                    .from('subscription_changes')
+                    .select('*, customers(full_name)')
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false });
+
+                const changesTable = document.getElementById('change-requests-table');
+                if (changes && changes.length > 0) {
+                    changesTable.innerHTML = changes.map(change => `
+                        <tr>
+                            <td>${change.customers?.full_name || 'Unknown'}</td>
+                            <td><span class="badge badge-${change.current_tier}">${change.current_tier.toUpperCase()}</span></td>
+                            <td><span class="badge badge-${change.requested_tier || 'basic'}">${(change.requested_tier || 'Cancellation').toUpperCase()}</span></td>
+                            <td><span class="badge badge-pending">${change.change_type.toUpperCase()}</span></td>
+                            <td>${new Date(change.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button class="action-btn btn-primary" onclick="approveChange('${change.id}')">Approve</button>
+                                <button class="action-btn btn-danger" onclick="rejectChange('${change.id}')">Reject</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    changesTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No pending change requests</td></tr>';
+                }
+
+                // Load cancellations
+                const { data: cancellations } = await supabase
+                    .from('subscription_changes')
+                    .select('*, customers(full_name)')
+                    .eq('change_type', 'cancellation')
+                    .order('created_at', { ascending: false });
+
+                const cancellationsTable = document.getElementById('cancellations-table');
+                if (cancellations && cancellations.length > 0) {
+                    cancellationsTable.innerHTML = cancellations.map(cancellation => `
+                        <tr>
+                            <td>${cancellation.customers?.full_name || 'Unknown'}</td>
+                            <td><span class="badge badge-${cancellation.current_tier}">${cancellation.current_tier.toUpperCase()}</span></td>
+                            <td>${cancellation.reason || 'No reason provided'}</td>
+                            <td>${new Date(cancellation.created_at).toLocaleDateString()}</td>
+                            <td><span class="badge badge-${cancellation.status}">${cancellation.status.toUpperCase()}</span></td>
+                            <td>
+                                <button class="action-btn btn-primary" onclick="processCancellation('${cancellation.id}')">Process</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    cancellationsTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No cancellation requests</td></tr>';
+                }
+
+            } catch (error) {
+                console.error('Error loading subscriptions data:', error);
+            }
+        }
+
+        async function loadSupportData() {
+            // This would load support tickets data
+            // For now, showing placeholder
+            document.getElementById('support-tickets-table').innerHTML = 
+                '<tr><td colspan="7" style="text-align: center;">Support ticket system ready for implementation</td></tr>';
+        }
+
+        // Helper functions
+        function calculateMonthlyRevenue(customers) {
+            return customers.reduce((total, customer) => {
+                if (customer.subscription_status !== 'active') return total;
+                
+                const tier = customer.subscription_tier || 'basic';
+                const billing = customer.billing_cycle || 'monthly';
+                
+                const prices = {
+                    basic: { monthly: 15, yearly: 135 },
+                    premier: { monthly: 19.99, yearly: 179.91 },
+                    elite: { monthly: 150, yearly: 1500 }
+                };
+                
+                const price = prices[tier][billing];
+                return total + (billing === 'yearly' ? price / 12 : price);
+            }, 0);
+        }
+
+        function getNextBillingDate(createdAt, billingCycle) {
+            const date = new Date(createdAt);
+            date.setMonth(date.getMonth() + (billingCycle === 'yearly' ? 12 : 1));
+            return date.toLocaleDateString();
+        }
+
+        function createRevenueChart() {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Monthly Revenue',
+                        data: [1200, 1450, 1800, 2100, 2300, 2500],
+                        borderColor: '#4a9960',
+                        backgroundColor: 'rgba(74, 153, 96, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Action functions (placeholders for full implementation)
+        function viewCustomer(id) { alert('View customer: ' + id); }
+        function editCustomer(id) { alert('Edit customer: ' + id); }
+        function emailCustomer(id) { alert('Email customer: ' + id); }
+        function manageSubscription(id) { alert('Manage subscription: ' + id); }
+        function pauseSubscription(id) { alert('Pause subscription: ' + id); }
+        function approveChange(id) { alert('Approve change: ' + id); }
+        function rejectChange(id) { alert('Reject change: ' + id); }
+        function processCancellation(id) { alert('Process cancellation: ' + id); }
+        function exportCustomers() { alert('Export customers data'); }
+        function sendNewsletter() { alert('Send newsletter to all customers'); }
+        function viewAnalytics() { alert('View detailed analytics'); }
+        function manageSubscriptions() { alert('Bulk subscription management'); }
+        function addNewCustomer() { alert('Add new customer'); }
+        function createTicket() { alert('Create new support ticket'); }
+        function searchCustomers() { alert('Search customers'); }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOverviewData();
+        });
+    </script>
+</body>
+</html>
