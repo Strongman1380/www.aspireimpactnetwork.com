@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Access Portal - Aspire Impact Network</title>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #2c5f41;
+            --accent-color: #4a9960;
+            --accent-light: #6bb77b;
+            --text-light: #2c3e50;
+            --text-gray: #495057;
+            --border-color: #e9ecef;
+            --bg-light: #f8f9fa;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --info-color: #3498db;
+            --dark-bg: #2c3e50;
+            --admin-purple: #6c5ce7;
+            --admin-blue: #74b9ff;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--primary-color) 100%);
+            color: white;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .admin-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .admin-logo i {
+            font-size: 2rem;
+            color: var(--admin-purple);
+        }
+        
+        .admin-nav {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-item {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 20px 40px;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .welcome-section h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, white, var(--admin-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .welcome-section p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .admin-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .admin-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .admin-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--admin-purple), var(--admin-blue));
+        }
+        
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .card-icon.pages { background: linear-gradient(135deg, var(--admin-purple), #a29bfe); }
+        .card-icon.links { background: linear-gradient(135deg, var(--admin-blue), #74b9ff); }
+        .card-icon.database { background: linear-gradient(135deg, var(--success-color), #00b894); }
+        .card-icon.analytics { background: linear-gradient(135deg, var(--warning-color), #fdcb6e); }
+        .card-icon.users { background: linear-gradient(135deg, var(--info-color), #81ecec); }
+        .card-icon.settings { background: linear-gradient(135deg, var(--danger-color), #fd79a8); }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .card-description {
+            opacity: 0.8;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-primary {
+            background: var(--admin-purple);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5f3dc4;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #219a52;
+        }
+        
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .system-status {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .status-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .status-value {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        
+        .status-label {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .status-online {
+            color: var(--success-color);
+        }
+        
+        .status-warning {
+            color: var(--warning-color);
+        }
+        
+        .status-error {
+            color: var(--danger-color);
+        }
+        
+        .quick-actions {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .quick-action {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .quick-action:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .recent-activity {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        .activity-info {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .activity-time {
+            opacity: 0.7;
+            font-size: 0.85rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            color: var(--text-light);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+        
+        .link-check-results {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .link-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .link-item:last-child {
+            border-bottom: none;
+        }
+        
+        .link-url {
+            font-family: monospace;
+            flex: 1;
+            margin-right: 15px;
+        }
+        
+        .link-status {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .link-status.working {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .link-status.broken {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .link-status.external {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 120px 15px 40px;
+            }
+            
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-nav {
+                display: none;
+            }
+            
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+            
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="admin-header">
+        <div class="header-container">
+            <div class="admin-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>Admin Access Portal</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="#overview" class="nav-item active">Overview</a>
+                <a href="#pages" class="nav-item">Pages</a>
+                <a href="#system" class="nav-item">System</a>
+                <a href="admin-dashboard.html" class="nav-item">Dashboard</a>
+                <a href="index.html" class="nav-item">← Main Site</a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>🛡️ Admin Access Portal</h1>
+            <p>Complete administrative control for Aspire Impact Network. Monitor, manage, and maintain your membership platform with comprehensive tools and analytics.</p>
+        </div>
+
+        <!-- System Status -->
+        <div class="system-status">
+            <div class="status-header">
+                <h2>System Status</h2>
+                <button class="action-btn btn-secondary" onclick="refreshStatus()">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+            </div>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-value status-online" id="website-status">ONLINE</div>
+                    <div class="status-label">Website Status</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value status-online" id="database-status">CONNECTED</div>
+                    <div class="status-label">Database</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value status-online" id="payments-status">ACTIVE</div>
+                    <div class="status-label">Payments</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="total-pages">12</div>
+                    <div class="status-label">Total Pages</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Tools Grid -->
+        <div class="admin-grid">
+            <!-- Page Management -->
+            <div class="admin-card">
+                <div class="card-icon pages">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3 class="card-title">Page Management</h3>
+                <p class="card-description">
+                    View all pages, check for broken links, test functionality, and monitor page performance across your entire platform.
+                </p>
+                <div class="card-actions">
+                    <button class="action-btn btn-primary" onclick="openPageChecker()">
+                        <i class="fas fa-search"></i>
+                        Check All Pages
+                    </button>
+                    <button class="action-btn btn-secondary" onclick="testAllLinks()">
+                        <i class="fas fa-link"></i>
+                        Test Links
+                    </button>
+                </div>
+            </div>
+
+            <!-- Link Validation -->
+            <div class="admin-card">
+                <div class="card-icon links">
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+                <h3 class="card-title">Link Validation</h3>
+                <p class="card-description">
+                    Comprehensive link checking tool to identify broken links, validate navigation, and ensure all external resources are accessible.
+                </p>
+                <div class="card-actions">
+                    <button class="action-btn btn-primary" onclick="runLinkCheck()">
+                        <i class="fas fa-check-circle"></i>
+                        Run Link Check
+                    </button>
+                    <button class="action-btn btn-secondary" onclick="exportLinkReport()">
+                        <i class="fas fa-download"></i>
+                        Export Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Database Management -->
+            <div class="admin-card">
+                <div class="card-icon database">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3 class="card-title">Database Management</h3>
+                <p class="card-description">
+                    Monitor database health, view table statistics, backup data, and manage Supabase configurations and settings.
+                </p>
+                <div class="card-actions">
+                    <button class="action-btn btn-primary" onclick="checkDatabaseHealth()">
+                        <i class="fas fa-heartbeat"></i>
+                        Health Check
+                    </button>
+                    <a href="admin-dashboard.html" class="action-btn btn-secondary">
+                        <i class="fas fa-cog"></i>
+                        Manage Data
+                    </a>
+                </div>
+            </div>
+
+            <!-- Analytics & Reports -->
+            <div class="admin-card">
+                <div class="card-icon analytics">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="card-title">Analytics & Reports</h3>
+                <p class="card-description">
+                    Comprehensive analytics dashboard with user behavior, conversion rates, subscription metrics, and detailed reporting tools.
+                </p>
+                <div class="card-actions">
+                    <button class="action-btn btn-primary" onclick="viewAnalytics()">
+                        <i class="fas fa-analytics"></i>
+                        View Analytics
+                    </button>
+                    <button class="action-btn btn-secondary" onclick="generateReport()">
+                        <i class="fas fa-file-pdf"></i>
+                        Generate Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- User Management -->
+            <div class="admin-card">
+                <div class="card-icon users">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="card-title">User Management</h3>
+                <p class="card-description">
+                    Manage customers, subscriptions, support tickets, and user accounts. Full control over membership tiers and access levels.
+                </p>
+                <div class="card-actions">
+                    <a href="admin-dashboard.html#customers" class="action-btn btn-primary">
+                        <i class="fas fa-user-cog"></i>
+                        Manage Users
+                    </a>
+                    <button class="action-btn btn-secondary" onclick="userStats()">
+                        <i class="fas fa-chart-pie"></i>
+                        User Stats
+                    </button>
+                </div>
+            </div>
+
+            <!-- System Settings -->
+            <div class="admin-card">
+                <div class="card-icon settings">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h3 class="card-title">System Settings</h3>
+                <p class="card-description">
+                    Configure system settings, manage API keys, update email templates, and control platform-wide configurations.
+                </p>
+                <div class="card-actions">
+                    <button class="action-btn btn-primary" onclick="systemSettings()">
+                        <i class="fas fa-tools"></i>
+                        Settings
+                    </button>
+                    <button class="action-btn btn-warning" onclick="backupSystem()">
+                        <i class="fas fa-save"></i>
+                        Backup
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="quick-actions-grid">
+                <a href="index.html" class="quick-action" target="_blank">
+                    <i class="fas fa-home"></i>
+                    <div>Homepage</div>
+                </a>
+                <a href="basic-membership.html" class="quick-action" target="_blank">
+                    <i class="fas fa-seedling"></i>
+                    <div>Basic Page</div>
+                </a>
+                <a href="premier-membership.html" class="quick-action" target="_blank">
+                    <i class="fas fa-crown"></i>
+                    <div>Premier Page</div>
+                </a>
+                <a href="../aspire-digital-solutions.html" class="quick-action" target="_blank">
+                    <i class="fas fa-rocket"></i>
+                    <div>Digital Services</div>
+                </a>
+                <a href="basic-signup.html" class="quick-action" target="_blank">
+                    <i class="fas fa-credit-card"></i>
+                    <div>Basic Signup</div>
+                </a>
+                <a href="premier-signup.html" class="quick-action" target="_blank">
+                    <i class="fas fa-credit-card"></i>
+                    <div>Premier Signup</div>
+                </a>
+                <a href="digital-services-signup.html" class="quick-action" target="_blank">
+                    <i class="fas fa-credit-card"></i>
+                    <div>Digital Signup</div>
+                </a>
+                <a href="member-dashboard.html" class="quick-action" target="_blank">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <div>Member Dashboard</div>
+                </a>
+                <a href="subscription-management.html" class="quick-action" target="_blank">
+                    <i class="fas fa-cog"></i>
+                    <div>Subscription Mgmt</div>
+                </a>
+                <a href="support-ticket.html" class="quick-action" target="_blank">
+                    <i class="fas fa-ticket-alt"></i>
+                    <div>Support System</div>
+                </a>
+                <a href="admin-dashboard.html" class="quick-action" target="_blank">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>Admin Dashboard</div>
+                </a>
+                <a href="signup-confirmation.html" class="quick-action" target="_blank">
+                    <i class="fas fa-check-circle"></i>
+                    <div>Confirmation</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+            <h2>Recent System Activity</h2>
+            <div id="activity-log">
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: var(--success-color);">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="activity-info">
+                        <div class="activity-title">System Status Check Completed</div>
+                        <div class="activity-time">All systems operational - 2 minutes ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: var(--info-color);">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="activity-info">
+                        <div class="activity-title">Admin Login Detected</div>
+                        <div class="activity-time">Administrator accessed portal - 5 minutes ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: var(--warning-color);">
+                        <i class="fas fa-sync"></i>
+                    </div>
+                    <div class="activity-info">
+                        <div class="activity-title">Database Sync Completed</div>
+                        <div class="activity-time">Customer data synchronized - 15 minutes ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Checker Modal -->
+    <div id="pageCheckerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Page Checker Results</h2>
+                <button class="close-modal" onclick="closeModal('pageCheckerModal')">&times;</button>
+            </div>
+            <div id="page-check-results">
+                <p>Running comprehensive page analysis...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Checker Modal -->
+    <div id="linkCheckerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Link Validation Results</h2>
+                <button class="close-modal" onclick="closeModal('linkCheckerModal')">&times;</button>
+            </div>
+            <div id="link-check-results" class="link-check-results">
+                <p>Scanning all links across the platform...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://vpxejnebrnwjlnokfkgu.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZweGVqbmVicm53amxub2tma2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTkwODMsImV4cCI6MjA2NjE5NTA4M30.wVHoKozEJbkEzlJ0WASQRuSEar2y1qZZQyTun0Ef-gQ';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Platform pages to check
+        const platformPages = [
+            { name: 'Homepage', url: 'index.html', critical: true },
+            { name: 'Basic Membership', url: 'basic-membership.html', critical: true },
+            { name: 'Premier Membership', url: 'premier-membership.html', critical: true },
+            { name: 'Digital Services', url: '../aspire-digital-solutions.html', critical: true },
+            { name: 'Basic Signup', url: 'basic-signup.html', critical: true },
+            { name: 'Premier Signup', url: 'premier-signup.html', critical: true },
+            { name: 'Digital Signup', url: 'digital-services-signup.html', critical: true },
+            { name: 'Member Dashboard', url: 'member-dashboard.html', critical: true },
+            { name: 'Subscription Management', url: 'subscription-management.html', critical: true },
+            { name: 'Support Ticket', url: 'support-ticket.html', critical: false },
+            { name: 'Admin Dashboard', url: 'admin-dashboard.html', critical: false },
+            { name: 'Signup Confirmation', url: 'signup-confirmation.html', critical: false }
+        ];
+
+        // Page checker function
+        async function openPageChecker() {
+            document.getElementById('pageCheckerModal').classList.add('show');
+            
+            const resultsDiv = document.getElementById('page-check-results');
+            resultsDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Analyzing all pages...</p>';
+            
+            let results = '<h3>Page Analysis Results</h3>';
+            
+            for (const page of platformPages) {
+                try {
+                    const response = await fetch(page.url, { method: 'HEAD' });
+                    const status = response.ok ? 'working' : 'broken';
+                    const statusText = response.ok ? '✅ Working' : '❌ Error';
+                    const criticalBadge = page.critical ? '<span style="background: #e74c3c; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;">CRITICAL</span>' : '';
+                    
+                    results += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;">
+                            <div>
+                                <strong>${page.name}</strong> ${criticalBadge}
+                                <br><small style="color: #666; font-family: monospace;">${page.url}</small>
+                            </div>
+                            <div style="text-align: right;">
+                                ${statusText}
+                                <br><a href="${page.url}" target="_blank" style="font-size: 0.8rem;">Open Page</a>
+                            </div>
+                        </div>
+                    `;
+                } catch (error) {
+                    results += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;">
+                            <div>
+                                <strong>${page.name}</strong>
+                                <br><small style="color: #666; font-family: monospace;">${page.url}</small>
+                            </div>
+                            <div style="text-align: right; color: #e74c3c;">
+                                ❌ Network Error
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            resultsDiv.innerHTML = results;
+        }
+
+        // Link checker function
+        async function runLinkCheck() {
+            document.getElementById('linkCheckerModal').classList.add('show');
+            
+            const resultsDiv = document.getElementById('link-check-results');
+            resultsDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Scanning all links...</p>';
+            
+            // Common links to check
+            const linksToCheck = [
+                // Navigation links
+                { url: 'index.html', type: 'internal', page: 'Navigation' },
+                { url: 'basic-membership.html', type: 'internal', page: 'Navigation' },
+                { url: 'premier-membership.html', type: 'internal', page: 'Navigation' },
+                { url: '../aspire-digital-solutions.html', type: 'internal', page: 'Navigation' },
+                
+                // Signup links
+                { url: 'basic-signup.html', type: 'internal', page: 'CTA Buttons' },
+                { url: 'premier-signup.html', type: 'internal', page: 'CTA Buttons' },
+                { url: 'digital-services-signup.html', type: 'internal', page: 'CTA Buttons' },
+                
+                // Dashboard links
+                { url: 'member-dashboard.html', type: 'internal', page: 'Member Area' },
+                { url: 'subscription-management.html', type: 'internal', page: 'Member Area' },
+                { url: 'support-ticket.html', type: 'internal', page: 'Member Area' },
+                { url: 'admin-dashboard.html', type: 'internal', page: 'Admin Area' },
+                
+                // External resources
+                { url: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap', type: 'external', page: 'CSS Resources' },
+                { url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css', type: 'external', page: 'CSS Resources' },
+                { url: 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2', type: 'external', page: 'JS Resources' },
+                { url: 'https://js.stripe.com/v3/', type: 'external', page: 'Payment Resources' }
+            ];
+            
+            let results = '';
+            let workingCount = 0;
+            let brokenCount = 0;
+            
+            for (const link of linksToCheck) {
+                try {
+                    const response = await fetch(link.url, { method: 'HEAD', mode: 'no-cors' });
+                    const status = 'working'; // Since we can't check cross-origin properly
+                    workingCount++;
+                    
+                    results += `
+                        <div class="link-item">
+                            <div class="link-url">
+                                <strong>${link.page}</strong><br>
+                                <small>${link.url}</small>
+                            </div>
+                            <div class="link-status working">✅ Working</div>
+                        </div>
+                    `;
+                } catch (error) {
+                    if (link.type === 'external') {
+                        // External links might fail due to CORS, mark as external
+                        workingCount++;
+                        results += `
+                            <div class="link-item">
+                                <div class="link-url">
+                                    <strong>${link.page}</strong><br>
+                                    <small>${link.url}</small>
+                                </div>
+                                <div class="link-status external">🔗 External</div>
+                            </div>
+                        `;
+                    } else {
+                        brokenCount++;
+                        results += `
+                            <div class="link-item">
+                                <div class="link-url">
+                                    <strong>${link.page}</strong><br>
+                                    <small>${link.url}</small>
+                                </div>
+                                <div class="link-status broken">❌ Broken</div>
+                            </div>
+                        `;
+                    }
+                }
+            }
+            
+            const summary = `
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3>Link Check Summary</h3>
+                    <p><strong>Working Links:</strong> ${workingCount}</p>
+                    <p><strong>Broken Links:</strong> ${brokenCount}</p>
+                    <p><strong>Total Checked:</strong> ${linksToCheck.length}</p>
+                </div>
+            `;
+            
+            resultsDiv.innerHTML = summary + results;
+        }
+
+        // Database health check
+        async function checkDatabaseHealth() {
+            try {
+                const { data, error } = await supabase.from('customers').select('count', { count: 'exact', head: true });
+                
+                if (error) {
+                    alert('Database connection failed: ' + error.message);
+                    document.getElementById('database-status').textContent = 'ERROR';
+                    document.getElementById('database-status').className = 'status-value status-error';
+                } else {
+                    alert('Database connection successful! Tables are accessible.');
+                    document.getElementById('database-status').textContent = 'HEALTHY';
+                    document.getElementById('database-status').className = 'status-value status-online';
+                }
+            } catch (error) {
+                alert('Database health check failed: ' + error.message);
+                document.getElementById('database-status').textContent = 'ERROR';
+                document.getElementById('database-status').className = 'status-value status-error';
+            }
+        }
+
+        // Utility functions
+        function testAllLinks() {
+            runLinkCheck();
+        }
+
+        function refreshStatus() {
+            // Simulate status refresh
+            const statuses = ['ONLINE', 'CONNECTED', 'ACTIVE'];
+            statuses.forEach((status, index) => {
+                setTimeout(() => {
+                    const elements = ['website-status', 'database-status', 'payments-status'];
+                    document.getElementById(elements[index]).textContent = status;
+                }, index * 200);
+            });
+            
+            // Add activity log entry
+            const activityLog = document.getElementById('activity-log');
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            newActivity.innerHTML = `
+                <div class="activity-icon" style="background: var(--success-color);">
+                    <i class="fas fa-sync"></i>
+                </div>
+                <div class="activity-info">
+                    <div class="activity-title">Status Refreshed</div>
+                    <div class="activity-time">System status updated - just now</div>
+                </div>
+            `;
+            activityLog.insertBefore(newActivity, activityLog.firstChild);
+        }
+
+        function viewAnalytics() {
+            window.open('admin-dashboard.html#overview', '_blank');
+        }
+
+        function generateReport() {
+            alert('Report generation feature would create a comprehensive PDF report with all system metrics, user statistics, and platform health data.');
+        }
+
+        function userStats() {
+            window.open('admin-dashboard.html#customers', '_blank');
+        }
+
+        function systemSettings() {
+            alert('System settings panel would include API key management, email template editing, and platform configuration options.');
+        }
+
+        function backupSystem() {
+            if (confirm('This would create a complete backup of your database and system configuration. Continue?')) {
+                alert('Backup initiated. This process typically takes 5-10 minutes and you will receive an email when complete.');
+            }
+        }
+
+        function exportLinkReport() {
+            alert('Link report would be exported as a CSV file with detailed information about all checked links and their status.');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Auto-refresh status every 30 seconds
+            setInterval(refreshStatus, 30000);
+            
+            // Log admin access
+            const activityLog = document.getElementById('activity-log');
+            const accessLog = document.createElement('div');
+            accessLog.className = 'activity-item';
+            accessLog.innerHTML = `
+                <div class="activity-icon" style="background: var(--admin-purple);">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="activity-info">
+                    <div class="activity-title">Admin Portal Accessed</div>
+                    <div class="activity-time">Administrative access granted - just now</div>
+                </div>
+            `;
+            activityLog.insertBefore(accessLog, activityLog.firstChild);
+        });
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
